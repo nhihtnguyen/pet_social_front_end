@@ -16,7 +16,7 @@ const Header = () => {
                 width: 280,
                 lineHeight: 90,
                 marginLeft: 10,
-                color: '#0055FF'
+                color: '#0055FF',
             }}>
                 <Link href="/">
                     <a>

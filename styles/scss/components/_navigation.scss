@@ -12,7 +12,7 @@
     -o-transition: width 0.25s;
     transition: width 0.25s;
     padding-top: calc(#{$nav-logo-height} + 6px);
-    z-index: -1;
+    z-index: 3000; // -1;
     &.menu-active {
         width: 90px;
         .nav-content {
@@ -137,7 +137,7 @@
         padding-right: 15px;
 
         // background: var(--theme-color);
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             width: auto;
             .nav-wrap {
                 box-shadow: none !important;
@@ -169,7 +169,7 @@
                 list-style-image: none;
                 list-style-type: none;
                 margin: $nav-menu-link-margin;
-                @include media-breakpoint-down(md) {
+                @include media-breakpoint-down(lg) {
                     margin: 4px 0px;
                 }
                 a {

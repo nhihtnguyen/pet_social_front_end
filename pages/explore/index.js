@@ -2,6 +2,7 @@ import styles from '../../styles/Explore.module.scss';
 import Header from '../../components/header/Header';
 import LeftNav from '../../components/leftnav/LeftNav';
 import Postcard from '../../components/postcard/Postcard';
+import PageTitle from '../../components/pagetitle/PageTitle';
 
 const content = [
     {
@@ -89,7 +90,8 @@ const Explore = () => {
                     <div className="middle-sidebar-left pe-0">
                         <div className="row">
                             <div className="col-xl-12">
-                                <div className="row ps-2 pe-1">
+                                <PageTitle title="For you" />
+                                <div className="row ps-2 pe-1 justify-content-center">
                                     {content.map((value, index) =>
                                         <Postcard key={index} index={index} value={value} />
                                     )}
