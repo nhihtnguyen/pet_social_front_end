@@ -126,20 +126,24 @@
 .bg-current-shade {
     background-color: var(--theme-color-shade) !important;
 }
-.bg-primary-gradiant {
+.bg-primary-gradient {
     background: linear-gradient(135deg, var(--theme-color), var(--theme-color-shade)) !important;
 }
-.bg-gold-gradiant {
+.bg-gold-gradient {
     background: linear-gradient(to right, #f2994a, #f2c94c) !important;
 }
-.bg-red-gradiant {
+.bg-red-gradient {
     background: linear-gradient(to right, #e44d26, #f16529) !important;
 }
-.bg-mini-gradiant {
+.bg-mini-gradient {
     background: linear-gradient(to right, #ee0979, #ff6a00) !important;
 }
-.bg-blue-gradiant {
+.bg-blue-gradient {
     background: linear-gradient(to right, #0575e6, #021b79) !important;
+}
+
+.bg-green-gradient {
+    background: linear-gradient(270deg, #3499d2 0%, #52e39c 100%) !important;
 }
 
 .bg-grey {
