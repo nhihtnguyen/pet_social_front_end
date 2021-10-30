@@ -28,7 +28,7 @@ const NavItem = ({
 
 const LeftNav = () => {
     return (
-        <div className={`navigation scroll-bar`}>
+        <div className={`navigation`}>
             <div className="container ps-0 pe-0">
                 <div className="nav-content">
                     <div className="nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2 mt-2">
@@ -87,14 +87,6 @@ const LeftNav = () => {
                                     <a>
                                         <i className="font-sm feather-pie-chart me-3 text-grey-500"><FiUser /></i>
                                         <span>Profile</span>
-                                    </a>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/chat" className="nav-content-bttn open-font h-auto pt-2 pb-2">
-                                    <a>
-                                        <i className="font-sm feather-message-square me-3 text-grey-500"><FiMessageSquare /></i>
-                                        <span>Chat</span><span className="circle-count bg-warning mt-0">23</span>
                                     </a>
                                 </Link>
                             </li>

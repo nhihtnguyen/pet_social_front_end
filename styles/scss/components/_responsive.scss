@@ -1,0 +1,15 @@
+@media (max-width: 1600px) {
+    .display5-size {
+        font-size: 60px !important;
+    }
+    .main-content .middle-sidebar-bottom .sidebar-right {
+        visibility: visible;
+        opacity: 1;
+    }
+    .main-content .middle-sidebar-bottom .middle-sidebar-left {
+        width: 100%;
+    }
+    .main-content {
+        padding-right: 0;
+    }
+}
