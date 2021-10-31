@@ -12,7 +12,7 @@
 		transition: all 0.25s;
 	}
 	&:not(.right-chat-active) {
-		padding-right: 0;
+		padding-right: 0.5rem;
 	}
 	&.menu-active {
 		padding-left: 90px;

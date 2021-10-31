@@ -6,7 +6,9 @@ import '../styles/globals.scss';
 function MyApp({ Component, pageProps }) {
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <div className='color-theme-blue mont-font loaded'>
+        <Component {...pageProps} />
+      </div>
     </Provider>
   );
 }

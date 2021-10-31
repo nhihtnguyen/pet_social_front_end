@@ -85,7 +85,7 @@ const Explore = () => {
         <div>
             <Header />
             <LeftNav />
-            <div className="main-content right-chat-active">
+            <div className="main-content">
                 <div className="middle-sidebar-bottom">
                     <div className="middle-sidebar-left pe-0">
                         <div className="row">

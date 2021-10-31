@@ -1,52 +1,40 @@
 import Link from 'next/link';
 import { Navbar } from 'react-bootstrap';
-import { FiGithub, FiSearch } from 'react-icons/fi';
+import { FiGithub, FiSearch, FiMessageCircle } from 'react-icons/fi';
 import styles from './Header.module.scss';
 
 const Header = () => {
     return (
-        <Navbar
-            fixed='top'
-            style={{
-                boxShadow: '0 0.5rem 1rem rgb(0 0 0 / 3%) !important',
-                height: 96,
-            }}
-        >
-            <Navbar.Brand style={{
-                width: 280,
-                lineHeight: 90,
-                marginLeft: 10,
-                color: '#0055FF',
-            }}>
+        <div className="nav-header bg-white shadow-xs border-0">
+            <div className="nav-top">
                 <Link href="/">
                     <a>
-                        <FiGithub style={{
-                            marginRight: '1rem',
-                            fontSize: 44,
-                        }}></FiGithub>
-                        <span style={{
-                            fontFamily: "'Fredoka One', cursive",
-                            textDecoration: 'none',
-                            fontWeight: 600,
-                            display: 'inline-block',
-                            fontSize: 32,
-                            lineHeight: 90,
-                            color: '#0055FF',
-                        }}>
-                            Pet's friend
+
+                        <span className="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">
+                            <i className="display2-size me-3 ms-0">
+                                <FiGithub />
+                            </i>
+                            Pet's Friend
                         </span>
+
                     </a>
                 </Link>
-            </Navbar.Brand>
+
+            </div>
 
             <form action="#" className="float-left header-search ms-3">
-                <div className={`${styles.search} mb-0 icon-input`}>
-                    <FiSearch />
+                <div className="form-group mb-0 icon-input">
+                    <i className="font-sm text-grey-400"><FiSearch /></i>
                     <input type="text" placeholder="Start typing to search.." className="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg" />
                 </div>
             </form>
-        </Navbar >
-    )
+
+
+
+
+
+        </div>
+    );
 };
 
 export default Header;
