@@ -9,7 +9,6 @@ const Header = () => {
             <div className="nav-top">
                 <Link href="/">
                     <a>
-
                         <span className="d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0">
                             <i className="display2-size me-3 ms-0">
                                 <FiGithub />
