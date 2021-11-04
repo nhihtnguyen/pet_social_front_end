@@ -11,6 +11,11 @@ import {
     ListGroup
 } from 'react-bootstrap'
 
+import EventCard from '../../components/eventcard/EventCard';
+import NotificationBanner from '../../components/notificationbanner/NotificationBanner';
+import Carousel from '../../components/carousel/Carousel';
+import ItemDetail from '../../components/itemdetail/ItemDetail';
+
 const Todo = () => {
     const dispatch = useAppDispatch();
     const todoData = useAppSelector(todoSelector);
@@ -32,6 +37,10 @@ const Todo = () => {
     return (
         <>
             <h1 align='center' style={{ margin: 50 }}>Todo list</h1>
+            <EventCard />
+            <NotificationBanner />
+            <Carousel />
+            <ItemDetail />
             <div style={{ display: 'flex' }}>
                 {todoData.isLoading
                     ? <h5>Loading...</h5>
