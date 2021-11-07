@@ -1,10 +1,21 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { todoActions, todoSelector } from "../../features/todo/todoSlice";
-import { Button, Form, InputGroup, ListGroup } from "react-bootstrap";
-import ItemCard from "../../components/itemcard/ItemCard";
-import UserCard from "../../components/usercard/UserCard";
-import ProfileBackground from "../../components/profilebackground/ProfileBackground";
+import { useEffect, useState } from 'react';
+import {
+    useAppDispatch,
+    useAppSelector,
+} from '../../app/hooks';
+import { todoActions, todoSelector } from '../../features/todo/todoSlice';
+import {
+    Button,
+    Form,
+    InputGroup,
+    ListGroup
+} from 'react-bootstrap'
+
+import EventCard from '../../components/eventcard/EventCard';
+import NotificationBanner from '../../components/notificationbanner/NotificationBanner';
+import Carousel from '../../components/carousel/Carousel';
+import ItemDetail from '../../components/itemdetail/ItemDetail';
+
 const Todo = () => {
   const dispatch = useAppDispatch();
   const todoData = useAppSelector(todoSelector);
@@ -13,6 +24,7 @@ const Todo = () => {
   useEffect(() => {
     dispatch(todoActions.fetchAll());
   }, []);
+
 
   const handleAdd = () => {
     dispatch(
@@ -27,11 +39,6 @@ const Todo = () => {
   };
   return (
     <>
-      <ProfileBackground />
-      <hr />
-      <ItemCard />
-      <hr />
-      <UserCard />
       <h1 align="center" style={{ margin: 50 }}>
         Todo list
       </h1>
@@ -93,6 +100,5 @@ const Todo = () => {
       </div>
     </>
   );
-};
 
 export default Todo;
