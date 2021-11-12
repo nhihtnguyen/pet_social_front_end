@@ -52,25 +52,25 @@ const content = [
         imageUrl: 'user.png',
         name: 'Aliqa Macale',
         email: 'support@gmail.com',
-        bgImage: 'product.png',
+        bgImage: 'https://picsum.photos/200/300',
     },
     {
         imageUrl: 'user.png',
         name: 'Surfiya Zakir',
         email: 'support@gmail.com',
-        bgImage: 'product.png',
+        bgImage: 'https://picsum.photos/200/300',
     },
     {
         imageUrl: 'user.png',
         name: 'Aliqa Macale',
         email: 'support@gmail.com',
-        bgImage: 'product.png',
+        bgImage: 'https://picsum.photos/500/300',
     },
     {
         imageUrl: 'user.png',
         name: 'Surfiya Zakir',
         email: 'support@gmail.com',
-        bgImage: 'product.png',
+        bgImage: 'https://picsum.photos/400/600',
     },
 
 ]

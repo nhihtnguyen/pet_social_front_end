@@ -31,12 +31,17 @@ const Explore = () => {
                             <div className="col-xl-12">
                                 <PageTitle title="For you" />
                                 <div className="row ps-2 pe-1 justify-content-center">
+                                    <section style={{
+                                        columnWidth: 236,
+                                        columnGap: 5,
+                                        padding: 5,
+                                    }}>
+                                        {postData?.data.map((value, index) =>
 
-                                    {postData?.data.map((value, index) =>
-                                        <div key={index} className="col-md-auto col-xss-6 pe-2 ps-2" style={{ padding: '0.5rem' }}>
                                             <Postcard key={index} index={index} value={value} />
-                                        </div>
-                                    )}
+
+                                        )}
+                                    </section>
                                 </div>
                             </div>
                         </div>
