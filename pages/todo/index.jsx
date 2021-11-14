@@ -1,20 +1,23 @@
 import { useEffect, useState } from 'react';
 import {
-    useAppDispatch,
-    useAppSelector,
+  useAppDispatch,
+  useAppSelector,
 } from '../../app/hooks';
 import { todoActions, todoSelector } from '../../features/todo/todoSlice';
 import {
-    Button,
-    Form,
-    InputGroup,
-    ListGroup
+  Button,
+  Form,
+  InputGroup,
+  ListGroup
 } from 'react-bootstrap'
 
 import EventCard from '../../components/eventcard/EventCard';
 import NotificationBanner from '../../components/notificationbanner/NotificationBanner';
 import Carousel from '../../components/carousel/Carousel';
 import ItemDetail from '../../components/itemdetail/ItemDetail';
+import { Input } from '../../components/controls';
+import { FiSearch } from 'react-icons/fi';
+import Postcard from '../../components/postcard/Postcard';
 
 const Todo = () => {
   const dispatch = useAppDispatch();
@@ -39,6 +42,12 @@ const Todo = () => {
   };
   return (
     <>
+      <Input
+        type='text'
+        placeholder='Your name...'
+        name=''
+        startIcon={<FiSearch />}
+      />
       <h1 align="center" style={{ margin: 50 }}>
         Todo list
       </h1>
@@ -100,5 +109,5 @@ const Todo = () => {
       </div>
     </>
   );
-
+}
 export default Todo;

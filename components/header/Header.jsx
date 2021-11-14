@@ -23,7 +23,7 @@ const Header = () => {
 
             <form action="#" className="float-left header-search ms-3">
                 <div className="form-group mb-0 icon-input">
-                    <i className="font-sm text-grey-400"><FiSearch /></i>
+                    <span className="font-sm text-grey-400"><FiSearch /></span>
                     <input type="text" placeholder="Start typing to search.." className="bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg" />
                 </div>
             </form>
