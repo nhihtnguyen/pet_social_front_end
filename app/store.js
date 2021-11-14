@@ -15,5 +15,4 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
 });
-
 sagaMiddleware.run(rootSaga);

@@ -35,5 +35,5 @@ function* handleUpload(data) {
   }
 }
 export default function* postSaga() {
-  yield all([watchFetchFlow()]);
+  yield all([watchFetchFlow(), watchEditFlow()]);
 }

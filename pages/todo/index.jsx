@@ -1,26 +1,15 @@
-<<<<<<< Updated upstream
 import { useEffect, useState } from 'react';
 import {
-    useAppDispatch,
-    useAppSelector,
+  useAppDispatch,
+  useAppSelector,
 } from '../../app/hooks';
 import { todoActions, todoSelector } from '../../features/todo/todoSlice';
 import {
-    Button,
-    Form,
-    InputGroup,
-    ListGroup
+  Button,
+  Form,
+  InputGroup,
+  ListGroup
 } from 'react-bootstrap'
-
-import EventCard from '../../components/eventcard/EventCard';
-import NotificationBanner from '../../components/notificationbanner/NotificationBanner';
-import Carousel from '../../components/carousel/Carousel';
-import ItemDetail from '../../components/itemdetail/ItemDetail';
-=======
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { todoActions, todoSelector } from "../../features/todo/todoSlice";
-import { Button, Form, InputGroup, ListGroup } from "react-bootstrap";
 
 import EventCard from "../../components/eventcard/EventCard";
 import NotificationBanner from "../../components/notificationbanner/NotificationBanner";
@@ -30,7 +19,6 @@ import { Input } from "../../components/controls";
 import { FiSearch } from "react-icons/fi";
 import Postcard from "../../components/postcard/Postcard";
 import UploadImage from "../../components/uploadimage/UploadImage";
->>>>>>> Stashed changes
 
 const Todo = () => {
   const dispatch = useAppDispatch();
@@ -55,9 +43,9 @@ const Todo = () => {
   return (
     <>
       <Input
-        type="text"
-        placeholder="Your name..."
-        name=""
+        type='text'
+        placeholder='Your name...'
+        name=''
         startIcon={<FiSearch />}
       />
       <h1 align="center" style={{ margin: 50 }}>
@@ -122,9 +110,6 @@ const Todo = () => {
       </div>
     </>
   );
-<<<<<<< Updated upstream
-
-=======
 };
->>>>>>> Stashed changes
+
 export default Todo;
