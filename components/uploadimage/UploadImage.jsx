@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { FiArrowUp, FiX } from "react-icons/fi";
 import { useState } from "react";
 const UploadImage = () => {
@@ -16,6 +16,7 @@ const UploadImage = () => {
   const handleClose = () => {
     setImageChossen();
   };
+  const handleUpload = () => {};
   return (
     <div>
       <Card className="w880 ">
@@ -41,6 +42,21 @@ const UploadImage = () => {
                 <FiArrowUp className="i-color" />
               </div>
             )}
+          </div>
+          <div style={{ position: "relative" }}>
+            <Button
+              style={{
+                position: "absolute",
+                bottom: "0",
+                left: "30px",
+                padding: "0 1.5rem",
+              }}
+              variant="primary"
+              size="lg"
+              onClick={handleUpload}
+            >
+              Post
+            </Button>{" "}
           </div>
         </Card.Body>
       </Card>
