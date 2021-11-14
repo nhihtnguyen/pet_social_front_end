@@ -1,7 +1,19 @@
 import { Card, Button } from "react-bootstrap";
 import { FiArrowUp, FiX } from "react-icons/fi";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  editPostActions,
+  editPostSelector,
+} from "../../features/post/editPostSlice";
+import { useEffect } from "react";
+
 const UploadImage = () => {
+  const dispatch = useAppDispatch();
+  const editPostData = useAppSelector(editPostSelector);
+
+  useEffect(() => {}, []);
+
   const [ImageChossen, setImageChossen] = useState("");
   const handleChange = (e) => {
     let file = e.target.files[0];
@@ -16,7 +28,9 @@ const UploadImage = () => {
   const handleClose = () => {
     setImageChossen();
   };
-  const handleUpload = () => {};
+  const handleUpload = () => {
+    dispatch(editPostActions.fetch, { image: ImageChossen });
+  };
   return (
     <div>
       <Card className="w880 ">
