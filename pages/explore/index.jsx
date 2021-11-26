@@ -3,6 +3,7 @@ import Header from '../../components/header/Header';
 import LeftNav from '../../components/leftnav/LeftNav';
 import Postcard from '../../components/postcard/Postcard';
 import PageTitle from '../../components/pagetitle/PageTitle';
+import FloatingButton from '../../components/floatingbutton/FloatingButton';
 import {
     useAppDispatch,
     useAppSelector,
@@ -11,7 +12,7 @@ import { postActions, postSelector } from '../../features/post/postSlice';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { FiUpload } from 'react-icons/fi';
-
+import { Spinner } from 'react-bootstrap';
 
 const Explore = () => {
     const dispatch = useAppDispatch();
@@ -20,6 +21,12 @@ const Explore = () => {
     useEffect(() => {
         dispatch(postActions.fetch());
     }, []);
+
+    useEffect(() => {
+        if (postData.isFailed) {
+            // Log, Alert...
+        }
+    }, [postData])
 
     return (
         <div>
@@ -30,18 +37,7 @@ const Explore = () => {
                     <div className="middle-sidebar-left pe-0">
                         <div className="row">
                             <div className="col-xl-12">
-                                <PageTitle title="For you" />
-                                <Link href='/create'>
-                                    <a style={{
-                                        position: 'absolute',
-                                        right: 0,
-                                        top: 0,
-
-                                    }}>
-                                        dsdshj
-                                        <FiUpload />
-                                    </a>
-                                </Link>
+                                <FloatingButton />
 
                                 <div className="row ps-2 pe-1 justify-content-center">
                                     <section style={{
@@ -49,11 +45,15 @@ const Explore = () => {
                                         columnGap: 5,
                                         padding: 5,
                                     }}>
-                                        {postData?.data.map((value, index) =>
+                                        {postData.isLoading
+                                            ? <Spinner animation="border" role="status">
+                                                <span className="visually-hidden">Loading...</span>
+                                            </Spinner>
+                                            : postData?.data?.map((value, index) =>
 
-                                            <Postcard key={index} index={index} value={value} />
+                                                <Postcard key={index} index={index} value={value} />
 
-                                        )}
+                                            )}
                                     </section>
                                 </div>
                             </div>
