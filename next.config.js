@@ -7,6 +7,6 @@ module.exports = {
   },
   images: {
 
-    domains: ['via.placeholder.com', 'placeholder.com', 'picsum.photos']
+    domains: ['via.placeholder.com', 'placeholder.com', 'picsum.photos', 'res.cloudinary.com']
   }
 }

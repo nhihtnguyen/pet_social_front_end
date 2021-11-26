@@ -9,7 +9,8 @@ import {
 } from '../../app/hooks';
 import { postActions, postSelector } from '../../features/post/postSlice';
 import { useEffect } from 'react';
-
+import Link from 'next/link';
+import { FiUpload } from 'react-icons/fi';
 
 
 const Explore = () => {
@@ -30,6 +31,18 @@ const Explore = () => {
                         <div className="row">
                             <div className="col-xl-12">
                                 <PageTitle title="For you" />
+                                <Link href='/create'>
+                                    <a style={{
+                                        position: 'absolute',
+                                        right: 0,
+                                        top: 0,
+
+                                    }}>
+                                        dsdshj
+                                        <FiUpload />
+                                    </a>
+                                </Link>
+
                                 <div className="row ps-2 pe-1 justify-content-center">
                                     <section style={{
                                         columnWidth: 236,

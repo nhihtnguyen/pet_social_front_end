@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 const content = [
     {
@@ -75,8 +76,23 @@ const content = [
 
 ]
 
+
 export const getPosts = (query) => {
-    return content;
+    return axios.get('http://localhost:3001/post').then(res => {
+        return res.data
+    }).catch(err => {
+        //
+    })
+};
+
+export const createPost = (data) => {
+    return axios.post('http://localhost:3001/post',
+        data,
+        { headers: { "Content-Type": "multipart/form-data" } }).then(res => {
+            return res.data
+        }).catch(err => {
+            //
+        })
 };
 
 export default getPosts;
