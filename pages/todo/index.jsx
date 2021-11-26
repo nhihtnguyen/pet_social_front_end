@@ -11,13 +11,14 @@ import {
   ListGroup
 } from 'react-bootstrap'
 
-import EventCard from '../../components/eventcard/EventCard';
-import NotificationBanner from '../../components/notificationbanner/NotificationBanner';
-import Carousel from '../../components/carousel/Carousel';
-import ItemDetail from '../../components/itemdetail/ItemDetail';
-import { Input } from '../../components/controls';
-import { FiSearch } from 'react-icons/fi';
-import Postcard from '../../components/postcard/Postcard';
+import EventCard from "../../components/eventcard/EventCard";
+import NotificationBanner from "../../components/notificationbanner/NotificationBanner";
+import Carousel from "../../components/carousel/Carousel";
+import ItemDetail from "../../components/itemdetail/ItemDetail";
+import { Input } from "../../components/controls";
+import { FiSearch } from "react-icons/fi";
+import Postcard from "../../components/postcard/Postcard";
+import UploadImage from "../../components/uploadimage/UploadImage";
 
 const Todo = () => {
   const dispatch = useAppDispatch();
@@ -27,7 +28,6 @@ const Todo = () => {
   useEffect(() => {
     dispatch(todoActions.fetchAll());
   }, []);
-
 
   const handleAdd = () => {
     dispatch(
@@ -51,6 +51,7 @@ const Todo = () => {
       <h1 align="center" style={{ margin: 50 }}>
         Todo list
       </h1>
+      <UploadImage />
       <div style={{ display: "flex" }}>
         {todoData.isLoading ? (
           <h5>Loading...</h5>
@@ -109,5 +110,6 @@ const Todo = () => {
       </div>
     </>
   );
-}
+};
+
 export default Todo;

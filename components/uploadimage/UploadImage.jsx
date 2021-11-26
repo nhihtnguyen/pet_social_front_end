@@ -95,6 +95,7 @@ const UploadImage = () => {
 			</Card>
 		</div>
 	);
+
 };
 
 export default UploadImage;

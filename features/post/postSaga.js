@@ -3,6 +3,7 @@ import { postActions as actions } from "./postSlice";
 import { editPostActions } from "./editPostSlice";
 import { getPosts, createPost } from "./postAPI";
 
+
 function* handleGetPosts() {
   try {
     let data = yield call(getPosts);
@@ -36,7 +37,6 @@ function* handleUpload(data) {
   }
 }
 export default function* postSaga() {
-  yield all([
-    watchFetchFlow(),
-  ])
-};
+  yield all([watchFetchFlow(), watchEditFlow()]);
+}
+
