@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useEffect, useState } from 'react';
 import {
     useAppDispatch,
@@ -22,6 +23,13 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { todoActions, todoSelector } from "../../features/todo/todoSlice";
 import { Button, Form, InputGroup, ListGroup } from "react-bootstrap";
 
+=======
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { todoActions, todoSelector } from "../../features/todo/todoSlice";
+import { Button, Form, InputGroup, ListGroup } from "react-bootstrap";
+
+>>>>>>> Stashed changes
 import EventCard from "../../components/eventcard/EventCard";
 import NotificationBanner from "../../components/notificationbanner/NotificationBanner";
 import Carousel from "../../components/carousel/Carousel";
@@ -30,6 +38,9 @@ import { Input } from "../../components/controls";
 import { FiSearch } from "react-icons/fi";
 import Postcard from "../../components/postcard/Postcard";
 import UploadImage from "../../components/uploadimage/UploadImage";
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 const Todo = () => {
@@ -60,7 +71,7 @@ const Todo = () => {
         name=""
         startIcon={<FiSearch />}
       />
-      <h1 align="center" style={{ margin: 50 }}>
+      <h1 align='center' style={{ margin: 50 }}>
         Todo list
       </h1>
       <UploadImage />
@@ -79,10 +90,10 @@ const Todo = () => {
             <ListGroup.Item>
               <InputGroup>
                 <Form.Control
-                  type="text"
+                  type='text'
                   onChange={(e) => setInput(e.target.value)}
                 />
-                <Button variant="primary" onClick={handleAdd}>
+                <Button variant='primary' onClick={handleAdd}>
                   Add
                 </Button>
               </InputGroup>
@@ -96,7 +107,7 @@ const Todo = () => {
                   <InputGroup>
                     <Form.Check
                       checked={todo.status === "done"}
-                      type="checkbox"
+                      type='checkbox'
                       id={`todo-${index}`}
                       onChange={handleChangeStatus(index)}
                       style={{ marginRight: 10 }}
@@ -123,7 +134,11 @@ const Todo = () => {
     </>
   );
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+};
+>>>>>>> Stashed changes
 =======
 };
 >>>>>>> Stashed changes
