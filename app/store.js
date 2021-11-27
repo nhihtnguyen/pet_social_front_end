@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import todoReducer from "../features/todo/todoSlice";
 import postReducer from "../features/post/postSlice";
 import editPostReducer from "../features/post/editPostSlice";
+import marketReducer from '../features/market/marketSlice';
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "./rootSaga";
 
@@ -11,6 +12,7 @@ export const store = configureStore({
     todo: todoReducer,
     post: postReducer,
     edit_post: editPostReducer,
+    market: marketReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),

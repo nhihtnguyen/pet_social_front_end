@@ -1,66 +1,12 @@
 //UploadImage
-.w880{
-    width:880px !important;
+.w880 {
+    width: 880px !important;
 }
 // .d-flex{
 //     display: flex !important;
 //     flex-direction: column !important;
 
 // }
-.i-color{
-    color:#fff;
-    font-size: 1.5rem;
-}
-.file-upload{
-    height:32px;
-    width:32px;
-    border-radius: 100px;
-    position:relative;
-    
-    display:flex;
-    justify-content:center;
-    align-items: center;  
 
-    overflow:hidden;
-    background-color: #0055ff;
-    background-size: 100% 200%;
-    transition: all 1s;
-    color: #FFFFFF;
-    font-size:100px;
-    cursor: pointer;
-
-    input[type='file']{
-        height:200px;
-        width:200px;
-        position:absolute;
-        top:0;
-        left:0;
-        opacity:0;
-    }
-    &:hover{
-        background-color: #003CB2;
-        cursor: pointer;
-    }
-}
-.image-upload{
-    position: relative;
-    width: 340px;
-    height: 510px;
-    background-color:#EFEFEF;
-    border-radius: 8px;
-
-
-    display:flex;
-    justify-content:center;
-    align-items: center; 
-}
-.btn-close{
-    position: absolute; 
-    right: 0; 
-    top: 0; 
-    border:none;
-    cursor: pointer;
-}
-.image-choosen{
-    
+.image-choosen {
 }

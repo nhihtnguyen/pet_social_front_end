@@ -9,7 +9,7 @@ const Postcard = ({ value, index }) => {
             }}
         >
             <div className={`image-container rounded-3`} style={{ width: 236 }}>
-                <Image src={value.media_URL} layout='fill' alt={value.caption} className='image rounded-3' />
+                <Image src={value.media_URL ? value.media_URL : '/'} layout='fill' alt={value.caption} className='image rounded-3' />
             </div>
 
             <div className="card-body d-block w-100 position-absolute bottom-0 text-center">

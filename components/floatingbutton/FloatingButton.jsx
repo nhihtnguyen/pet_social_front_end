@@ -1,26 +1,19 @@
-import { FiPlus } from 'react-icons/fi';
 import styles from './FloatingButton.module.scss';
 import Link from 'next/link';
 
-const FloatingButton = ({ label, icon }) => {
-
-    const handleClick = () => {
-
-    }
-    let buttonStyle = {
-        backgroundImage: `url(${icon})`
-    }
+const FloatingButton = ({ label, icon, onClick, href }) => {
 
     return (
         <div
-            onClick={handleClick}
+            onClick={onClick}
             className={`shadow-xss ${styles.floatingButton}`}>
             {label && <label>{label}</label>}
-            <Link href='/create'>
+            <Link href={href ? href : '#'}>
                 <a
-                    className={`${styles.icon}`}
+                    className={`shadow-xss ${styles.icon}`}
+                    style={{ fontSize: 30 }}
                 >
-                    <FiPlus style={{ fontSize: 30 }} />
+                    {icon}
                 </a>
             </Link>
         </div >

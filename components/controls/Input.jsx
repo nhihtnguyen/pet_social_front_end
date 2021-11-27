@@ -15,6 +15,7 @@ const Input = ({
                 name={name}
                 id={name}
                 type={type}
+                style={style}
                 placeholder={placeholder}
                 className={`bg-grey 
                 border-0 

@@ -1,8 +1,8 @@
 import styles from '../../styles/Explore.module.scss';
+
 import Header from '../../components/header/Header';
 import LeftNav from '../../components/leftnav/LeftNav';
 import Postcard from '../../components/postcard/Postcard';
-import PageTitle from '../../components/pagetitle/PageTitle';
 import FloatingButton from '../../components/floatingbutton/FloatingButton';
 import {
     useAppDispatch,
@@ -11,7 +11,7 @@ import {
 import { postActions, postSelector } from '../../features/post/postSlice';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { FiUpload } from 'react-icons/fi';
+import { FiPlus } from 'react-icons/fi';
 import { Spinner } from 'react-bootstrap';
 
 const Explore = () => {
@@ -37,7 +37,7 @@ const Explore = () => {
                     <div className="middle-sidebar-left pe-0">
                         <div className="row">
                             <div className="col-xl-12">
-                                <FloatingButton />
+                                <FloatingButton icon={<FiPlus />} href={`/create`} />
 
                                 <div className="row ps-2 pe-1 justify-content-center">
                                     <section style={{

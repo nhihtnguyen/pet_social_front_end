@@ -3,7 +3,8 @@
     right: 45px;
     bottom: 45px;
     border-radius: 50%;
-
+    position: fixed;
+    z-index: 100;
     & .icon {
         background-color: #fff;
         height: 45px;
