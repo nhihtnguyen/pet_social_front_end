@@ -1,5 +1,5 @@
-import { Card, Button, Form } from "react-bootstrap";
-import { FiArrowUp, FiX, FiAtSign, FiHash } from "react-icons/fi";
+import { Card, Button, Form, Modal } from "react-bootstrap";
+import { FiArrowUp, FiX, FiAtSign, FiHash, FiCheckSquare } from "react-icons/fi";
 import { FaArrowUp } from 'react-icons/fa';
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -12,6 +12,27 @@ import { useEffect } from "react";
 import Image from 'next/image';
 
 import styles from './UploadImage.module.scss';
+import VerifyImage from "../../components/verify/VerifyImage";
+import DragAndDrop from '../../components/draganddrop/DragAndDrop';
+
+const MIN_CONFIDENCE = 0.55;
+const A_CONFIDENCE = 0.7;
+const STATUS = {
+	allowed: 1,
+	warning: 2,
+	denied: 3,
+}
+
+const checkImageStatus = (res) => {
+	for (let box of res) {
+		if (box.name === 'cat' || box.name === 'dog') {
+			if (box.confidence >= MIN_CONFIDENCE) {
+				return STATUS['allowed'];
+			}
+		}
+	}
+	return ['denied'];
+}
 
 const UploadImage = () => {
 	const dispatch = useAppDispatch();
@@ -23,8 +44,25 @@ const UploadImage = () => {
 	const [file, setFile] = useState('');
 	const [caption, setCaption] = useState('');
 
+	const [show, setShow] = useState(false);
+	const [res, setRes] = useState('');
+
+	const [status, setStatus] = useState('');
+
 	const handleChange = (e) => {
 		let file = e.target.files[0];
+		console.log('sd', file);
+		setFile(file);
+
+		let reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => {
+			setImage(reader.result);
+		};
+	};
+	const handleDrop = (file) => {
+		console.log('sds', file);
+
 		setFile(file);
 
 		let reader = new FileReader();
@@ -34,53 +72,91 @@ const UploadImage = () => {
 		};
 	};
 	const handleClose = () => {
-		setImage();
+		setImage('');
+		setStatus('');
 	};
-	const handleUpload = () => {
+	const handleUpload = async () => {
 		var bodyFormData = new FormData();
 		bodyFormData.append('image', file);
-		bodyFormData.append('caption', 'hello');
+		bodyFormData.append('caption', caption);
 		bodyFormData.append('user_id', 3);
-		axios.post('http://localhost:3001/post',
-			bodyFormData,
+
+		let newForm = new FormData();
+		newForm.append('file', file);
+		newForm.append('model_choice', 'last');
+		newForm.append('result_type', 'json');
+
+		let status = await axios.post('http://localhost:2000/',
+			newForm,
 			{ headers: { "Content-Type": "multipart/form-data" } }).then(res => {
-				return res.data
+				console.log(res.data);
+				return checkImageStatus(res.data);
+				//setRes(res.data);
+
 			}).catch(err => {
 				//
 			})
+		setStatus(status);
+		/*
+				axios.post('http://localhost:3001/post',
+					bodyFormData,
+					{ headers: { "Content-Type": "multipart/form-data" } }).then(res => {
+						return res.data
+					}).catch(err => {
+						//
+					})
+					*/
 		//dispatch(editPostActions.fetch({ data: bodyFormData }));
 	};
 	return (
 		<Card className={`${styles['create-post-card']} shadow-xss rounded-xxl`}>
+			<Modal show={show} onHide={() => setShow(false)}>
+				<VerifyImage res={res} />
+			</Modal>
 			<Card.Body className="d-flex" style={{ margin: 20 }}>
-				<div className={`${styles['image-upload']}`}>
-					{image && (
-						<div className='image-container'>
-							<Image
-								layout='fill'
-								className='image'
-								src={image}
-								alt="image"
-								style={{
-									objectFit: "contain",
-									height: "100%",
-									width: "100%",
-								}}
-							/>
-						</div>
-					)}
-					{image && <FiX onClick={handleClose} className={`${styles['btn-close']}`} />}
-					{!image && (
-						<div className={`${styles['browse-file-container']}`}>
-							<div className={`${styles['button']} mb-3`} style={{ padding: 8 }}>
-								<input type="file" onChange={handleChange} />
-								<FaArrowUp className="i-color" />
+				<DragAndDrop handleDrop={handleDrop}>
+					<div className={`${styles['image-upload']}`}>
+						{image && (
+							<div className='image-container'>
+								<Image
+									layout='fill'
+									className='image'
+									src={image}
+									alt="image"
+									style={{
+										objectFit: "contain",
+										height: "100%",
+										width: "100%",
+									}}
+								/>
 							</div>
-							<h6>Drag and drop or click to upload</h6>
-						</div>
-					)}
-				</div>
-
+						)}
+						{image && <FiX onClick={handleClose} className={`${styles['btn-close']}`} />}
+						{!image && (
+							<div className={`${styles['browse-file-container']}`}>
+								<div className={`${styles['button']} mb-3`} style={{ padding: 8 }}>
+									<input type="file" onChange={handleChange} />
+									<FaArrowUp className="i-color" />
+								</div>
+								<h6>Drag and drop or click to upload</h6>
+							</div>
+						)}
+					</div>
+					{
+						status !== '' &&
+						<h3 style={{
+							position: 'absolute',
+							top: '50%',
+							left: '50%',
+							transform: 'translate(-50%, -50%)',
+							background: 'rgba(0,0,0,0.5)',
+							color: '#fff',
+							padding: 10,
+						}}>
+							{status}
+						</h3>
+					}
+				</DragAndDrop>
 				<div
 					style={{
 						position: 'relative',

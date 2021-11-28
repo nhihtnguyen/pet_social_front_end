@@ -9,7 +9,6 @@ const EditProfile = () => {
     <Fragment>
       <Header />
       <LeftNav />
-      <RightNav />
 
       <div className='main-content bg-lightblue theme-dark-bg right-chat-active'>
         <div className='middle-sidebar-bottom'>

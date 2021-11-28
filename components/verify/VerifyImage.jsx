@@ -1,5 +1,7 @@
 import Link from "next/link";
-const VerifyImage = () => {
+import Image from 'next/image';
+
+const VerifyImage = ({ res }) => {
   return (
     <div className='card w-100 border-0 bg-white shadow-xs p-0 mb-4'>
       <div className='card-body p-4 w-300 bg-current border-0 d-flex rounded-3'>
@@ -15,11 +17,15 @@ const VerifyImage = () => {
         <div className='row justify-content-center'>
           <div className='col-lg-4 text-center'>
             <figure className='avatar ms-auto me-auto mb-0 mt-2 w-100'>
-              <img
-                src='https://picsum.photos/800/600'
-                alt='avater'
-                className='shadow-sm rounded-3 w-100'
-              />
+              <div className={`image-container`}>
+                <Image
+                  layout='fill'
+                  src={res ? res : 'https://picsum.photos/800/600'}
+                  alt='avater'
+                  className='image shadow-sm rounded-3 w-100'
+                />
+              </div>
+
             </figure>
           </div>
         </div>
