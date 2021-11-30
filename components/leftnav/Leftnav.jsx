@@ -36,7 +36,7 @@ const LeftNav = () => {
                         <ul className="mb-1 top-content">
                             <li className="logo d-none d-xl-block d-lg-block"></li>
                             <NavItem
-                                href='/'
+                                href='/explore'
                                 icon={<FiHome />}
                                 className='bg-blue-gradient'>
                                 Home

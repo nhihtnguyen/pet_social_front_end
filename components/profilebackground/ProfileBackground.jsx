@@ -1,27 +1,35 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FiMail, FiMoreHorizontal } from "react-icons/fi";
-const ProfileBackground = () => {
+
+const ProfileBackground = ({ profile }) => {
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
       <div className='card-body h250 p-0 rounded-xxl overflow-hidden m-3'>
-        <img src={"https://picsum.photos/928/250"} alt='avatar' />
+        <div className={`image-container`}>
+          <Image
+            className={`image`}
+            src={profile.background ? profile.background : '/'}
+            alt='background'
+            layout='fill' />
+        </div>
       </div>
       <div className='card-body p-0 position-relative'>
         <figure
-          className='avatar position-absolute w100 z-index-1'
+          className='avatar position-absolute w100 z-index-1 image-container'
           style={{ top: "-40px", left: "30px" }}
         >
-          <img
-            src={"https://picsum.photos/200"}
-            alt='avater'
-            className='float-right p-1 bg-white rounded-circle w-100'
+          <Image
+            layout='fill'
+            src={profile.avatar ? profile.avatar : '/'}
+            alt='avatar'
+            className='image float-right p-1 bg-white rounded-circle w-100 h-100'
           />
         </figure>
         <h4 className='fw-700 font-sm mt-2 mb-lg-5 mb-4 pl-15'>
-          Mohannad Zitoun{" "}
+          {`${profile.first_name} ${profile.last_name} `}
           <span className='fw-500 font-xssss text-grey-500 mt-1 mb-3 d-block'>
-            support@gmail.com
+            {profile.email}
           </span>
         </h4>
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
@@ -45,7 +53,7 @@ const ProfileBackground = () => {
               aria-haspopup='true'
               aria-expanded='false'
             >
-              <i className='font-md tetx-dark'>
+              <i className='font-md text-dark'>
                 <FiMoreHorizontal />
               </i>
             </a>
@@ -101,49 +109,24 @@ const ProfileBackground = () => {
           role='tablist'
         >
           <li className='active list-inline-item me-5'>
-            <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block active'
-              href='#navtabs1'
-              data-toggle='tab'
-            >
-              About
-            </a>
+            <Link href='/profile'>
+              <a
+                className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block active'
+                data-toggle='tab'
+              >
+                About
+              </a>
+            </Link>
           </li>
           <li className='list-inline-item me-5'>
-            <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs2'
-              data-toggle='tab'
-            >
-              Membership
-            </a>
-          </li>
-          <li className='list-inline-item me-5'>
-            <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs3'
-              data-toggle='tab'
-            >
-              Discussion
-            </a>
-          </li>
-          <li className='list-inline-item me-5'>
-            <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs4'
-              data-toggle='tab'
-            >
-              Video
-            </a>
-          </li>
-          <li className='list-inline-item me-5'>
-            <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs3'
-              data-toggle='tab'
-            >
-              Group
-            </a>
+            <Link href='/profile/family'>
+              <a
+                className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
+                data-toggle='tab'
+              >
+                Family
+              </a>
+            </Link>
           </li>
           <li className='list-inline-item me-5'>
             <a
@@ -155,17 +138,18 @@ const ProfileBackground = () => {
             </a>
           </li>
           <li className='list-inline-item me-5'>
-            <a
-              className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs7'
-              data-toggle='tab'
-            >
-              Media
-            </a>
+            <Link href='/profile/posts'>
+              <a
+                className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
+                data-toggle='tab'
+              >
+                Posts
+              </a>
+            </Link>
           </li>
         </ul>
       </div>
-    </div>
+    </div >
   );
 };
 
