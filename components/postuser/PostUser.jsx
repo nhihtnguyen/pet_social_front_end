@@ -1,16 +1,21 @@
 import Link from "next/link";
-import { FiThumbsUp, FiHeart, FiMessageCircle, FiShare2 } from "react-icons/fi";
-const PostUser = () => {
+import Image from 'next/image';
+import { FiThumbsUp, FiHeart, FiMessageCircle, FiShare2, FiMoreHorizontal } from "react-icons/fi";
+import { IoPawOutline } from 'react-icons/io5';
+
+const PostUser = ({ post }) => {
   return (
     <div className='card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3'>
       <div className='card-body p-0 d-flex'>
         <figure className='avatar me-3'>
-          <img
-            src='https://picsum.photos/200'
-            // src={`assets/images/${value.avater}`}
-            alt='avatar'
-            className='shadow-sm rounded-circle w45'
-          />
+          <div className={`image-container shadow-sm rounded-circle w45`}>
+            <Image
+              layout='fill'
+              src={post ? post.media_URL : 'https://picsum.photos/200'}
+              alt='avatar'
+              className='image  shadow-sm rounded-circle w45'
+            />
+          </div>
         </figure>
         <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
           {" "}
@@ -23,15 +28,18 @@ const PostUser = () => {
         </h4>
         <Link href='/defaultvideo'>
           <a className='ms-auto'>
-            <i className='ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss'></i>
+            <i className='ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss'>
+              <FiMoreHorizontal />
+            </i>
           </a>
         </Link>
-      </div>
+      </div >
 
-      <div className='card-body p-0 mb-3 rounded-3 overflow-hidden'>
-        <img
-          //   poster={`assets/images/${value.videoimage}`}
-          //   src={`assets/images/${value.videourl}`}
+      <div className='card-body p-0 mb-3 rounded-3 overflow-hidden image-container'>
+        <Image
+          className={`image`}
+          alt='content'
+          layout='fill'
           src='https://picsum.photos/800/400'
         />
       </div>
@@ -50,10 +58,10 @@ const PostUser = () => {
       <div className='card-body d-flex p-0 mt-3'>
         <Link href='/defaultvideo'>
           <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-3'>
-            <i className='text-white bg-primary-gradient me-1 btn-round-xs font-xss'>
-              <FiThumbsUp />
+            <i className='text-white bg-green-gradient me-1 btn-round-xs font-xss'>
+              <IoPawOutline />
             </i>{" "}
-            <i className='text-white bg-red-gradient me-2 btn-round-xs font-xss'>
+            <i className='text-white bg-mini-gradient me-2 btn-round-xs font-xss'>
               <FiHeart />
             </i>
             2.8K Like
@@ -76,7 +84,7 @@ const PostUser = () => {
           </a>
         </Link>
       </div>
-    </div>
+    </div >
   );
 };
 

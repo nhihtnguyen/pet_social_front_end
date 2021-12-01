@@ -27,7 +27,7 @@ const Profile = () => {
     <Fragment>
       <Header />
       <LeftNav />
-      <FloatingButton />
+
 
       <div className='main-content'>
         <div className='middle-sidebar-bottom'>
@@ -36,8 +36,8 @@ const Profile = () => {
               <div className='col-xl-12 mb-3'>
                 <ProfileBackground profile={myProfile} />
               </div>
-              <div className='col'>
-                <ProfileDetail />
+              <div className='col pe-0'>
+                <PostUser />
               </div>
 
             </div>

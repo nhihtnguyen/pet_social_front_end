@@ -5,17 +5,17 @@
 		-webkit-box-flex: 1;
 		-ms-flex-positive: 1;
 		flex-grow: 1;
-		//padding-top: $nav-logo-height;
+		padding-top: $nav-logo-height;
 		padding-left: $nav-width;
-		//padding-right: $chat-width;
-		padding-top: 80px;
+		padding-right: $chat-width;
+		//padding-top: 80px;
 		-webkit-transition: all 0.25s;
 		-o-transition: all 0.25s;
 		transition: all 0.25s;
 	}
 	&:not(.right-chat-active) {
-		//padding-right: 0.5rem;
-		padding-right: 1rem;
+		padding-right: 0.5rem;
+		//padding-right: 1rem;
 	}
 	&.menu-active {
 		padding-left: 90px;

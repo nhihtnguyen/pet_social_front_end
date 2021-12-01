@@ -14,13 +14,12 @@ import Link from 'next/link';
 import { FiPlus } from 'react-icons/fi';
 import { Spinner } from 'react-bootstrap';
 
-const Explore = () => {
+const Explore = ({ query }) => {
     const dispatch = useAppDispatch();
     const postData = useAppSelector(postSelector);
-
     useEffect(() => {
-        dispatch(postActions.fetch());
-    }, []);
+        dispatch(postActions.fetch(query));
+    }, [query]);
 
     useEffect(() => {
         if (postData.isFailed) {
@@ -65,5 +64,8 @@ const Explore = () => {
         </div >
     )
 };
+Explore.getInitialProps = ({ query }) => {
+    return { query }
+}
 
 export default Explore;

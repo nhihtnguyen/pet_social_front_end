@@ -1,8 +1,6 @@
 import styles from '../../styles/Explore.module.scss';
 import Header from '../../components/header/Header';
 import LeftNav from '../../components/leftnav/LeftNav';
-import PageTitle from '../../components/pagetitle/PageTitle';
-import UploadImage from '../../components/uploadimage/UploadImage';
 import Slide from '../../components/carousel/Carousel';
 import ItemCard from '../../components/itemcard/ItemCard';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
@@ -15,9 +13,9 @@ import {
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json';
 import NFTMarket from '../../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
 import { ethers } from 'ethers'
-//import { create as ipfsHttpClient } from 'ipfs-http-client'
+import { create } from 'ipfs-http-client'
 import Web3Modal from 'web3modal'
-import { Modal } from 'react-bootstrap';
+import { Modal, Spinner } from 'react-bootstrap';
 import ItemDetail from '../../components/itemdetail/ItemDetail';
 
 //const client = ipfsHttpClient({ url: 'https://ipfs.infura.io:5001/api/v0' });
@@ -49,7 +47,9 @@ const Market = () => {
 
 
                                     {arrayItems.isLoading
-                                        ? <h3>Loading...</h3>
+                                        ? <Spinner animation="border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </Spinner>
                                         : arrayItems.data.length < 1
                                             ? <h3>No item</h3>
                                             : arrayItems.data.map((item, index) =>
