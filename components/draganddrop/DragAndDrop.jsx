@@ -42,7 +42,6 @@ const DragAndDrop = (props) => {
     div.addEventListener('dragover', handleDrag)
     div.addEventListener('drop', handleDrop)
     return () => {
-      let div = dropRef.current
       div.removeEventListener('dragenter', handleDragIn)
       div.removeEventListener('dragleave', handleDragOut)
       div.removeEventListener('dragover', handleDrag)

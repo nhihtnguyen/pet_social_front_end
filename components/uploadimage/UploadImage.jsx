@@ -91,7 +91,6 @@ const UploadImage = () => {
 			{ headers: { "Content-Type": "multipart/form-data" } }).then(res => {
 				console.log(res.data);
 				return checkImageStatus(res.data);
-				//setRes(res.data);
 
 			}).catch(err => {
 				//
@@ -123,11 +122,7 @@ const UploadImage = () => {
 									className='image'
 									src={image}
 									alt="image"
-									style={{
-										objectFit: "contain",
-										height: "100%",
-										width: "100%",
-									}}
+
 								/>
 							</div>
 						)}
