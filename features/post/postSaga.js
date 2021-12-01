@@ -4,8 +4,9 @@ import { editPostActions } from "./editPostSlice";
 import { getPosts, createPost } from "./postAPI";
 
 
-function* handleGetPosts() {
+function* handleGetPosts(query) {
   try {
+    console.log('In saga: ', query);
     let data = yield call(getPosts);
     yield put(actions.fetchSuccess(data));
   } catch (error) {
@@ -17,7 +18,7 @@ function* handleGetPosts() {
 function* watchFetchFlow() {
   while (true) {
     const action = yield take(actions.fetch.type);
-    yield call(handleGetPosts);
+    yield call(handleGetPosts, action.payload);
   }
 }
 function* watchEditFlow() {

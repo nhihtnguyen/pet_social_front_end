@@ -11,7 +11,7 @@ export const postSlice = createSlice({
     name: 'post',
     initialState,
     reducers: {
-        fetch(state) {
+        fetch(state, action) {
             state.isLoading = true;
         },
         fetchSuccess(state, action) {
