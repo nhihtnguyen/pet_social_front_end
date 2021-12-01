@@ -13,10 +13,12 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { FiPlus } from 'react-icons/fi';
 import { Spinner } from 'react-bootstrap';
+import { useRouter } from 'next/router';
 
 const Explore = ({ query }) => {
     const dispatch = useAppDispatch();
     const postData = useAppSelector(postSelector);
+    const router = useRouter();
     useEffect(() => {
         dispatch(postActions.fetch(query));
     }, [query]);
@@ -26,6 +28,10 @@ const Explore = ({ query }) => {
             // Log, Alert...
         }
     }, [postData])
+
+    const handleClickPost = (pid) => () => {
+        router.push('/post/' + pid)
+    }
 
     return (
         <div>
@@ -49,9 +55,11 @@ const Explore = ({ query }) => {
                                                 <span className="visually-hidden">Loading...</span>
                                             </Spinner>
                                             : postData?.data?.map((value, index) =>
-
-                                                <Postcard key={index} index={index} value={value} />
-
+                                                <Link href={`/post/${value.id}`} key={index}>
+                                                    <a>
+                                                        <Postcard index={index} value={value} />
+                                                    </a>
+                                                </Link>
                                             )}
                                     </section>
                                 </div>

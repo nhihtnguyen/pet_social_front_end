@@ -8,6 +8,8 @@ import { marketActions, marketSelector } from '../../features/market/marketSlice
 import { useEffect, useState } from 'react';
 import { Modal, Spinner } from 'react-bootstrap';
 import ItemDetail from '../../components/itemdetail/PostDetail';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const postInfo = {
     imageUrl: 'user.png',
@@ -17,11 +19,22 @@ const postInfo = {
 }
 
 const PostDetail = () => {
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const arrayItems = useAppSelector(marketSelector);
+    const { pid } = router.query
 
+    const [post, setPost] = useState({});
     useEffect(() => {
-        dispatch(marketActions.fetchItems());
+        if (pid) {
+            axios.get('http://localhost:3001/posts/' + pid).then(req => {
+                console.log(req.data);
+                setPost(req.data)
+            }).catch(err => {
+                // loggg
+                console.log(err);
+            })
+        }
     }, [])
 
     const [show, setShow] = useState(false);
@@ -39,7 +52,7 @@ const PostDetail = () => {
                         <div className="row">
 
                             <div className="col-xl-12">
-                                <ItemDetail item={postInfo} />
+                                <ItemDetail item={post} />
                             </div>
                         </div>
                     </div>
