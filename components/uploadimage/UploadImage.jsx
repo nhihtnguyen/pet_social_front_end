@@ -3,12 +3,12 @@ import { FiArrowUp, FiX, FiAtSign, FiHash, FiCheckSquare } from "react-icons/fi"
 import { FaArrowUp } from 'react-icons/fa';
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useEffect } from 'react';
 import axios from 'axios';
 import {
 	editPostActions,
 	editPostSelector,
 } from "../../features/post/editPostSlice";
-import { useEffect } from "react";
 import Image from 'next/image';
 
 import styles from './UploadImage.module.scss';
@@ -34,7 +34,7 @@ const checkImageStatus = (res) => {
 	return ['denied'];
 }
 
-const UploadImage = () => {
+const UploadImage = ({ content, onSubmit, isEdit }) => {
 	const dispatch = useAppDispatch();
 	const editPostData = useAppSelector(editPostSelector);
 
@@ -48,6 +48,14 @@ const UploadImage = () => {
 	const [res, setRes] = useState('');
 
 	const [status, setStatus] = useState('');
+
+	useEffect(() => {
+		console.log('conte', content);
+		if (isEdit) {
+			setImage(content.media_URL);
+			setCaption(content.caption);
+		}
+	}, [content])
 
 	const handleChange = (e) => {
 		let file = e.target.files[0];
@@ -107,6 +115,13 @@ const UploadImage = () => {
 					*/
 		//dispatch(editPostActions.fetch({ data: bodyFormData }));
 	};
+	const handleEdit = () => {
+
+	}
+	const handleClickReset = () => {
+		setImage(content.media_URL);
+		setCaption(content.caption);
+	}
 	return (
 		<Card className={`${styles['create-post-card']} shadow-xss rounded-xxl`}>
 			<Modal show={show} onHide={() => setShow(false)}>
@@ -196,20 +211,33 @@ const UploadImage = () => {
 							<FiAtSign /> Mention
 						</div>
 					</div>
-					<Button
-						style={{
-							position: "absolute",
-							bottom: "0",
-							padding: "0.5rem 1.5rem",
-							fontSize: 14,
-							borderRadius: 30,
-						}}
-						variant="primary"
-						size="lg"
-						onClick={handleUpload}
-					>
-						Post
-					</Button>{" "}
+					<div className='position-absolute bottom-0'>
+						<Button
+							style={{
+								padding: "0.5rem 1.5rem",
+								fontSize: 14,
+								borderRadius: 30,
+							}}
+							variant="primary"
+							size="lg"
+							onClick={handleEdit}
+						>
+							Post
+						</Button> {" "}
+						{isEdit && <Button
+							style={{
+								padding: "0.5rem 1.5rem",
+								fontSize: 14,
+								borderRadius: 30,
+							}}
+							variant="secondary"
+							size="lg"
+							onClick={handleClickReset}
+						>
+							Reset
+						</Button>
+						}
+					</div>
 
 				</div>
 			</Card.Body>

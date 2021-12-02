@@ -49,10 +49,12 @@ const PostDetail = () => {
             <div className="main-content">
                 <div className="middle-sidebar-bottom">
                     <div className="middle-sidebar-left pe-0">
-                        <div className="row">
+                        <div className="row w-100">
 
                             <div className="col-xl-12">
-                                <ItemDetail item={post} />
+                                <div className="justify-content-center">
+                                    <ItemDetail item={post} pid={pid} />
+                                </div>
                             </div>
                         </div>
                     </div>

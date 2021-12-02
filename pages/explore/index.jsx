@@ -18,9 +18,9 @@ import { useRouter } from 'next/router';
 const Explore = ({ query }) => {
     const dispatch = useAppDispatch();
     const postData = useAppSelector(postSelector);
-    const router = useRouter();
     useEffect(() => {
         dispatch(postActions.fetch(query));
+        console.log('num');
     }, [query]);
 
     useEffect(() => {
@@ -29,10 +29,6 @@ const Explore = ({ query }) => {
         }
     }, [postData])
 
-    const handleClickPost = (pid) => () => {
-        router.push('/post/' + pid)
-    }
-
     return (
         <div>
             <Header />
@@ -40,28 +36,29 @@ const Explore = ({ query }) => {
             <div className="main-content">
                 <div className="middle-sidebar-bottom">
                     <div className="middle-sidebar-left pe-0">
-                        <div className="row">
+                        <div className="row w-100">
                             <div className="col-xl-12">
                                 <FloatingButton icon={<FiPlus />} href={`/create`} />
 
                                 <div className="row ps-2 pe-1 justify-content-center">
-                                    <section style={{
-                                        columnWidth: 236,
-                                        columnGap: 5,
-                                        padding: 5,
-                                    }}>
-                                        {postData.isLoading
-                                            ? <Spinner animation="border" role="status">
-                                                <span className="visually-hidden">Loading...</span>
-                                            </Spinner>
-                                            : postData?.data?.map((value, index) =>
-                                                <Link href={`/post/${value.id}`} key={index}>
-                                                    <a>
-                                                        <Postcard index={index} value={value} />
-                                                    </a>
-                                                </Link>
+                                    {postData.isLoading
+                                        ? <Spinner animation="border" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </Spinner> : <section style={{
+                                            columnWidth: 236,
+                                            columnGap: 5,
+                                            padding: 5,
+                                        }}>
+
+                                            {postData?.data?.map((value, index) =>
+                                                <Postcard
+                                                    index={index}
+                                                    value={value}
+                                                    href={`post/${value.id}`}
+                                                    key={index} />
                                             )}
-                                    </section>
+                                        </section>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -72,7 +69,7 @@ const Explore = ({ query }) => {
         </div >
     )
 };
-Explore.getInitialProps = ({ query }) => {
+Explore.getInitialProps = async ({ query }) => {
     return { query }
 }
 
