@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const ItemCard = ({ item, onClick, href }) => {
   return (
-    <div className="card w-100 border-0 mt-4">
+    <div className="card w-100 border-0 mt-4" style={{ maxWidth: 300 }}>
       <div className="card-image w-100 p-0 text-center bg-greylight rounded-3 mb-2">
         <a href={href ? href : '#'} onClick={onClick}>
           <div className="image-container">

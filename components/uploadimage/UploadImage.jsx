@@ -23,6 +23,18 @@ const STATUS = {
 	denied: 3,
 }
 
+import { ethers } from 'ethers'
+import Web3Modal from 'web3modal'
+import {
+	nftaddress,
+	nftmarketaddress
+} from '../../config';
+import NFT from '../../artifacts/contracts/NFT.sol/NFT.json';
+import NFTMarket from '../../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
+import { create as ipfsHttpClient } from 'ipfs-http-client';
+//const IpfsHttpClient = require("ipfs-http-client");
+const client = ipfsHttpClient({ url: 'https://ipfs.infura.io:5001/api/v0' });
+
 const checkImageStatus = (res) => {
 	for (let box of res) {
 		if (box.name === 'cat' || box.name === 'dog') {
@@ -40,6 +52,9 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 
 	useEffect(() => { }, []);
 
+
+	const [name, setName] = useState("");
+	const [price, setPrice] = useState("");
 	const [image, setImage] = useState("");
 	const [file, setFile] = useState('');
 	const [caption, setCaption] = useState('');
@@ -48,9 +63,9 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 	const [res, setRes] = useState('');
 
 	const [status, setStatus] = useState('');
+	const [isMint, setIsMint] = useState(false);
 
 	useEffect(() => {
-		console.log('conte', content);
 		if (isEdit) {
 			setImage(content.media_URL);
 			setCaption(content.caption);
@@ -83,6 +98,7 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 		setImage('');
 		setStatus('');
 	};
+
 	const handleUpload = async () => {
 		var bodyFormData = new FormData();
 		bodyFormData.append('image', file);
@@ -115,12 +131,82 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 					*/
 		//dispatch(editPostActions.fetch({ data: bodyFormData }));
 	};
+
 	const handleEdit = () => {
 
 	}
 	const handleClickReset = () => {
 		setImage(content.media_URL);
 		setCaption(content.caption);
+	}
+
+	const [fileUrl, setFileUrl] = useState('');
+
+	const uploadImageIPFS = async () => {
+
+		// Upload image
+		try {
+			console.log('inupload', file);
+			const added = await client.add(
+				file,
+				{
+					progress: (prog) => console.log(`received: ${prog}`)
+				}
+			)
+			const url = `https://ipfs.infura.io/ipfs/${added.path}`
+			setFileUrl(url)
+			return url
+		} catch (error) {
+			console.log('Error uploading file: ', error)
+		}
+	}
+
+	const handleMintAndSell = async () => {
+		// Upload image
+		const fileUrl = await uploadImageIPFS();
+
+		if (!name || !caption || !price || !fileUrl || fileUrl === '') {
+			return
+		}
+
+		// Upload to IPFS
+		const data = JSON.stringify({
+			name, description: caption, image: fileUrl
+		})
+		try {
+			const added = await client.add(data)
+			const url = `https://ipfs.infura.io/ipfs/${added.path}`
+			/* after file is uploaded to IPFS, pass the URL to save it on Polygon */
+			const web3Modal = new Web3Modal()
+			const connection = await web3Modal.connect()
+			const provider = new ethers.providers.Web3Provider(connection)
+			const signer = provider.getSigner()
+
+			// Create the item token
+			let contract = new ethers.Contract(nftaddress, NFT.abi, signer)
+			let transaction = await contract.createToken(url)
+			// After transaction
+			let tx = await transaction.wait()
+			let event = tx.events[0]
+			let value = event.args[2]
+			let tokenId = value.toNumber()
+			const priceParsed = ethers.utils.parseUnits(price, 'ether')
+
+			// List the item for sale on the marketplace
+			contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer)
+			let listingPrice = await contract.getListingPrice()
+			listingPrice = listingPrice.toString()
+
+			transaction = await contract.createMarketItem(nftaddress, tokenId, priceParsed, { value: listingPrice })
+			await transaction.wait();
+		} catch (error) {
+			console.log('Error uploading file: ', error)
+		}
+	}
+
+	const handleMint = async () => {
+
+
 	}
 	return (
 		<Card className={`${styles['create-post-card']} shadow-xss rounded-xxl`}>
@@ -173,6 +259,40 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 						marginLeft: 20,
 						width: '100%'
 					}}>
+					{isMint &&
+						<>
+							<h3>Name</h3>
+
+							<Form.Control
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								as="textarea"
+								rows={1}
+								style={{
+									border: '3px solid #F1F1F1',
+									borderWidth: 3,
+									borderColor: '#F1F1F1',
+									resize: 'none',
+								}}
+								className={`rounded-xxl`}
+							/>
+							<h3>Price</h3>
+
+							<Form.Control
+								value={price}
+								onChange={(e) => setPrice(e.target.value)}
+								as="textarea"
+								rows={1}
+								style={{
+									border: '3px solid #F1F1F1',
+									borderWidth: 3,
+									borderColor: '#F1F1F1',
+									resize: 'none',
+								}}
+								className={`rounded-xxl`}
+							/>
+						</>
+					}
 					<h3>Tell your story</h3>
 					<div className={`rounded-xxl`}
 						style={{
@@ -211,19 +331,37 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 							<FiAtSign /> Mention
 						</div>
 					</div>
-					<div className='position-absolute bottom-0'>
-						<Button
-							style={{
-								padding: "0.5rem 1.5rem",
-								fontSize: 14,
-								borderRadius: 30,
-							}}
-							variant="primary"
-							size="lg"
-							onClick={handleEdit}
-						>
-							Post
-						</Button> {" "}
+					{!isEdit && <Form.Check
+						checked={isMint}
+						onChange={() => setIsMint(!isMint)}
+						label='Create as NFT token (wallet connected require)'
+					/>}
+					<div >
+						{isMint
+							? <Button
+								style={{
+									padding: "0.5rem 1.5rem",
+									fontSize: 14,
+									borderRadius: 30,
+								}}
+								variant="primary"
+								size="lg"
+								onClick={handleMintAndSell}
+							>
+								Create token and Listing to market
+							</Button>
+							: <Button
+								style={{
+									padding: "0.5rem 1.5rem",
+									fontSize: 14,
+									borderRadius: 30,
+								}}
+								variant="primary"
+								size="lg"
+								onClick={handleEdit}
+							>
+								Post
+							</Button>} {" "}
 						{isEdit && <Button
 							style={{
 								padding: "0.5rem 1.5rem",

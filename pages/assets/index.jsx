@@ -19,13 +19,15 @@ import {
 } from '../../config';
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json';
 import NFTMarket from '../../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
+import axios from 'axios';
 
-const Market = () => {
-    const dispatch = useAppDispatch();
-    const arrayItems = useAppSelector(marketSelector);
+const Assets = () => {
+    const [nfts, setNfts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [price, setPrice] = useState('');
 
     useEffect(() => {
-        dispatch(marketActions.fetchItems());
+        loadNFTs();
     }, [])
 
     const [show, setShow] = useState(false);
@@ -33,19 +35,52 @@ const Market = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    const buyNft = async (nft) => {
+    const sellNFT = async (nft) => {
+        const web3Modal = new Web3Modal()
+        const connection = await web3Modal.connect()
+        const provider = new ethers.providers.Web3Provider(connection)
+        const signer = provider.getSigner()
+        let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+        await contract.approve(nftmarketaddress, nft.tokenId);
+        const priceParsed = ethers.utils.parseUnits(price, 'ether');
+
+
+        contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer)
+        let listingPrice = await contract.getListingPrice()
+        listingPrice = listingPrice.toString()
+        const transaction = await contract.createMarketItem(nft.nftContract, nft.tokenId, priceParsed, { value: listingPrice })
+
+        await transaction.wait();
+    }
+    const loadNFTs = async () => {
         const web3Modal = new Web3Modal();
         const connection = await web3Modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
-        const contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
 
-        const price = ethers.utils.parseUnits(nft.price.toString(), 'ether')
+        const marketContract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
+        const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
+        const data = await marketContract.fetchMyNFTs();
 
-        const transaction = await contract.createMarketSale(nftaddress, nft.marketId, {
-            value: price
-        });
-        await transaction.wait();
+        const items = await Promise.all(data.map(async (i) => {
+            const tokenUri = await tokenContract.tokenURI(i.tokenId)
+            const meta = await axios.get(tokenUri)
+            let price = ethers.utils.formatUnits(i.price.toString(), 'ether')
+            let item = {
+                marketId: 0,
+                tokenId: Number(i.tokenId.toNumber()),
+                seller: String(i.seller),
+                owner: String(i.owner),
+                image: String(meta.data.image),
+                name: String(meta.data.name),
+                description: String(meta.data.description),
+                price: Number(price),
+                nftContract: String(i.nftContract)
+            };
+            return item
+        }))
+        setNfts(items);
+        setLoading(false);
     }
 
     return (
@@ -53,7 +88,6 @@ const Market = () => {
             <Header />
             <LeftNav />
             <FloatingButton icon={<FiPlus />} href={`/create`} />
-            <FloatingButton icon={<FiBriefcase />} href={`/assets`} index={1} />
 
             <div className="main-content">
                 <div className="middle-sidebar-bottom">
@@ -62,23 +96,29 @@ const Market = () => {
 
                             <div className="col-xl-12">
                                 <div className="row ps-2 pe-1 justify-content-center">
-                                    <PageTitle title={'Market'} />
+                                    <PageTitle title={'My Assets'} />
 
 
-                                    {arrayItems.isLoading
+                                    {loading
                                         ? <Spinner animation="border" role="status">
                                             <span className="visually-hidden">Loading...</span>
                                         </Spinner>
-                                        : arrayItems.data.length < 1
+                                        : nfts.length < 1
                                             ? <h3>No item</h3>
-                                            : arrayItems.data.map((item, index) =>
+                                            : nfts.map((item, index) =>
                                                 <div className="col-4" key={index}>
                                                     <ItemCard item={item} onClick={handleShow} />
                                                     <Modal size="lg"
                                                         show={show}
                                                         onHide={handleClose}>
 
-                                                        <ItemDetail item={item} onAction={buyNft} />
+                                                        <ItemDetail
+                                                            item={item}
+                                                            onAction={sellNFT}
+                                                            actionName={'sell'}
+                                                            price={price}
+                                                            setPrice={setPrice}
+                                                        />
 
                                                     </Modal>
                                                 </div>
@@ -94,4 +134,4 @@ const Market = () => {
     )
 };
 
-export default Market;
+export default Assets;
