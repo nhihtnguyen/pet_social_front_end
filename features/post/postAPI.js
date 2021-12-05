@@ -78,7 +78,7 @@ const content = [
 
 
 export const getPosts = (query) => {
-    return axios.get('http://localhost:3001/post').then(res => {
+    return axios.get('http://localhost:3001/posts').then(res => {
         return res.data
     }).catch(err => {
         //
@@ -86,7 +86,7 @@ export const getPosts = (query) => {
 };
 
 export const createPost = (data) => {
-    return axios.post('http://localhost:3001/post',
+    return axios.post('http://localhost:3001/posts',
         data,
         { headers: { "Content-Type": "multipart/form-data" } }).then(res => {
             return res.data

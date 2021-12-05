@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 const Edit = () => {
   return (
     <div className='card w-100 border-0 bg-white shadow-xs p-0 mb-4'>

@@ -1,6 +1,6 @@
-import Link from "next/link";
-import Image from "next/image";
-import { FiMail, FiMoreHorizontal } from "react-icons/fi";
+import Link from 'next/link';
+import Image from 'next/image';
+import { FiMail, FiMoreHorizontal } from 'react-icons/fi';
 
 const ProfileBackground = ({ profile }) => {
   return (
@@ -11,13 +11,14 @@ const ProfileBackground = ({ profile }) => {
             className={`image`}
             src={profile.background ? profile.background : '/'}
             alt='background'
-            layout='fill' />
+            layout='fill'
+          />
         </div>
       </div>
       <div className='card-body p-0 position-relative'>
         <figure
           className='avatar position-absolute w100 z-index-1 image-container'
-          style={{ top: "-40px", left: "30px" }}
+          style={{ top: '-40px', left: '30px' }}
         >
           <Image
             layout='fill'
@@ -65,7 +66,7 @@ const ProfileBackground = ({ profile }) => {
             <div className='card-body p-0 d-flex'>
               <i className='feather-bookmark text-grey-500 me-3 font-lg'></i>
               <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0'>
-                Save Link{" "}
+                Save Link{' '}
                 <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
                   Add this to your saved items
                 </span>
@@ -74,7 +75,7 @@ const ProfileBackground = ({ profile }) => {
             <div className='card-body p-0 d-flex mt-2'>
               <i className='feather-alert-circle text-grey-500 me-3 font-lg'></i>
               <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0'>
-                Hide Post{" "}
+                Hide Post{' '}
                 <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
                   Save to your saved items
                 </span>
@@ -83,7 +84,7 @@ const ProfileBackground = ({ profile }) => {
             <div className='card-body p-0 d-flex mt-2'>
               <i className='feather-alert-octagon text-grey-500 me-3 font-lg'></i>
               <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0'>
-                Hide all from Group{" "}
+                Hide all from Group{' '}
                 <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
                   Save to your saved items
                 </span>
@@ -92,7 +93,7 @@ const ProfileBackground = ({ profile }) => {
             <div className='card-body p-0 d-flex mt-2'>
               <i className='feather-lock text-grey-500 me-3 font-lg'></i>
               <h4 className='fw-600 mb-0 text-grey-900 font-xssss mt-0 me-0'>
-                Unfollow Group{" "}
+                Unfollow Group{' '}
                 <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
                   Save to your saved items
                 </span>
@@ -149,7 +150,7 @@ const ProfileBackground = ({ profile }) => {
           </li>
         </ul>
       </div>
-    </div >
+    </div>
   );
 };
 

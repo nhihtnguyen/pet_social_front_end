@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { todoActions, todoSelector } from "../../features/todo/todoSlice";
-import { Button, Form, InputGroup, ListGroup } from "react-bootstrap";
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { todoActions, todoSelector } from '../../features/todo/todoSlice';
+import { Button, Form, InputGroup, ListGroup } from 'react-bootstrap';
 
-import EventCard from "../../components/eventcard/EventCard";
-import NotificationBanner from "../../components/notificationbanner/NotificationBanner";
-import Carousel from "../../components/carousel/Carousel";
-import ItemDetail from "../../components/itemdetail/ItemDetail";
-import { Input } from "../../components/controls";
-import { FiSearch } from "react-icons/fi";
-import Postcard from "../../components/postcard/Postcard";
-import UploadImage from "../../components/uploadimage/UploadImage";
+import EventCard from '../../components/eventcard/EventCard';
+import NotificationBanner from '../../components/notificationbanner/NotificationBanner';
+import Carousel from '../../components/carousel/Carousel';
+import ItemDetail from '../../components/itemdetail/ItemDetail';
+import { Input } from '../../components/controls';
+import { FiSearch } from 'react-icons/fi';
+import Postcard from '../../components/postcard/Postcard';
+import UploadImage from '../../components/uploadimage/UploadImage';
 
 const Todo = () => {
   const dispatch = useAppDispatch();
   const todoData = useAppSelector(todoSelector);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   useEffect(() => {
     dispatch(todoActions.fetchAll());
@@ -25,7 +25,7 @@ const Todo = () => {
     dispatch(
       todoActions.addOne({
         name: input,
-        status: "planned",
+        status: 'planned',
       })
     );
   };
@@ -44,15 +44,15 @@ const Todo = () => {
         Todo list
       </h1>
       <UploadImage />
-      <div style={{ display: "flex" }}>
+      <div style={{ display: 'flex' }}>
         {todoData.isLoading ? (
           <h5>Loading...</h5>
         ) : (
           <ListGroup
             style={{
-              margin: "auto",
+              margin: 'auto',
               width: 500,
-              overflow: "auto",
+              overflow: 'auto',
               maxHeight: 300,
             }}
           >
@@ -71,24 +71,24 @@ const Todo = () => {
               .map((todo, index) => (
                 <ListGroup.Item
                   key={index}
-                  variant={todo.status === "planned" ? "" : "success"}
+                  variant={todo.status === 'planned' ? '' : 'success'}
                 >
                   <InputGroup>
                     <Form.Check
-                      checked={todo.status === "done"}
+                      checked={todo.status === 'done'}
                       type='checkbox'
                       id={`todo-${index}`}
                       onChange={handleChangeStatus(index)}
                       style={{ marginRight: 10 }}
                     />
-                    {todo.status === "planned" ? (
+                    {todo.status === 'planned' ? (
                       <Form.Label htmlFor={`todo-${index}`}>
                         {todo.name}
                       </Form.Label>
                     ) : (
                       <Form.Label
                         htmlFor={`todo-${index}`}
-                        style={{ textDecoration: "line-through" }}
+                        style={{ textDecoration: 'line-through' }}
                       >
                         {todo.name}
                       </Form.Label>

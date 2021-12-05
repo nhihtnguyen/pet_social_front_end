@@ -24,9 +24,10 @@ a {
 
 .image-container {
   width: 100%;
+  position: relative;
 
   > div {
-    position: unset !important;
+    position: relative !important;
   }
   .image {
     object-fit: contain;

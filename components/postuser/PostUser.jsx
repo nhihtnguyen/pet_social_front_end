@@ -1,6 +1,12 @@
-import Link from "next/link";
+import Link from 'next/link';
 import Image from 'next/image';
-import { FiThumbsUp, FiHeart, FiMessageCircle, FiShare2, FiMoreHorizontal } from "react-icons/fi";
+import {
+  FiThumbsUp,
+  FiHeart,
+  FiMessageCircle,
+  FiShare2,
+  FiMoreHorizontal,
+} from 'react-icons/fi';
 import { IoPawOutline } from 'react-icons/io5';
 
 const PostUser = ({ post }) => {
@@ -18,11 +24,11 @@ const PostUser = ({ post }) => {
           </div>
         </figure>
         <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
-          {" "}
+          {' '}
           {/* {value.user}{" "} */}
           Boeen
           <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
-            {" "}
+            {' '}
             {/* {value.time} */}5 hour
           </span>
         </h4>
@@ -33,7 +39,7 @@ const PostUser = ({ post }) => {
             </i>
           </a>
         </Link>
-      </div >
+      </div>
 
       <div className='card-body p-0 mb-3 rounded-3 overflow-hidden image-container'>
         <Image
@@ -45,7 +51,7 @@ const PostUser = ({ post }) => {
       </div>
       <div className='card-body p-0 me-lg-5'>
         <p className='fw-500 text-grey-500 lh-26 font-xssss w-100 mb-0'>
-          {" "}
+          {' '}
           {/* {value.des}{" "} */}
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero
           delectus facere hic iusto consequuntur est sequi quis laborum impedit
@@ -60,7 +66,7 @@ const PostUser = ({ post }) => {
           <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-3'>
             <i className='text-white bg-green-gradient me-1 btn-round-xs font-xss'>
               <IoPawOutline />
-            </i>{" "}
+            </i>{' '}
             <i className='text-white bg-mini-gradient me-2 btn-round-xs font-xss'>
               <FiHeart />
             </i>
@@ -84,7 +90,7 @@ const PostUser = ({ post }) => {
           </a>
         </Link>
       </div>
-    </div >
+    </div>
   );
 };
 

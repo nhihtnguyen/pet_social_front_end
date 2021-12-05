@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 const PetCard = () => {
   return (
     <div className='col-md-6 col-sm-6 pe-2 ps-2'>
@@ -13,7 +13,7 @@ const PetCard = () => {
             style={{ marginTop: `-40px` }}
           >
             <img
-              src={"https://picsum.photos/200"}
+              src={'https://picsum.photos/200'}
               //   src={`assets/images/${value.imageUrl}`}
               alt='avater'
               className='float-right p-1 bg-white rounded-circle w-100 '

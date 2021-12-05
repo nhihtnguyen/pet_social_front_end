@@ -5,7 +5,7 @@ const UserCard = () => {
         <div className='card-body d-block w-100 ps-3 pe-3 pb-4 text-center'>
           <figure className='overflow-hidden avatar ms-auto me-auto mb-0 position-relative w65 z-index-1'>
             <img
-              src={"https://picsum.photos/200"}
+              src={'https://picsum.photos/200'}
               alt='avater'
               className='float-right p-0 bg-white rounded-circle w-100 h-90 shadow-xss'
             />

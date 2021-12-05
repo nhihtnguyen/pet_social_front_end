@@ -1,9 +1,10 @@
-import { Fragment } from "react";
-import Header from "../../components/header/Header";
-import LeftNav from "../../components/leftnav/LeftNav";
-import PageTitle from "../../components/pagetitle/PageTitle";
-import RightNav from "../../components/rightnav/RightNav";
-import EventCard from "../../components/eventcard/EventCard";
+import { Fragment } from 'react';
+import Header from '../../components/header/Header';
+import LeftNav from '../../components/leftnav/LeftNav';
+import PageTitle from '../../components/pagetitle/PageTitle';
+import RightNav from '../../components/rightnav/RightNav';
+import EventCard from '../../components/eventcard/EventCard';
+
 const Event = () => {
   return (
     <Fragment>

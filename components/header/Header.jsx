@@ -1,42 +1,48 @@
-import Link from "next/link";
-import { Navbar } from "react-bootstrap";
-import { FiGithub, FiSearch, FiMessageCircle } from "react-icons/fi";
-import styles from "./Header.module.scss";
+import Link from 'next/link';
+import { Navbar } from 'react-bootstrap';
+import { FiGithub, FiSearch, FiMessageCircle } from 'react-icons/fi';
+import styles from './Header.module.scss';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Typeahead, Menu, MenuItem, TypeaheadMenu, Highlighter } from 'react-bootstrap-typeahead';
+import {
+  Typeahead,
+  Menu,
+  MenuItem,
+  TypeaheadMenu,
+  Highlighter,
+} from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 
 const options = [
   {
     label: 'Alakazam',
-    property: ''
+    property: '',
   },
   {
     label: 'Ralts',
-    property: ''
+    property: '',
   },
   {
     label: 'Lucario',
-    property: ''
+    property: '',
   },
-]
+];
 
 const Header = () => {
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState([]);
-  const router = useRouter()
+  const router = useRouter();
   const handleSubmit = (e) => {
     e.preventDefault();
     if (keyword != '' && keyword) {
       router.push(`/explore?search=${keyword}`);
     }
-  }
+  };
   let timerid;
   return (
     <div
       className='nav-header bg-white shadow-xs border-0'
-      style={{ zIndex: "1000" }}
+      style={{ zIndex: '1000' }}
     >
       <div className='nav-top'>
         <Link href='/'>
@@ -56,17 +62,10 @@ const Header = () => {
           <span className='font-sm text-grey-400' style={{ zIndex: 100 }}>
             <FiSearch />
           </span>
-          {/*<input
-            type='text'
-            placeholder='Start typing to search..'
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            className='bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg'
-          />*/}
           <Typeahead
             minLength={1}
-            id="basic-typeahead-single"
-            labelKey="label"
+            id='basic-typeahead-single'
+            labelKey='label'
             onChange={(selected) => {
               setSelected(selected);
               if (selected) {
@@ -74,7 +73,7 @@ const Header = () => {
               }
             }}
             options={options}
-            placeholder="Start typing to search..."
+            placeholder='Start typing to search...'
             selected={selected}
             onInputChange={(text, e) => setKeyword(text)}
             onKeyDown={(e) => {
@@ -83,29 +82,28 @@ const Header = () => {
                 if (timerid) {
                   clearTimeout(timerid);
                 }
-                timerid = setTimeout(
-                  () => {
-                    handleSubmit(e)
-                  },
-                  300
-                );
+                timerid = setTimeout(() => {
+                  handleSubmit(e);
+                }, 300);
               }
             }}
             inputProps={{
               style: { zIndex: 99 },
-              className: 'bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg'
+              className:
+                'bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg',
             }}
             renderMenu={(results, menuProps, state) => (
-              <Menu {...menuProps} style={{
-                width: '100%',
-                marginTop: 10,
-                borderRadius: 30,
-                zIndex: 98,
-              }}
+              <Menu
+                {...menuProps}
+                style={{
+                  width: '100%',
+                  marginTop: 10,
+                  borderRadius: 30,
+                  zIndex: 98,
+                }}
                 className='bg-grey border-0 lh-32 pt-2 pb-2 ps-5 pe-3 font-xssss fw-500 rounded-xl w350 theme-dark-bg'
               >
                 {results.map((result, index) => (
-
                   <MenuItem option={result} position={index} key={index}>
                     <Highlighter search={state.text}>
                       {result.label}
@@ -114,11 +112,10 @@ const Header = () => {
                 ))}
               </Menu>
             )}
-
           />
         </div>
-      </form >
-    </div >
+      </form>
+    </div>
   );
 };
 
