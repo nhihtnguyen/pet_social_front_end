@@ -1,18 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   isLoading: false,
   isError: false,
+  data: [],
   errorMsg: undefined,
   isSuccess: false,
 };
 
 export const editPostSlice = createSlice({
-  name: "edit_post",
+  name: 'edit_post',
   initialState,
   reducers: {
-    fetch(state, action) {
+    create(state, action) {
       state.isLoading = true;
+    },
+    update(state, action) {
+      state.data = state.data.concat(action.payload);
+    },
+    delete(state, action) {
+      state = state.data.filter((todo) => index !== action.payload);
     },
     fetchSuccess(state, action) {
       state.isLoading = false;
@@ -22,7 +29,7 @@ export const editPostSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.errorMsg = action.payload;
-    },
+    }
   },
 });
 

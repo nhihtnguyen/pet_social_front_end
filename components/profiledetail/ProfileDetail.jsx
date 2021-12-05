@@ -12,7 +12,7 @@ const ProfileDetail = () => {
       <div className='card-body border-top-xs d-flex'>
         <i className='feather-lock text-grey-500 me-3 font-lg'></i>
         <h4 className='fw-700 text-grey-900 font-xssss mt-0'>
-          Private{" "}
+          Private{' '}
           <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
             Whats up, how are you?
           </span>
@@ -22,7 +22,7 @@ const ProfileDetail = () => {
       <div className='card-body d-flex pt-0'>
         <i className='feather-eye text-grey-500 me-3 font-lg'></i>
         <h4 className='fw-700 text-grey-900 font-xssss mt-0'>
-          Visble{" "}
+          Visble{' '}
           <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
             Anyone can find you
           </span>
@@ -31,7 +31,7 @@ const ProfileDetail = () => {
       <div className='card-body d-flex pt-0'>
         <i className='feather-map-pin text-grey-500 me-3 font-lg'></i>
         <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
-          Flodia, Austia{" "}
+          Flodia, Austia{' '}
         </h4>
       </div>
       <div className='card-body d-flex pt-0'>

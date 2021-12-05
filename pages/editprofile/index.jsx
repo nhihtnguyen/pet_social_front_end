@@ -1,9 +1,10 @@
-import { Fragment } from "react";
-import Header from "../../components/header/Header";
-import LeftNav from "../../components/leftnav/LeftNav";
-import RightNav from "../../components/rightnav/RightNav";
-import Edit from "../../components/editprofile/Edit";
-import Link from "next/link";
+import { Fragment } from 'react';
+import Header from '../../components/header/Header';
+import LeftNav from '../../components/leftnav/LeftNav';
+import RightNav from '../../components/rightnav/RightNav';
+import Edit from '../../components/editprofile/Edit';
+import Link from 'next/link';
+
 const EditProfile = () => {
   return (
     <Fragment>

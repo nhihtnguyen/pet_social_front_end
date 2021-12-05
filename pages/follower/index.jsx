@@ -1,9 +1,10 @@
-import { Fragment } from "react";
-import Header from "../../components/header/Header";
-import LeftNav from "../../components/leftnav/LeftNav";
-import PageTitle from "../../components/pagetitle/PageTitle";
-import RightNav from "../../components/rightnav/RightNav";
-import UserCard from "../../components/usercard/UserCard";
+import { Fragment } from 'react';
+import Header from '../../components/header/Header';
+import LeftNav from '../../components/leftnav/LeftNav';
+import PageTitle from '../../components/pagetitle/PageTitle';
+import RightNav from '../../components/rightnav/RightNav';
+import UserCard from '../../components/usercard/UserCard';
+
 const Follower = () => {
   return (
     <Fragment>
