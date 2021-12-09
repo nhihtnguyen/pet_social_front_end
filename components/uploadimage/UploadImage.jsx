@@ -79,6 +79,15 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 
     let result;
     try {
+      result = await axiosClient.post(`localhost:2000`, newForm, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setStatus();
+    } catch (err) {
+      // logging
+    }
+
+    try {
       result = await axiosClient.post(`${serverHost}/posts`, bodyFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -168,25 +177,31 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
     <Card className={`${styles['create-post-card']} shadow-xss rounded-xxl`}>
       <Card.Body className='d-flex' style={{ margin: 20 }}>
         <DragAndDrop handleDrop={handleDrop}>
-          <div className={`${styles['image-upload']}`}>
+          <div
+            className={`${styles['image-upload']} d-flex rounded-xxxl position-relative justify-content-center align-items-center text-align-center`}
+          >
             {image ? (
               <>
                 <div className='image-container'>
                   <Image
                     layout='fill'
-                    className='image'
+                    className='image rounded-xxxxl'
                     src={image}
                     alt='image'
                   />
                 </div>
                 <FiX
                   onClick={handleClose}
-                  className={`${styles['btn-close']}`}
+                  className={`${styles['btn-close']} rounded-circle position-absolute`}
                 />
               </>
             ) : (
-              <div className={`${styles['browse-file-container']}`}>
-                <div className={`${styles['upload-button']} mb-3`}>
+              <div
+                className={`${styles['browse-file-container']}  d-flex flex-column justify-content-center align-items-center`}
+              >
+                <div
+                  className={`${styles['upload-button']} mb-3 d-flex justify-content-center align-items-center position-relative rounded-circle`}
+                >
                   <input type='file' onChange={handleChange} />
                   <FaArrowUp />
                 </div>
@@ -194,30 +209,9 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
               </div>
             )}
           </div>
-          {status !== '' && (
-            <h3
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                background: 'rgba(0,0,0,0.5)',
-                color: '#fff',
-                padding: 10,
-              }}
-            >
-              {status}
-            </h3>
-          )}
         </DragAndDrop>
 
-        <div
-          style={{
-            position: 'relative',
-            marginLeft: 20,
-            width: '100%',
-          }}
-        >
+        <div className={`position-relative w-100 ms-3`}>
           {isMint && (
             <>
               <h3>Name</h3>
@@ -254,7 +248,10 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
               className={`rounded-xxl ${styles['textarea']}`}
             />
 
-            <div style={{}} className={`${styles['action-button']}`}>
+            <div
+              style={{}}
+              className={`${styles['action-button']} position-absolute w-100 left-0 bottom-0`}
+            >
               <FiHash /> Tag
               <FiAtSign /> Mention
             </div>
@@ -266,7 +263,7 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
               label='Create as NFT token (wallet connected require)'
             />
           )}
-          <div>
+          <div className={`mt-3`}>
             {isMint ? (
               <Button onClick={handleMintAndSell}>
                 Create token and Listing to market

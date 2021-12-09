@@ -14,8 +14,8 @@ const myProfile = {
   email: 'tdkhoat@gmail.com',
 };
 
-const Profile = ({query}) => {
-  const {pid} = query;
+const Profile = ({ query }) => {
+  const { pid } = query;
   console.log(pid);
   return (
     <Fragment>
@@ -25,11 +25,11 @@ const Profile = ({query}) => {
       <div className='main-content'>
         <div className='middle-sidebar-bottom'>
           <div className='middle-sidebar-left pe-0'>
-            <div className='row w-100'>
-              <div className='col-xl-12 mb-3 pe-0'>
+            <div className='row w-100 justify-content-center'>
+              <div className='col-12 mb-3 pe-0' style={{ maxWidth: 1000 }}>
                 <ProfileBackground profile={myProfile} />
               </div>
-              <div className='col pe-0'>
+              <div className='col-12 pe-0' style={{ maxWidth: 1000 }}>
                 <ProfileDetail />
               </div>
             </div>

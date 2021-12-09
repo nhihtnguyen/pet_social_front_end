@@ -10,32 +10,22 @@ const Event = () => {
     <Fragment>
       <Header />
       <LeftNav />
-      <RightNav />
 
-      <div className='main-content right-chat-active'>
+      <div className='main-content'>
         <div className='middle-sidebar-bottom'>
           <div className='middle-sidebar-left pe-0'>
-            <div className='row'>
+            <div className='row w-100'>
               <div className='col-xl-12'>
-                <PageTitle title='Follower' />
+                <PageTitle title='Event' />
                 <div className='row ps-2 pe-2'>
                   {/* api get list follow */}
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
+                  {[1, 2, 3, 4, 5, 6, 7].map((value) => {
+                    return (
+                      <div key={value} className='col pe-2 ps-2'>
+                        <EventCard />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

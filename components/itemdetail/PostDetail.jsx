@@ -24,12 +24,12 @@ const PostDetail = ({ item, loading, pid }) => {
   };
   return (
     <>
-      <Card className={`rounded-xxl shadow-xss ${styles['post-card']}`}>
+      <Card className={`p-0 rounded-xxl shadow-xss ${styles['post-card']}`}>
         <Card.Body>
           <Row>
             <Col xs='6'>
               {loading ? (
-                <Placeholder as='div' className={`w-100 h-100 rounded-xxl}`} />
+                <Placeholder as='div' className={`w-100 h-100 rounded-xxxl}`} />
               ) : (
                 <div className='image-container'>
                   <Image
@@ -38,7 +38,7 @@ const PostDetail = ({ item, loading, pid }) => {
                         ? item.media_URL
                         : 'https://picsum.photos/300/500'
                     }
-                    className={`image rounded-xxl`}
+                    className={`image rounded-xxxl`}
                     layout='fill'
                     alt='image'
                   />

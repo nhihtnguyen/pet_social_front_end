@@ -7,12 +7,17 @@ import { Spinner } from 'react-bootstrap';
 import { host as serverHost } from 'config';
 import axiosClient from 'axiosSetup';
 import useSWR, { SWRConfig } from 'swr';
+import Masonry from 'react-masonry-component';
+import styles from 'styles/Explore.module.scss';
 
 const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
 const Content = () => {
   const { data: posts, error } = useSWR(`${serverHost}/posts`, fetcher);
-
+  const masonryOptions = {
+    transitionDuration: 0,
+    fitWidth: true,
+  };
   return (
     <>
       {!posts && !error ? (
@@ -20,22 +25,23 @@ const Content = () => {
           <span className='visually-hidden'>Loading...</span>
         </Spinner>
       ) : (
-        <section
-          style={{
-            columnWidth: 236,
-            columnGap: 5,
-            padding: 5,
-          }}
+        <Masonry
+          className={`${styles.masonry}`}
+          elementType={'ul'}
+          options={masonryOptions}
+          disableImagesLoaded={false}
+          updateOnEachImageLoad={false}
         >
           {posts?.map((value, index) => (
             <Postcard
+              as={'li'}
               key={index}
               index={index}
               value={value}
               href={`post/${value.id}`}
             />
           ))}
-        </section>
+        </Masonry>
       )}
     </>
   );

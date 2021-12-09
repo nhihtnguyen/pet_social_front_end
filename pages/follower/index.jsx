@@ -1,3 +1,4 @@
+import PostUser from 'components/postuser/PostUser';
 import { Fragment } from 'react';
 import Header from '../../components/header/Header';
 import LeftNav from '../../components/leftnav/LeftNav';
@@ -10,32 +11,22 @@ const Follower = () => {
     <Fragment>
       <Header />
       <LeftNav />
-      <RightNav />
 
-      <div className='main-content right-chat-active'>
+      <div className='main-content'>
         <div className='middle-sidebar-bottom'>
           <div className='middle-sidebar-left pe-0'>
-            <div className='row'>
+            <div className='row w-100'>
               <div className='col-xl-12'>
                 <PageTitle title='Follower' />
                 <div className='row ps-2 pe-2'>
                   {/* api get list follow */}
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
-                  <UserCard />
+                  {[1, 2, 3, 4, 5, 6, 7].map((value) => {
+                    return (
+                      <div key={value} className='col-md-3 col-sm-4 pe-2 ps-2'>
+                        <UserCard />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

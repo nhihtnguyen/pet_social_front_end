@@ -68,7 +68,6 @@
     width: 400px !important;
 }
 
-
 .w__12 {
     width: 12.1% !important;
     flex: 0 0 30% !important;
@@ -669,18 +668,23 @@
     line-height: 100px;
     border-radius: 100px;
 }
+.rounded-xxxxxl {
+    border-radius: 2px !important;
+}
+.rounded-xxxxl {
+    border-radius: 4px !important;
+}
 .rounded-xxxl {
-    border-radius: 10px !important;
+    border-radius: 8px !important;
 }
 .rounded-xxl {
-    border-radius: 15px !important;
+    border-radius: 16px !important;
 }
 .rounded-xl {
-    border-radius: 30px !important;
+    border-radius: 32px !important;
 }
 
 .list-style-disc li {
     list-style-type: disc;
     margin-bottom: 5px;
 }
-

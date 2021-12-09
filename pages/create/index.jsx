@@ -15,12 +15,8 @@ const Create = () => {
       <div className='main-content'>
         <div className='middle-sidebar-bottom'>
           <div className='middle-sidebar-left pe-0'>
-            <div className='row w-100'>
-              <div className='col-xl-12'>
-                <div className='row ps-2 pe-1 justify-content-center'>
-                  <UploadImage mint={true} />
-                </div>
-              </div>
+            <div className='row ps-2 pe-1 justify-content-center w-100'>
+              <UploadImage mint={true} />
             </div>
           </div>
         </div>

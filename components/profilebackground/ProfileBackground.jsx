@@ -5,7 +5,7 @@ import { FiMail, FiMoreHorizontal } from 'react-icons/fi';
 const ProfileBackground = ({ profile }) => {
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
-      <div className='card-body h250 p-0 rounded-xxl overflow-hidden m-3'>
+      <div className='card-body h250 p-0 rounded-xxxl overflow-hidden m-3'>
         <div className={`image-container`}>
           <Image
             className={`image`}
@@ -110,7 +110,7 @@ const ProfileBackground = ({ profile }) => {
           role='tablist'
         >
           <li className='active list-inline-item me-5'>
-            <Link href='/profile'>
+            <Link href='/user/1'>
               <a
                 className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block active'
                 data-toggle='tab'
@@ -120,7 +120,7 @@ const ProfileBackground = ({ profile }) => {
             </Link>
           </li>
           <li className='list-inline-item me-5'>
-            <Link href='/profile/family'>
+            <Link href='/user/1/family'>
               <a
                 className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'
@@ -139,7 +139,7 @@ const ProfileBackground = ({ profile }) => {
             </a>
           </li>
           <li className='list-inline-item me-5'>
-            <Link href='/profile/posts'>
+            <Link href='/user/1/posts'>
               <a
                 className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'

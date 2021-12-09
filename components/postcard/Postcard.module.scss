@@ -1,0 +1,6 @@
+.hide {
+    display: none !important;
+}
+.post-card:hover + .hide {
+    display: block !important;
+}
