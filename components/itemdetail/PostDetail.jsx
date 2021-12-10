@@ -29,7 +29,10 @@ const PostDetail = ({ item, loading, pid }) => {
           <Row>
             <Col xs='6'>
               {loading ? (
-                <Placeholder as='div' className={`w-100 h-100 rounded-xxxl}`} />
+                <Placeholder
+                  as='div'
+                  className={`w-100 h-100 rounded-xxxxl}`}
+                />
               ) : (
                 <div className='image-container'>
                   <Image
@@ -38,7 +41,7 @@ const PostDetail = ({ item, loading, pid }) => {
                         ? item.media_URL
                         : 'https://picsum.photos/300/500'
                     }
-                    className={`image rounded-xxxl`}
+                    className={`image rounded-xxxxl`}
                     layout='fill'
                     alt='image'
                   />

@@ -8,7 +8,9 @@ import styles from './UploadImage.module.scss';
 import DragAndDrop from 'components/draganddrop/DragAndDrop';
 import Button from 'components/controls/Button';
 import useSWR, { useSWRConfig } from 'swr';
+import { useRouter } from 'next/router';
 import { host as serverHost } from 'config';
+import { ProgressBar } from 'react-bootstrap';
 
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
@@ -21,12 +23,14 @@ const client = ipfsHttpClient({ url: 'https://ipfs.infura.io:5001/api/v0' });
 
 const UploadImage = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
+  const router = useRouter();
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('');
   const [file, setFile] = useState('');
   const [caption, setCaption] = useState('');
+  const [loaded, setLoaded] = useState(-1);
 
   const [status, setStatus] = useState('');
   const [isMint, setIsMint] = useState(false);
@@ -70,7 +74,7 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
     var bodyFormData = new FormData();
     bodyFormData.append('image', file);
     bodyFormData.append('caption', caption);
-    bodyFormData.append('user_id', 3);
+    bodyFormData.append('user_id', 1);
 
     let newForm = new FormData();
     newForm.append('file', file);
@@ -90,6 +94,13 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
     try {
       result = await axiosClient.post(`${serverHost}/posts`, bodyFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        onUploadProgress: function (progressEvent) {
+          let percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log(percentCompleted);
+          setLoaded(percentCompleted);
+        },
       });
     } catch (err) {
       // logging
@@ -97,6 +108,7 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
     // if result
     console.log('result: ', result);
     mutate('/posts');
+    router.push('/post/' + result.data.id);
   };
 
   const handleEdit = () => {};
@@ -174,108 +186,114 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
   const handleMint = async () => {};
 
   return (
-    <Card className={`${styles['create-post-card']} shadow-xss rounded-xxl`}>
-      <Card.Body className='d-flex' style={{ margin: 20 }}>
-        <DragAndDrop handleDrop={handleDrop}>
-          <div
-            className={`${styles['image-upload']} d-flex rounded-xxxl position-relative justify-content-center align-items-center text-align-center`}
-          >
-            {image ? (
-              <>
-                <div className='image-container'>
-                  <Image
-                    layout='fill'
-                    className='image rounded-xxxxl'
-                    src={image}
-                    alt='image'
-                  />
+    <>
+      <Card className={`${styles['create-post-card']} shadow-xss rounded-xxl`}>
+        <Card.Body className='d-flex' style={{ margin: 20 }}>
+          <DragAndDrop handleDrop={handleDrop}>
+            <div
+              className={`${styles['image-upload']} d-flex rounded-xxxl position-relative justify-content-center align-items-center text-align-center`}
+            >
+              {image ? (
+                <>
+                  <div className='image-container'>
+                    <Image
+                      layout='fill'
+                      className='image rounded-xxxxl'
+                      src={image}
+                      alt='image'
+                    />
+                    <FiX
+                      onClick={handleClose}
+                      className={`${styles['btn-close']} rounded-circle position-absolute`}
+                    />
+                  </div>
+                </>
+              ) : (
+                <div
+                  className={`${styles['browse-file-container']}  d-flex flex-column justify-content-center align-items-center`}
+                >
+                  <div
+                    className={`${styles['upload-button']} mb-3 d-flex justify-content-center align-items-center position-relative rounded-circle`}
+                  >
+                    <input type='file' onChange={handleChange} />
+                    <FaArrowUp />
+                  </div>
+                  <h6>Drag and drop or click to upload</h6>
                 </div>
-                <FiX
-                  onClick={handleClose}
-                  className={`${styles['btn-close']} rounded-circle position-absolute`}
+              )}
+            </div>
+          </DragAndDrop>
+
+          <div className={`position-relative w-100 ms-3`}>
+            {isMint && (
+              <>
+                <h3>Name</h3>
+                <Form.Control
+                  label={''}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  as='textarea'
+                  rows={1}
+                  className={`rounded-xxl ${styles['textarea']}`}
+                />
+                <h3>Price</h3>
+                <Form.Control
+                  label={''}
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  as='textarea'
+                  rows={1}
+                  className={`rounded-xxl ${styles['textarea']}`}
                 />
               </>
-            ) : (
+            )}
+            <h3>Tell your story</h3>
+            <div className={`rounded-xxl ${styles['typing-box']}`}>
+              <Form.Control
+                label={''}
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                as='textarea'
+                rows={5}
+                style={{
+                  borderBottom: '30px solid #F1F1F1 !important',
+                }}
+                className={`rounded-xxl ${styles['textarea']}`}
+              />
+
               <div
-                className={`${styles['browse-file-container']}  d-flex flex-column justify-content-center align-items-center`}
+                style={{}}
+                className={`${styles['action-button']} position-absolute w-100 left-0 bottom-0`}
               >
-                <div
-                  className={`${styles['upload-button']} mb-3 d-flex justify-content-center align-items-center position-relative rounded-circle`}
-                >
-                  <input type='file' onChange={handleChange} />
-                  <FaArrowUp />
-                </div>
-                <h6>Drag and drop or click to upload</h6>
+                <FiHash /> Tag
+                <FiAtSign /> Mention
+              </div>
+            </div>
+            {!isEdit && (
+              <Form.Check
+                checked={isMint}
+                onChange={() => setIsMint(!isMint)}
+                label='Create as NFT token (wallet connected require)'
+              />
+            )}
+            {loaded > 0 ? (
+              <ProgressBar animated now={loaded} />
+            ) : (
+              <div className={`mt-3`}>
+                {isMint ? (
+                  <Button onClick={handleMintAndSell}>
+                    Create token and Listing to market
+                  </Button>
+                ) : (
+                  <Button onClick={handleUpload}>Post</Button>
+                )}{' '}
+                {isEdit && <Button onClick={handleClickReset}>Reset</Button>}
               </div>
             )}
           </div>
-        </DragAndDrop>
-
-        <div className={`position-relative w-100 ms-3`}>
-          {isMint && (
-            <>
-              <h3>Name</h3>
-              <Form.Control
-                label={''}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                as='textarea'
-                rows={1}
-                className={`rounded-xxl ${styles['textarea']}`}
-              />
-              <h3>Price</h3>
-              <Form.Control
-                label={''}
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                as='textarea'
-                rows={1}
-                className={`rounded-xxl ${styles['textarea']}`}
-              />
-            </>
-          )}
-          <h3>Tell your story</h3>
-          <div className={`rounded-xxl ${styles['typing-box']}`}>
-            <Form.Control
-              label={''}
-              value={caption}
-              onChange={(e) => setCaption(e.target.value)}
-              as='textarea'
-              rows={5}
-              style={{
-                borderBottom: '30px solid #F1F1F1 !important',
-              }}
-              className={`rounded-xxl ${styles['textarea']}`}
-            />
-
-            <div
-              style={{}}
-              className={`${styles['action-button']} position-absolute w-100 left-0 bottom-0`}
-            >
-              <FiHash /> Tag
-              <FiAtSign /> Mention
-            </div>
-          </div>
-          {!isEdit && (
-            <Form.Check
-              checked={isMint}
-              onChange={() => setIsMint(!isMint)}
-              label='Create as NFT token (wallet connected require)'
-            />
-          )}
-          <div className={`mt-3`}>
-            {isMint ? (
-              <Button onClick={handleMintAndSell}>
-                Create token and Listing to market
-              </Button>
-            ) : (
-              <Button onClick={handleUpload}>Post</Button>
-            )}{' '}
-            {isEdit && <Button onClick={handleClickReset}>Reset</Button>}
-          </div>
-        </div>
-      </Card.Body>
-    </Card>
+        </Card.Body>
+      </Card>
+    </>
   );
 };
 

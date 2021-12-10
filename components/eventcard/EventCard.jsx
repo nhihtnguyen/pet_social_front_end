@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { FiGithub, FiUser } from 'react-icons/fi';
 import { useState } from 'react';
-import Image from 'next/Image';
+import Image from 'next/image';
 
 const EventCard = () => {
   const [toggle, setToggle] = useState(true);
   return (
     <div
-      className='card shadow-xss p-0 rounded-xxl overflow-hidden border-0 mb-3 mt-3 pb-3 hover-overlay hover-shadow'
+      className='card shadow-xss p-0 rounded-xxl overflow-hidden border-0 hover-overlay hover-shadow'
       style={{ width: 236 }}
       onMouseEnter={() => setToggle(false)}
       onMouseLeave={() => setToggle(true)}

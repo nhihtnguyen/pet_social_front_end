@@ -40,36 +40,16 @@ const Login = () => {
           <div className='card shadow-none border-0 ms-auto me-auto login-card'>
             <div className='card-body rounded-0 text-left'>
               <h2 className='fw-700 display1-size display2-md-size mb-4'>
-                Create <br />
-                your account
+                Change <br />
+                your password
               </h2>
 
               <form>
                 <div className='form-group icon-input mb-3'>
-                  <span className='font-sm text-grey-500 pe-0'>
-                    <FiUser />
-                  </span>
-                  <input
-                    type='text'
-                    className='style2-input ps-5 form-control text-grey-900 font-xsss fw-600'
-                    placeholder='Your Name'
-                  />
-                </div>
-                <div className='form-group icon-input mb-3'>
-                  <span className='font-sm text-grey-500 pe-0'>
-                    <FiMail />
-                  </span>
-                  <input
-                    type='text'
-                    className='style2-input ps-5 form-control text-grey-900 font-xsss fw-600'
-                    placeholder='Your Email Address'
-                  />
-                </div>
-                <div className='form-group icon-input mb-3'>
                   <input
                     type='Password'
                     className='style2-input ps-5 form-control text-grey-900 font-xss ls-3'
-                    placeholder='Password'
+                    placeholder='Old Password'
                   />
                   <span className='font-sm text-grey-500 pe-0'>
                     <FiLock />
@@ -79,7 +59,7 @@ const Login = () => {
                   <input
                     type='Password'
                     className='style2-input ps-5 form-control text-grey-900 font-xss ls-3'
-                    placeholder='Confirm Password'
+                    placeholder='New Password'
                   />
                   <span className='font-sm text-grey-500 pe-0'>
                     <FiLock />
@@ -89,7 +69,7 @@ const Login = () => {
                   <input
                     type='checkbox'
                     className='form-check-input mt-2'
-                    id='exampleCheck2'
+                    id='exampleCheck4'
                   />
                   <label className='form-check-label font-xsss text-grey-500'>
                     Accept Term and Conditions
@@ -99,18 +79,12 @@ const Login = () => {
 
               <div className='col-sm-12 p-0 text-left'>
                 <div className='form-group mb-1'>
-                  <Link href='/register'>
+                  <Link href='/login'>
                     <a className='form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0 '>
-                      Register
+                      Change Password
                     </a>
                   </Link>
                 </div>
-                <h6 className='text-grey-500 font-xsss fw-500 mt-0 mb-0 lh-32'>
-                  Already have account{' '}
-                  <Link href='/login'>
-                    <a className='fw-700 ms-1'>Login</a>
-                  </Link>
-                </h6>
               </div>
             </div>
           </div>

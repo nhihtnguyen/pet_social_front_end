@@ -25,7 +25,7 @@ const LeftNav = () => {
     <div className={`navigation`}>
       <div className='container ps-0 pe-0'>
         <div className='nav-content'>
-          <div className='nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-2 mt-2'>
+          <div className='nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-3 mt-3'>
             <div className='nav-caption fw-600 font-xssss text-grey-500'>
               <span>New </span>Feeds
             </div>
@@ -36,7 +36,7 @@ const LeftNav = () => {
                 icon={<FiHome />}
                 className='bg-blue-gradient'
               >
-                Home
+                Explore
               </NavItem>
               <NavItem
                 href='/event'
@@ -54,17 +54,10 @@ const LeftNav = () => {
               </NavItem>
               <NavItem
                 href='/pet-adoption'
-                icon={<FiUmbrella />}
-                className='bg-mini-gradient'
-              >
-                Pet Adoption
-              </NavItem>
-              <NavItem
-                href='/petcare'
                 icon={<FiShield />}
                 className='bg-green-gradient'
               >
-                Pet Care
+                Pet Adoption
               </NavItem>
             </ul>
           </div>
@@ -90,7 +83,7 @@ const LeftNav = () => {
               </li>
               <li>
                 <Link
-                  href='/profile'
+                  href='/user/1'
                   className='nav-content-bttn open-font h-auto pt-2 pb-2'
                 >
                   <a>

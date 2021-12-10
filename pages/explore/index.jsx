@@ -1,5 +1,3 @@
-import Header from 'components/header/Header';
-import LeftNav from 'components/leftnav/LeftNav';
 import Postcard from 'components/postcard/Postcard';
 import FloatingButton from 'components/floatingbutton/FloatingButton';
 import { FiPlus } from 'react-icons/fi';
@@ -9,6 +7,7 @@ import axiosClient from 'axiosSetup';
 import useSWR, { SWRConfig } from 'swr';
 import Masonry from 'react-masonry-component';
 import styles from 'styles/Explore.module.scss';
+import Layout from 'components/Layout';
 
 const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
@@ -39,6 +38,7 @@ const Content = () => {
               index={index}
               value={value}
               href={`post/${value.id}`}
+              className={`mb-3 me-3 `}
             />
           ))}
         </Masonry>
@@ -49,27 +49,18 @@ const Content = () => {
 
 const Explore = ({ fallback }) => {
   return (
-    <div>
-      <Header />
-      <LeftNav />
-      <div className='main-content'>
-        <div className='middle-sidebar-bottom'>
-          <div className='middle-sidebar-left pe-0'>
-            <div className='row w-100'>
-              <div className='col-xl-12'>
-                <FloatingButton icon={<FiPlus />} href={`/create`} />
-
-                <div className='row ps-2 pe-1 justify-content-center'>
-                  <SWRConfig value={{ fallback }}>
-                    <Content />
-                  </SWRConfig>
-                </div>
-              </div>
-            </div>
+    <Layout>
+      <div className='row w-100'>
+        <div className='col-xl-12'>
+          <FloatingButton icon={<FiPlus />} href={`/create`} />
+          <div className='row ps-2 pe-1 justify-content-center'>
+            <SWRConfig value={{ fallback }}>
+              <Content />
+            </SWRConfig>
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
@@ -91,24 +82,5 @@ export const getStaticProps = async () => {
     },
   };
 };
-/*
-//Static generate
-export const getStaticProps = async () => {
-  let posts = [];
-
-  try {
-    const response = await axiosClient.get(`${serverHost}/posts`);
-    posts = response.data;
-  } catch (error) {
-    console.error(error);
-  }
-
-  return {
-    props: {
-      posts,
-    },
-  };
-};
-*/
 
 export default Explore;

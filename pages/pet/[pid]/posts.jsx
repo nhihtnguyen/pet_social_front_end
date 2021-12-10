@@ -1,5 +1,5 @@
 import Layout from 'components/Layout';
-import ProfileBackground from 'components/profilebackground/ProfileBackground';
+import ProfileBackground from 'components/profilebackground/ProfileBackground2';
 import PostUser from 'components/postuser/PostUser';
 
 const myProfile = {

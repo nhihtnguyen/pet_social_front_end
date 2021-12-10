@@ -1,8 +1,6 @@
 import Layout from 'components/Layout';
-import ProfileBackground from '../../../components/profilebackground/ProfileBackground';
-import ProfileDetail from '../../../components/profiledetail/ProfileDetail';
-import FloatingButton from '../../../components/floatingbutton/FloatingButton';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import ProfileBackground from 'components/profilebackground/ProfileBackground2';
+import ProfileDetail from 'components/profiledetail/ProfileDetail';
 
 const myProfile = {
   first_name: 'Dinh Khoat',

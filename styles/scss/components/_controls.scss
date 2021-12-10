@@ -5,7 +5,8 @@
         span {
             display: flex;
             position: absolute;
-            top: 15px;
+            top: 50%;
+            transform: translateY(-50%);
         }
         input {
             padding-left: 35px;

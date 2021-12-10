@@ -1,26 +1,15 @@
-import Header from 'components/header/Header';
-import LeftNav from 'components/leftnav/LeftNav';
-import { useEffect, useState } from 'react';
-import { Modal, Spinner } from 'react-bootstrap';
 import ItemDetail from 'components/itemdetail/PostDetail';
 import axiosClient from 'axiosSetup';
 import { host as serverHost } from 'config';
+import Layout from 'components/Layout';
 
 const PostDetail = ({ post, pid }) => {
   return (
-    <div>
-      <Header />
-      <LeftNav />
-      <div className='main-content'>
-        <div className='middle-sidebar-bottom'>
-          <div className='middle-sidebar-left pe-0'>
-            <div className='row ps-2 pe-1 justify-content-center w-100'>
-              <ItemDetail item={post} pid={pid} />
-            </div>
-          </div>
-        </div>
+    <Layout>
+      <div className='row ps-3 pe-1 justify-content-center w-100'>
+        <ItemDetail item={post} pid={pid} />
       </div>
-    </div>
+    </Layout>
   );
 };
 

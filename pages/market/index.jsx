@@ -1,6 +1,4 @@
-import styles from '../../styles/Explore.module.scss';
-import Header from '../../components/header/Header';
-import LeftNav from '../../components/leftnav/LeftNav';
+import Layout from 'components/Layout';
 import Slide from '../../components/carousel/Carousel';
 import ItemCard from '../../components/itemcard/ItemCard';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
@@ -57,43 +55,33 @@ const Market = () => {
   };
 
   return (
-    <div>
-      <Header />
-      <LeftNav />
-      <FloatingButton icon={<FiPlus />} href={`/create`} />
-      <FloatingButton icon={<FiBriefcase />} href={`/assets`} index={1} />
-
-      <div className='main-content'>
-        <div className='middle-sidebar-bottom'>
-          <div className='middle-sidebar-left pe-0'>
-            <div className='row w-100'>
-              <div className='col-xl-12'>
-                <div className='row ps-2 pe-1 justify-content-center'>
-                  <PageTitle title={'Market'} />
-
-                  {arrayItems.isLoading ? (
-                    <Spinner animation='border' role='status'>
-                      <span className='visually-hidden'>Loading...</span>
-                    </Spinner>
-                  ) : arrayItems.data.length < 1 ? (
-                    <h3>No item</h3>
-                  ) : (
-                    arrayItems.data.map((item, index) => (
-                      <div className='col-4' key={index}>
-                        <ItemCard item={item} onClick={handleShow} />
-                        <Modal size='lg' show={show} onHide={handleClose}>
-                          <ItemDetail item={item} onAction={buyNft} />
-                        </Modal>
-                      </div>
-                    ))
-                  )}
+    <Layout>
+      <div className='row w-100'>
+        <div className='col-xl-12'>
+          <FloatingButton icon={<FiPlus />} href={`/create`} />
+          <FloatingButton icon={<FiBriefcase />} href={`/assets`} index={1} />
+          <PageTitle title={'Market'} />
+          <div className='row justify-content-center'>
+            {arrayItems.isLoading ? (
+              <Spinner animation='border' role='status'>
+                <span className='visually-hidden'>Loading...</span>
+              </Spinner>
+            ) : arrayItems.data.length < 1 ? (
+              <h3>No item</h3>
+            ) : (
+              arrayItems.data.map((item, index) => (
+                <div className='col-4' key={index}>
+                  <ItemCard item={item} onClick={handleShow} />
+                  <Modal size='lg' show={show} onHide={handleClose}>
+                    <ItemDetail item={item} onAction={buyNft} />
+                  </Modal>
                 </div>
-              </div>
-            </div>
+              ))
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
