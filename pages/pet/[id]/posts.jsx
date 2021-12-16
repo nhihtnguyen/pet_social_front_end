@@ -12,17 +12,19 @@ const myProfile = {
 
 const Profile = () => {
   return (
-    <Layout>
-      <div className='row w-100'>
-        <div className='col-xl-12 mb-3 pe-0'>
-          <ProfileBackground profile={myProfile} />
-        </div>
-        <div className='col pe-0'>
-          <PostUser />
-        </div>
+    <div className='row w-100'>
+      <div className='col-xl-12 mb-3 pe-0'>
+        <ProfileBackground profile={myProfile} />
       </div>
-    </Layout>
+      <div className='col pe-0'>
+        <PostUser />
+      </div>
+    </div>
   );
+};
+
+Profile.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Profile;

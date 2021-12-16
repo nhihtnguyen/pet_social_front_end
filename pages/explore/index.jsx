@@ -5,18 +5,13 @@ import { Spinner } from 'react-bootstrap';
 import { host as serverHost } from 'config';
 import axiosClient from 'axiosSetup';
 import useSWR, { SWRConfig } from 'swr';
-import Masonry from 'react-masonry-component';
-import styles from 'styles/Explore.module.scss';
 import Layout from 'components/Layout';
+import Head from 'next/head';
 
 const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
 const Content = () => {
   const { data: posts, error } = useSWR(`${serverHost}/posts`, fetcher);
-  const masonryOptions = {
-    transitionDuration: 0,
-    fitWidth: true,
-  };
   return (
     <>
       {!posts && !error ? (
@@ -24,12 +19,11 @@ const Content = () => {
           <span className='visually-hidden'>Loading...</span>
         </Spinner>
       ) : (
-        <Masonry
-          className={`${styles.masonry}`}
-          elementType={'ul'}
-          options={masonryOptions}
-          disableImagesLoaded={false}
-          updateOnEachImageLoad={false}
+        <li
+          style={{
+            columnGap: '0',
+            columnWidth: 236,
+          }}
         >
           {posts?.map((value, index) => (
             <Postcard
@@ -38,10 +32,10 @@ const Content = () => {
               index={index}
               value={value}
               href={`post/${value.id}`}
-              className={`mb-3 me-3 `}
+              className={`m-0 mb-3`}
             />
           ))}
-        </Masonry>
+        </li>
       )}
     </>
   );
@@ -49,19 +43,27 @@ const Content = () => {
 
 const Explore = ({ fallback }) => {
   return (
-    <Layout>
+    <>
+      <Head>
+        <title>Explore</title>
+        <meta name='description' content="Show a post's list" />
+        <link rel='icon' href='/favicon.ico' />
+      </Head>
       <div className='row w-100'>
         <div className='col-xl-12'>
           <FloatingButton icon={<FiPlus />} href={`/create`} />
-          <div className='row ps-2 pe-1 justify-content-center'>
+          <div className='row'>
             <SWRConfig value={{ fallback }}>
               <Content />
             </SWRConfig>
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
+};
+Explore.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 export const getStaticProps = async () => {

@@ -4,10 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'styles/globals.scss';
 
 function MyApp({ Component, pageProps }) {
+  const getLayout = Component.getLayout || ((page) => page);
   return (
     <Provider store={store}>
-      <div className='color-theme-blue mont-font loaded'>
-        <Component {...pageProps} />
+      <div className='color-theme-violet mont-font loaded'>
+        {getLayout(<Component {...pageProps} />)}
       </div>
     </Provider>
   );

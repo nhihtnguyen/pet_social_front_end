@@ -5,12 +5,14 @@ import Layout from 'components/Layout';
 
 const PostDetail = ({ post, pid }) => {
   return (
-    <Layout>
-      <div className='row ps-3 pe-1 justify-content-center w-100'>
-        <ItemDetail item={post} pid={pid} />
-      </div>
-    </Layout>
+    <div className='row ms-0 me-1 mb-3 justify-content-center w-100'>
+      <ItemDetail item={post} pid={pid} />
+    </div>
   );
+};
+
+PostDetail.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 export const getStaticProps = async ({ params }) => {

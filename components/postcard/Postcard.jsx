@@ -19,12 +19,14 @@ const Postcard = ({ value, index, as, className }) => {
     >
       <Link href={`/post/${value.id}`}>
         <a>
-          <Card.Img
-            className={`image-container rounded-xxl`}
-            style={{ width: 236 }}
+          <Image
+            className={`rounded-xxl`}
+            width={236}
+            height={300}
             src={value.media_URL || '/'}
             alt={value.media_URL}
           />
+
           {hover && (
             <div
               className={`position-absolute rounded-xxl top-0 w-100 h-100`}
@@ -37,7 +39,7 @@ const Postcard = ({ value, index, as, className }) => {
                 className={`d-flex flex-column w-100 position-absolute bottom-0 text-center`}
               >
                 <figure className='avatar ms-auto me-auto mb-0 position-relative w50 z-index-1'>
-                  <Link href={`/user/`}>
+                  <Link href={`/user/1`}>
                     <a>
                       <div
                         className={`image-container float-right p-0 bg-white rounded-circle shadow-xss`}

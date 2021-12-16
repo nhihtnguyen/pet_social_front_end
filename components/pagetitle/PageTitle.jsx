@@ -1,6 +1,6 @@
 const PageTitle = ({ title }) => {
   return (
-    <div className='card shadow-xss w-100 d-block d-flex border-0 p-4 mb-3 rounded-xxl'>
+    <div className='card shadow-xss w-100 d-block d-flex border-0 p-4 mb-3  rounded-xxl'>
       <h2 className='fw-700 mb-0 mt-0 font-md text-grey-900 d-flex align-items-center'>
         {title}
         <form action='#' className='pt-0 pb-0 ms-auto '>

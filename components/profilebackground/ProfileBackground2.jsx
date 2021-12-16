@@ -9,7 +9,7 @@ const ProfileBackground = ({ profile }) => {
         <div className={`image-container`}>
           <Image
             className={`image`}
-            src={profile.background ? profile.background : '/'}
+            src={profile.background || '/https://picsum.photos/1200/500'}
             alt='background'
             layout='fill'
           />
@@ -20,7 +20,7 @@ const ProfileBackground = ({ profile }) => {
           <div className={`image-container`}>
             <Image
               layout='fill'
-              src='https://picsum.photos/200'
+              src={profile.avatar || 'https://picsum.photos/200'}
               alt='avatar'
               className='image p-1 bg-white rounded-xl w-100'
             />
@@ -28,7 +28,7 @@ const ProfileBackground = ({ profile }) => {
         </figure>
 
         <h4 className='font-xs ls-1 fw-700 text-grey-900'>
-          Surfiya Zakir{' '}
+          {profile.name || 'Name'}
           <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
             @surfiyazakir22
           </span>
@@ -56,7 +56,7 @@ const ProfileBackground = ({ profile }) => {
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
           <Link href='/defaultmember'>
             <a className='d-none d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'>
-              Add Friend
+              Follow
             </a>
           </Link>
           <Link href='/defaultemailbox'>
@@ -161,7 +161,7 @@ const ProfileBackground = ({ profile }) => {
           <li className='list-inline-item me-5'>
             <a
               className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs1'
+              href='.pet/1/follower'
               data-toggle='tab'
             >
               Followers

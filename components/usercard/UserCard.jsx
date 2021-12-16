@@ -24,7 +24,7 @@ const UserCard = () => {
           href='#'
           className='mt-0 btn pt-2 pb-2 ps-3 pe-3 lh-24 ms-1 ls-3 d-inline-block rounded-xl bg-success font-xsssss fw-700 ls-lg text-white'
         >
-          ADD FRIEND
+          FOLLOW
         </a>
       </Card.Body>
     </Card>

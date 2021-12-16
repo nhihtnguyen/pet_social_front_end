@@ -1,35 +1,45 @@
 import Link from 'next/link';
-import { FiMail, FiLock, FiGithub } from 'react-icons/fi';
 import Image from 'next/image';
+import useForm from 'hooks/useForm';
+import { useRouter } from 'next/router';
+import { host as serverHost } from 'config';
+import axiosClient from 'axiosSetup';
+import { LayoutLogin } from 'components/Layout';
+import Backdrop from 'components/backdrop/Backdrop';
+import { useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+import LoginForm from 'components/forms/LoginForm';
 
 const Login = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [validated, setValidated] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    const body = {
+      email: e.currentTarget.username.value,
+      password: e.currentTarget.password.value,
+    };
+
+    try {
+      const response = await axiosClient.post(`${serverHost}/auth/login`, body);
+      console.log(response);
+      if (response.status === 200) {
+        setLoading(false);
+        router.push('/');
+      } else {
+        throw new Error(response.data.msg);
+      }
+    } catch (error) {
+      console.error('An unexpected error happened occurred:', error);
+    }
+  };
+
   return (
-    <div className='main-wrap'>
-      <div className='nav-header bg-transparent shadow-none border-0'>
-        <div className='nav-top w-100'>
-          <Link href='/'>
-            <a>
-              <span className='d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0'>
-                <i className='display1-size me-2 ms-0'>
-                  <FiGithub />
-                </i>
-                Pet's Friend
-              </span>{' '}
-            </a>
-          </Link>
-          <button className='nav-menu me-0 ms-auto' />
-          <Link href='/login'>
-            <a className='header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl'>
-              Login
-            </a>
-          </Link>
-          <Link href='/register'>
-            <a className='header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl'>
-              Register
-            </a>
-          </Link>
-        </div>
-      </div>
+    <>
       <div className='row'>
         <div
           className='col-xl-5 d-none d-xl-block p-0 vh-100 bg-image-cover bg-no-repeat'
@@ -44,52 +54,9 @@ const Login = () => {
                 Login into <br />
                 your account
               </h2>
-              <form>
-                <div className='form-group icon-input mb-3'>
-                  <span className='font-sm text-grey-500 pe-0'>
-                    <FiMail />
-                  </span>
-                  <input
-                    type='text'
-                    className='style2-input ps-5 form-control text-grey-900 font-xsss fw-600'
-                    placeholder='Your Email Address'
-                  />
-                </div>
-                <div className='form-group icon-input mb-1'>
-                  <input
-                    type='Password'
-                    className='style2-input ps-5 form-control text-grey-900 font-xss ls-3'
-                    placeholder='Password'
-                  />
-                  <span className='font-sm text-grey-500 pe-0'>
-                    <FiLock />
-                  </span>
-                </div>
-                <div className='form-check text-left mb-3'>
-                  <input
-                    type='checkbox'
-                    className='form-check-input mt-2'
-                    id='exampleCheck5'
-                  />
-                  <label className='form-check-label font-xssss text-grey-500'>
-                    Remember me
-                  </label>
-                  <Link href='/forgot'>
-                    <a className='fw-600 font-xssss text-grey-700 mt-1 float-right'>
-                      Forgot your Password?
-                    </a>
-                  </Link>
-                </div>
-              </form>
+              <LoginForm onSubmit={handleLogin} validated={validated} />
 
               <div className='col-sm-12 p-0 text-left'>
-                <div className='form-group mb-1'>
-                  <Link href='/login'>
-                    <a className='form-control text-center style2-input text-white fw-600 bg-dark border-0 p-0 '>
-                      Login
-                    </a>
-                  </Link>
-                </div>
                 <h6 className='text-grey-500 font-xsss fw-500 mt-0 mb-0 lh-32'>
                   Dont have account{' '}
                   <Link href='/register'>
@@ -140,8 +107,19 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </div>
+      {loading && (
+        <Backdrop className='justify-content-center align-items-center'>
+          <Spinner className='text-current' animation='border' role='status'>
+            <span className='visually-hidden'>Loading...</span>
+          </Spinner>
+        </Backdrop>
+      )}
+    </>
   );
+};
+
+Login.getLayout = function getLayout(page) {
+  return <LayoutLogin>{page}</LayoutLogin>;
 };
 
 export default Login;

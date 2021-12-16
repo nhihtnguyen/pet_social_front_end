@@ -1,37 +1,29 @@
-import { Component } from 'react';
-import { FiSearch } from 'react-icons/fi';
+import { Form } from 'react-bootstrap';
 
 const Input = ({
-    type,
-    placeholder,
-    startIcon,
-    style,
-    name
+  label,
+  startIcon,
+  endIcon,
+  className,
+  inputClassName,
+  iconClassName,
+  type,
+  style,
+  ...props
 }) => {
-    return (
-        <div className={`form-group mb-0 ${startIcon ? 'icon-input' : ''}`}>
-            {startIcon && <span className="font-sm text-grey-400">{startIcon}</span>}
-            <input
-                name={name}
-                id={name}
-                type={type}
-                style={style}
-                placeholder={placeholder}
-                className={`bg-grey 
-                border-0 
-                lh-32 
-                pt-2 
-                pb-2 
-                ps-5 
-                pe-3 
-                font-xssss 
-                fw-500 
-                rounded-xl 
-                w350 
-                theme-dark-bg`}
-            />
-        </div>
-    )
+  const icon = startIcon ? 'icon-input' : endIcon ? 'icon-right-input' : '';
+  return (
+    <Form.Group className={`${className} ${icon} form-group`} style={style}>
+      {label && <Form.Label>{label}</Form.Label>}
+      {icon && <span className='font-sm text-grey-500 pe-0'>{startIcon}</span>}
+      <Form.Control
+        type={type}
+        className={`${inputClassName} text-grey-900 font-xsss fw-600`}
+        {...props}
+      />
+      <div className='invalid-tooltip font-xsss'>Required</div>
+    </Form.Group>
+  );
 };
 
 export default Input;

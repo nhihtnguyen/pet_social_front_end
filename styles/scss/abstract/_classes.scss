@@ -688,3 +688,10 @@
     list-style-type: disc;
     margin-bottom: 5px;
 }
+
+.position-absolute-center {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -34,11 +34,6 @@ const ProfileBackground = ({ profile }) => {
           </span>
         </h4>
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
-          <Link href='/defaultmember'>
-            <a className='d-none d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'>
-              Add Friend
-            </a>
-          </Link>
           <Link href='/defaultemailbox'>
             <a className='d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
               <i className='font-md'>

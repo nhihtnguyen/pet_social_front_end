@@ -31,16 +31,14 @@ const Edit = ({ query }) => {
     }
   }, [pid]);
   return (
-    <Layout>
-      <div className='row w-100'>
-        <div className='col-xl-12'>
-          <div className='row ps-3 pe-1 justify-content-center'>
-            <UploadImage isEdit={true} content={post} />
-          </div>
-        </div>
-      </div>
-    </Layout>
+    <div className='row ms-0 pe-2 mb-3 justify-content-center w-100'>
+      <UploadImage isEdit={true} content={post} />
+    </div>
   );
+};
+
+Edit.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 Edit.getInitialProps = async ({ query }) => {

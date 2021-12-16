@@ -7,10 +7,61 @@ import { useState } from 'react';
 import styles from './AddPetCard.module.scss';
 import Button from 'components/controls/Button';
 import Layout from 'components/Layout';
+import useSWR, { useSWRConfig } from 'swr';
+import axiosClient from 'axiosSetup';
+import { ProgressBar } from 'react-bootstrap';
+import { host as serverHost } from 'config';
+import { useRouter } from 'next/router';
 
 const AddPetCard = () => {
+  const { mutate } = useSWRConfig();
+  const router = useRouter();
+
+  const [loaded, setLoaded] = useState(-1);
   const [image, setImage] = useState('');
   const [file, setFile] = useState('');
+  const [info, setInfo] = useState({
+    name: '',
+    gender: '',
+    type: '',
+    age: '',
+  });
+
+  const handleChangeInfo = (key) => (e) => {
+    let value;
+    if (key === 'gender') {
+      console.log(e.target.value);
+      value = e.target.value;
+    } else {
+      value = e.target.value;
+    }
+    let temp = { ...info };
+    temp[key] = value;
+    setInfo(temp);
+  };
+
+  const handleSubmit = async () => {
+    console.log(info);
+    let result;
+    try {
+      result = await axiosClient.post(`${serverHost}/pets`, info, {
+        onUploadProgress: function (progressEvent) {
+          let percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          console.log(percentCompleted);
+          setLoaded(percentCompleted);
+        },
+      });
+    } catch (err) {
+      // logging
+    }
+
+    if (result) {
+      console.log('result: ', result);
+      router.push('/pet/' + result.data.id);
+    }
+  };
 
   const handleChange = (e) => {
     let file = e.target.files[0];
@@ -94,6 +145,8 @@ const AddPetCard = () => {
                 <input
                   type='text'
                   className={`${styles['input']} form-control rounded-xxxl`}
+                  value={info.name}
+                  onChange={handleChangeInfo('name')}
                 />
               </div>
             </div>
@@ -103,21 +156,41 @@ const AddPetCard = () => {
                 <label className='mont-font fw-600 font-xsss mb-2'>
                   Gender
                 </label>
-                <input
-                  type='text'
-                  className={`${styles['input']} form-control rounded-xxxl`}
-                />
+                <select
+                  className={`${styles['input']} form-select rounded-xxxl`}
+                  aria-label='gender'
+                  value={info.gender}
+                  onChange={handleChangeInfo('gender')}
+                >
+                  <option value=''>Choose...</option>
+
+                  <option value={true}>Male</option>
+                  <option value={false}>Female</option>
+                </select>
               </div>
             </div>
           </div>
 
           <div className='row'>
-            <div className='col-lg-12 mb-3'>
+            <div className='col-lg-6 mb-3'>
               <div className='form-group'>
                 <label className='mont-font fw-600 font-xsss mb-2'>Type</label>
                 <input
                   type='text'
                   className={`${styles['input']} form-control rounded-xxxl`}
+                  value={info.type}
+                  onChange={handleChangeInfo('type')}
+                />
+              </div>
+            </div>
+            <div className='col-lg-6 mb-3'>
+              <div className='form-group'>
+                <label className='mont-font fw-600 font-xsss mb-2'>Age</label>
+                <input
+                  type='number'
+                  className={`${styles['input']} form-control rounded-xxxl`}
+                  value={info.age}
+                  onChange={handleChangeInfo('age')}
                 />
               </div>
             </div>
@@ -136,7 +209,11 @@ const AddPetCard = () => {
             </div>
 
             <div className='col-lg-12'>
-              <Button>Add</Button>
+              {loaded > 0 ? (
+                <ProgressBar animated now={loaded} />
+              ) : (
+                <Button onClick={handleSubmit}>Add</Button>
+              )}
             </div>
           </div>
         </form>
@@ -147,12 +224,14 @@ const AddPetCard = () => {
 
 const Account = () => {
   return (
-    <Layout>
-      <div className='middle-wrap'>
-        <AddPetCard />
-      </div>
-    </Layout>
+    <div className='middle-wrap'>
+      <AddPetCard />
+    </div>
   );
+};
+
+Account.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Account;

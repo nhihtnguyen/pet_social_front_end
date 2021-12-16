@@ -1,7 +1,8 @@
 import Layout from 'components/Layout';
 import PageTitle from '../../../components/pagetitle/PageTitle';
 import PetCard from '../../../components/petcard/PetCard';
-const MyPet = () => {
+
+const Family = () => {
   return (
     <div className='row w-100'>
       <div className='col-xl-12 pe-0'>
@@ -18,8 +19,8 @@ const MyPet = () => {
   );
 };
 
-MyPet.getLayout = function getLayout(page) {
+Family.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default MyPet;
+export default Family;

@@ -1,16 +1,13 @@
 import { Button } from 'react-bootstrap';
+import styles from './Controls.module.scss';
 
-const PrimaryButton = ({ variant, onClick, children }) => {
+const PrimaryButton = ({ onClick, children, className, ...props }) => {
   return (
     <Button
-      style={{
-        padding: '0.5rem 1.5rem',
-        fontSize: 14,
-        borderRadius: 30,
-      }}
-      variant='primary'
+      className={`${styles['primary-button']} ${className}`}
       size='lg'
       onClick={onClick}
+      {...props}
     >
       {children}
     </Button>
