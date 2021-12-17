@@ -1,39 +1,49 @@
 import { useState, useEffect } from 'react';
 
 const useForm = (initValues, validateOnchange = false, validate, callback) => {
-    const [values, setValues] = useState(initValues);
-    const [errors, setErrors] = useState({});
-    const [isSubmitted, setIsSubmitted] = useState(false);
+  const [values, setValues] = useState(initValues);
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-    useEffect(() => {
-        if (isSubmitted && Object.values(errors).every(x => x === '')) {
-            callback();
-        }
-        setIsSubmitted(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [errors]);
-
-    const handleChange = (name) => (event) => {
-        const newValue = event.target.value;
-        setValues({ ...values, [name]: newValue });
-        if (validateOnchange) {
-            const temp = validate({ [name]: newValue })
-            setErrors({ ...errors, ...temp })
-        }
+  useEffect(() => {
+    if (isSubmitted && Object.values(errors).every((x) => x === '')) {
+      console.log('submit');
+      callback(values);
     }
+    setIsSubmitted(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errors]);
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const temp = validate(values)
-        setErrors({ ...errors, ...temp })
-        setIsSubmitted(true);
+  const handleChange = (name) => (event) => {
+    const newValue = event.target.value;
+    setValues({ ...values, [name]: newValue });
+    if (validateOnchange) {
+      const temp = validate({ [name]: newValue });
+      setErrors({ ...errors, ...temp });
     }
+  };
 
-    const resetForm = () => {
-        setValues(initValues)
-    }
+  const handleSubmit = (event) => {
+    console.log('submit1');
+    event.preventDefault();
+    const temp = validate(values);
+    setErrors({ ...errors, ...temp });
+    setIsSubmitted(true);
+  };
 
-    return { handleChange, values, setValues, errors, setErrors, resetForm, handleSubmit };
+  const resetForm = () => {
+    setValues(initValues);
+  };
+
+  return {
+    handleChange,
+    values,
+    setValues,
+    errors,
+    setErrors,
+    resetForm,
+    handleSubmit,
+  };
 };
 
 export default useForm;

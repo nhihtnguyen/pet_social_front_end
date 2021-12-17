@@ -12,6 +12,7 @@ import axiosClient from 'axiosSetup';
 import { ProgressBar } from 'react-bootstrap';
 import { host as serverHost } from 'config';
 import { useRouter } from 'next/router';
+import Input from 'components/controls/Input';
 
 const AddPetCard = () => {
   const { mutate } = useSWRConfig();
@@ -174,7 +175,7 @@ const AddPetCard = () => {
           <div className='row'>
             <div className='col-lg-6 mb-3'>
               <div className='form-group'>
-                <label className='mont-font fw-600 font-xsss mb-2'>Type</label>
+                <label className='mont-font fw-600 font-xsss mb-2'>Breed</label>
                 <input
                   type='text'
                   className={`${styles['input']} form-control rounded-xxxl`}

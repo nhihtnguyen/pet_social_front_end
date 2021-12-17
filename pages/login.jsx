@@ -28,13 +28,14 @@ const Login = () => {
       const response = await axiosClient.post(`${serverHost}/auth/login`, body);
       console.log(response);
       if (response.status === 200) {
-        setLoading(false);
         router.push('/');
       } else {
         throw new Error(response.data.msg);
       }
     } catch (error) {
       console.error('An unexpected error happened occurred:', error);
+    } finally {
+      setLoading(false);
     }
   };
 

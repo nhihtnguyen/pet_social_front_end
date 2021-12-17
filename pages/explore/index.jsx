@@ -11,7 +11,7 @@ import Head from 'next/head';
 const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
 const Content = () => {
-  const { data: posts, error } = useSWR(`${serverHost}/posts`, fetcher);
+  const { data: posts, error } = useSWR(`${serverHost}/posts/explore`, fetcher);
   return (
     <>
       {!posts && !error ? (
@@ -70,7 +70,7 @@ export const getStaticProps = async () => {
   let posts = [];
 
   try {
-    const response = await axiosClient.get(`${serverHost}/posts`);
+    const response = await axiosClient.get(`${serverHost}/posts/explore`);
     posts = response.data;
   } catch (error) {
     console.error(error);

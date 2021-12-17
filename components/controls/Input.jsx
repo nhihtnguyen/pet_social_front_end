@@ -9,6 +9,7 @@ const Input = ({
   iconClassName,
   type,
   style,
+  invalidTooltip,
   ...props
 }) => {
   const icon = startIcon ? 'icon-input' : endIcon ? 'icon-right-input' : '';
@@ -21,7 +22,13 @@ const Input = ({
         className={`${inputClassName} text-grey-900 font-xsss fw-600`}
         {...props}
       />
-      <div className='invalid-tooltip font-xsss'>Required</div>
+      <div
+        className={`invalid-tooltip font-xsss ${
+          invalidTooltip ? 'd-block' : 'd-none'
+        }`}
+      >
+        {invalidTooltip}
+      </div>
     </Form.Group>
   );
 };

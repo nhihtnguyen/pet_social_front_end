@@ -98,3 +98,21 @@
     border-radius: 30px;
     border-color: inherit;
 }
+
+.select {
+    .khoast__control {
+        color: #717171;
+    }
+    .is-focused > Select-control {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        border-top-color: rgb(134, 183, 254);
+        border-right-color: rgb(134, 183, 254);
+        border-bottom-color: rgb(134, 183, 254);
+        border-left-color: rgb(134, 183, 254);
+        outline: 0;
+        -webkit-box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+}

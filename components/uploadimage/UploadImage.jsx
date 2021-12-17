@@ -11,6 +11,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { host as serverHost } from 'config';
 import { ProgressBar } from 'react-bootstrap';
+import Select from 'components/controls/Select';
 
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
@@ -20,10 +21,12 @@ import NFTMarket from 'artifacts/contracts/NFTMarket.sol/NFTMarket.json';
 import { create as ipfsHttpClient } from 'ipfs-http-client';
 
 const client = ipfsHttpClient({ url: 'https://ipfs.infura.io:5001/api/v0' });
+const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
 const UploadImage = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
+  const { data: pets, error } = useSWR(`${serverHost}/pets/owner`, fetcher);
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -74,7 +77,7 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
   };
 
   const handleUpload = async () => {
-    var bodyFormData = new FormData();
+    let bodyFormData = new FormData();
 
     bodyFormData.append('image', file);
     bodyFormData.append('caption', caption);
@@ -85,6 +88,14 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
     newForm.append('model_choice', 'last');
     newForm.append('result_type', 'json');
 
+    // Mentions
+
+    const mentionIds = mention.map((value) => {
+      return value.label;
+    });
+
+    bodyFormData.append('mentions', mentionIds.join(','));
+    console.log(bodyFormData);
     let result;
     try {
       result = await axiosClient.post(`localhost:2000`, newForm, {
@@ -121,7 +132,6 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
 
     bodyFormData.append('image', file);
     bodyFormData.append('caption', caption);
-    bodyFormData.append('user_id', 1);
 
     let newForm = new FormData();
     newForm.append('file', file);
@@ -292,7 +302,23 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
               />
             </>
           )}
-
+          <h3>Choose pets</h3>
+          <Select
+            value={mention}
+            onChange={(e) => {
+              console.log(e);
+              return setMention(e);
+            }}
+            className={`rounded-xxl ${styles['typing-box']}`}
+            isLoading={!error && !pets}
+            options={pets?.map((pet) => {
+              return {
+                value: pet.id,
+                label: pet.name,
+                image: 'https://picsum.photos/200/300',
+              };
+            })}
+          />
           <h3>Tell your story</h3>
           <div className={`rounded-xxl ${styles['typing-box']}`}>
             <Form.Control
@@ -314,14 +340,12 @@ const UploadImage = ({ content, onSubmit, isEdit }) => {
               <FiAtSign /> Mention
             </div>
           </div>
-
           <Form.Check
             className={`mt-3`}
             checked={isMint}
             onChange={() => setIsMint(!isMint)}
             label='Create as NFT token (wallet connected require)'
           />
-
           {loaded > 0 ? (
             <ProgressBar animated now={loaded} />
           ) : (

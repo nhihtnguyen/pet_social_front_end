@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-const PetCard = () => {
+const PetCard = ({ pet }) => {
   return (
     <div className='card d-block border-0 shadow-xss rounded-3 overflow-hidden rounded-xxl'>
       <div
@@ -22,7 +22,7 @@ const PetCard = () => {
           </div>
         </figure>
         <div className='clearfix'></div>
-        <h4 className='fw-700 font-xsss mt-3 mb-1'>Hehehe</h4>
+        <h4 className='fw-700 font-xsss mt-3 mb-1'>{pet?.name || 'Name'}</h4>
         <p className='fw-500 font-xsssss text-grey-500 mt-0 mb-3 lh-3'>
           @mickey
         </p>
