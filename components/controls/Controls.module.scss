@@ -116,3 +116,60 @@
         box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
     }
 }
+
+.image-picker {
+    width: 340px;
+    min-height: 300px;
+    background-color: #efefef;
+    border: 3px dashed grey;
+    outline: 10px solid #e3e3e3;
+    padding: 10px;
+    margin: 10px;
+    &.isDenied {
+        border: 3px solid var(--bs-danger) !important;
+        .tooltip {
+            background-color: var(--bs-danger);
+            display: block !important;
+        }
+    }
+
+    &.isWaring {
+        border: 3px solid var(--bs-warning) !important;
+        .tooltip {
+            background-color: var(--bs-warning);
+            display: block !important;
+        }
+    }
+
+    &.isAllowed {
+        border: 3px solid var(--bs-success) !important;
+        .tooltip {
+            background-color: var(--bs-success);
+            display: block !important;
+        }
+    }
+
+    .btn-close {
+        z-index: 100;
+        height: 32px;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        padding: 5px;
+    }
+    .browse-file-container {
+        padding: 10px;
+        .upload-button {
+            height: 32px;
+            width: 32px;
+            overflow: hidden;
+            transition: all 1s;
+            font-size: 100px;
+
+            input[type="file"] {
+                visibility: hidden;
+                position: absolute;
+            }
+        }
+    }
+}

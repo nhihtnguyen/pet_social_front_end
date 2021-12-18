@@ -21,7 +21,7 @@ const CommentSection = ({ pid }) => {
     if (previousPageData && !previousPageData.length) {
       return null;
     }
-    return `${serverHost}/comments/post/${pid}?page=${pageIndex + 1}`;
+    return `/comments/post/${pid}?page=${pageIndex + 1}`;
   };
   const {
     data: comments,

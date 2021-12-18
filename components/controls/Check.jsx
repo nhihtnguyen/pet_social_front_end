@@ -13,8 +13,9 @@ const Check = ({
 }) => {
   return (
     <Form.Group className={`${className}`} style={style}>
-      <Form.Check className={`${inputClassName} form-check`} {...props}>
+      <Form.Check className={`${inputClassName} form-check`}>
         <Form.Check.Input
+          {...props}
           type={'checkbox'}
           className={`${inputClassName} form-check-input mt-2`}
         />

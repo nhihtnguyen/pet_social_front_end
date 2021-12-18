@@ -2,28 +2,35 @@ import Link from 'next/link';
 import Image from 'next/image';
 import useForm from 'hooks/useForm';
 import { useRouter } from 'next/router';
-import { host as serverHost } from 'config';
-import axiosClient from 'axiosSetup';
 import { LayoutLogin } from 'components/Layout';
 import Backdrop from 'components/backdrop/Backdrop';
 import { useState } from 'react';
 import { Spinner } from 'react-bootstrap';
 import LoginForm from 'components/forms/LoginForm';
+import { useAuth } from 'app/authContext';
 
 const Login = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
+  const { isAuthenticated, loading, login } = useAuth();
+  if (isAuthenticated) {
+    router.replace('/');
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    login({
+      email: e.currentTarget.username.value,
+      password: e.currentTarget.password.value,
+    });
 
-    setLoading(true);
+    /*setLoading(true);
     const body = {
       email: e.currentTarget.username.value,
       password: e.currentTarget.password.value,
     };
-
+    /*
     try {
       const response = await axiosClient.post(`${serverHost}/auth/login`, body);
       console.log(response);
@@ -37,6 +44,7 @@ const Login = () => {
     } finally {
       setLoading(false);
     }
+    */
   };
 
   return (

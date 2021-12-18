@@ -2,6 +2,7 @@ import Select from 'react-select';
 import styles from './Controls.module.scss';
 import { components } from 'react-select';
 import Image from 'next/image';
+import { Form } from 'react-bootstrap';
 const { Option, MultiValue } = components;
 
 const options = [
@@ -69,14 +70,43 @@ const customStyles = {
   },
 };
 
-const MySelect = ({ className, ...props }) => (
-  <Select
-    isMulti
-    options={options}
-    styles={customStyles}
-    components={{ MultiValue: IconMultiValue, Option: IconOption }}
-    {...props}
-  />
+const convertToDefEventPara = (name, value) => ({
+  target: {
+    name,
+    value,
+  },
+});
+
+const MySelect = ({
+  onChange,
+  label,
+  name,
+  invalidTooltip,
+  className = '',
+  style = '',
+  ...props
+}) => (
+  <Form.Group className={`${className} form-group`}>
+    {label && <Form.Label>{label}</Form.Label>}
+    <Select
+      isMulti
+      options={options}
+      styles={customStyles}
+      components={{ MultiValue: IconMultiValue, Option: IconOption }}
+      onChange={(e) => onChange(convertToDefEventPara(name, e))}
+      name={name}
+      {...props}
+    />
+    {
+      <div
+        className={`invalid-tooltip font-xsss ${
+          invalidTooltip ? 'd-block' : 'd-none'
+        }`}
+      >
+        {invalidTooltip}
+      </div>
+    }
+  </Form.Group>
 );
 
 export default MySelect;

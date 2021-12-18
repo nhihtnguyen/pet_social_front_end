@@ -4,7 +4,7 @@ const Input = ({
   label,
   startIcon,
   endIcon,
-  className,
+  className = '',
   inputClassName,
   iconClassName,
   type,

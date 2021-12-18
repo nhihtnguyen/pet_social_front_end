@@ -11,7 +11,7 @@ const MyPet = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data, error } = useSWR(
-    id ? `${serverHost}/pets?user_id=${id}` : null,
+    id ? `/pets?user_id=${id}` : null,
     id ? fetcher : null
   );
   if (error) return <div>failed to load</div>;

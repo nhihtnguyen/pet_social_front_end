@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 const Profile = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data: user, error } = useSWR(`${serverHost}/users/${id}`, fetcher);
+  const { data: user, error } = useSWR(`/users/${id}`, fetcher);
   if (error) return <div>failed to load</div>;
   if (!user) return <div>loading...</div>;
   return (

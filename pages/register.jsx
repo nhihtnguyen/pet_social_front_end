@@ -20,10 +20,7 @@ const Register = () => {
     console.log('eef', body);
 
     try {
-      const response = await axiosClient.post(
-        `${serverHost}/auth/register`,
-        body
-      );
+      const response = await axiosClient.post(`/auth/register`, body);
       console.log(response);
       if (response.status === 200) {
         setLoading(false);
