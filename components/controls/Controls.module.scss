@@ -1,0 +1,175 @@
+.form-group {
+    max-width: 880;
+    &.icon-input {
+        position: relative;
+        i {
+            position: absolute;
+            left: 15px;
+            top: 19px;
+        }
+        input {
+            padding-left: 35px;
+        }
+    }
+
+    &.icon-right-input {
+        position: relative;
+        i {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+        }
+        input {
+            padding-left: 35px;
+        }
+    }
+    .style1-input {
+        height: 55px;
+        line-height: 55px;
+        display: block;
+        font-size: 12px;
+    }
+    .style1-select {
+        line-height: 55px;
+        height: 55px;
+        width: 100%;
+        font-size: 14px;
+        font-weight: 500;
+        color: #adb5bd !important;
+    }
+
+    .style2-select {
+        line-height: 60px;
+        height: 60px;
+
+        font-size: 14px;
+        font-weight: 500;
+        color: #adb5bd !important;
+        border: 2px #eee solid;
+        border-radius: 7px;
+    }
+
+    .style2-input {
+        height: 60px;
+        line-height: 60px;
+        display: block;
+        border: 2px #eee solid;
+        border-radius: 7px;
+        &::-webkit-input-placeholder {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 60px;
+        }
+        &::-moz-placeholder {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 60px;
+        }
+        &:-ms-input-placeholder {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 60px;
+        }
+        &:-moz-placeholder {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 60px;
+        }
+        i {
+            position: relative;
+            top: 6px;
+        }
+    }
+    .style2-textarea {
+        line-height: 20px;
+        display: block;
+        border: 2px #eee solid;
+        border-radius: 7px;
+    }
+}
+
+.primary-button {
+    padding: 0.5rem 1.5rem;
+    font-size: 14px;
+    border-radius: 30px;
+    border-color: inherit;
+}
+
+.select {
+    .khoast__control {
+        color: #717171;
+    }
+    .is-focused > Select-control {
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        border-top-color: rgb(134, 183, 254);
+        border-right-color: rgb(134, 183, 254);
+        border-bottom-color: rgb(134, 183, 254);
+        border-left-color: rgb(134, 183, 254);
+        outline: 0;
+        -webkit-box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+}
+
+.image-picker {
+    width: 340px;
+    min-height: 300px;
+    background-color: #efefef;
+    border: 3px dashed grey;
+    outline: 10px solid #e3e3e3;
+    padding: 10px;
+    margin: 10px;
+    &.isDenied {
+        border: 3px solid var(--bs-danger) !important;
+        .tooltip {
+            background-color: var(--bs-danger);
+            display: block !important;
+        }
+    }
+
+    &.isWarning {
+        border: 3px solid var(--bs-warning) !important;
+        .tooltip {
+            background-color: var(--bs-warning);
+            display: block !important;
+        }
+    }
+
+    &.isAllowed {
+        border: 3px solid var(--bs-success) !important;
+        .tooltip {
+            background-color: var(--bs-success);
+            display: block !important;
+        }
+    }
+
+    .btn-close {
+        z-index: 100;
+        height: 32px;
+        top: 8px;
+        right: 8px;
+        width: 32px;
+        padding: 5px;
+    }
+    .browse-file-container {
+        padding: 10px;
+        .upload-button {
+            height: 32px;
+            width: 32px;
+            overflow: hidden;
+            transition: all 1s;
+            font-size: 100px;
+
+            input[type="file"] {
+                visibility: hidden;
+                position: absolute;
+            }
+        }
+    }
+}

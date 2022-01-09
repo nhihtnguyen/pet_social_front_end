@@ -1,7 +1,4 @@
-import styles from '../../styles/Explore.module.scss';
-import Header from '../../components/header/Header';
-import LeftNav from '../../components/leftnav/LeftNav';
-import Slide from '../../components/carousel/Carousel';
+import Layout from 'components/Layout';
 import ItemCard from '../../components/itemcard/ItemCard';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
@@ -13,13 +10,14 @@ import { Modal, Spinner } from 'react-bootstrap';
 import ItemDetail from '../../components/itemdetail/ItemDetail';
 import FloatingButton from '../../components/floatingbutton/FloatingButton';
 import PageTitle from '../../components/pagetitle/PageTitle';
-import { FiPlus, FiBriefcase } from 'react-icons/fi';
+import { FiPlus, FiShoppingBag } from 'react-icons/fi';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
 import { nftaddress, nftmarketaddress } from '../../config';
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json';
 import NFTMarket from '../../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const Assets = () => {
   const [nfts, setNfts] = useState([]);
@@ -30,31 +28,42 @@ const Assets = () => {
     loadNFTs();
   }, []);
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState([]);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = (index) => () => {
+    let temp = [...show];
+    temp.splice(temp.indexOf(index), 1);
+    setShow(temp);
+  };
+  const handleShow = (index) => () => {
+    setShow([...show, index]);
+  };
 
   const sellNFT = async (nft) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-    await contract.approve(nftmarketaddress, nft.tokenId);
-    const priceParsed = ethers.utils.parseUnits(price, 'ether');
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+      let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+      await contract.approve(nftmarketaddress, nft.tokenId);
+      const priceParsed = ethers.utils.parseUnits(price, 'ether');
 
-    contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-    const transaction = await contract.createMarketItem(
-      nft.nftContract,
-      nft.tokenId,
-      priceParsed,
-      { value: listingPrice }
-    );
+      contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
+      let listingPrice = await contract.getListingPrice();
+      listingPrice = listingPrice.toString();
+      const transaction = await contract.createMarketItem(
+        nft.nftContract,
+        nft.tokenId,
+        priceParsed,
+        { value: listingPrice }
+      );
 
-    await transaction.wait();
+      await transaction.wait();
+      router.push('/market');
+    } catch (error) {
+      console.log(error);
+    }
   };
   const loadNFTs = async () => {
     const web3Modal = new Web3Modal();
@@ -94,49 +103,47 @@ const Assets = () => {
   };
 
   return (
-    <div>
-      <Header />
-      <LeftNav />
-      <FloatingButton icon={<FiPlus />} href={`/create`} />
-
-      <div className='main-content'>
-        <div className='middle-sidebar-bottom'>
-          <div className='middle-sidebar-left pe-0'>
-            <div className='row w-100'>
-              <div className='col-xl-12'>
-                <div className='row ps-2 pe-1 justify-content-center'>
-                  <PageTitle title={'My Assets'} />
-
-                  {loading ? (
-                    <Spinner animation='border' role='status'>
-                      <span className='visually-hidden'>Loading...</span>
-                    </Spinner>
-                  ) : nfts.length < 1 ? (
-                    <h3>No item</h3>
-                  ) : (
-                    nfts.map((item, index) => (
-                      <div className='col-4' key={index}>
-                        <ItemCard item={item} onClick={handleShow} />
-                        <Modal size='lg' show={show} onHide={handleClose}>
-                          <ItemDetail
-                            item={item}
-                            onAction={sellNFT}
-                            actionName={'sell'}
-                            price={price}
-                            setPrice={setPrice}
-                          />
-                        </Modal>
-                      </div>
-                    ))
-                  )}
-                </div>
+    <div className='row w-100'>
+      <div className='col-xl-12 pe-0'>
+        <FloatingButton icon={<FiPlus />} href={`/create`} />
+        <FloatingButton icon={<FiShoppingBag />} href={`/market`} index={1} />
+        <PageTitle title={'My Assets'} />
+        <div className='row ms-0'>
+          {loading ? (
+            <Spinner animation='border' role='status'>
+              <span className='visually-hidden'>Loading...</span>
+            </Spinner>
+          ) : nfts.length < 1 ? (
+            <h3>No item</h3>
+          ) : (
+            nfts.map((item, index) => (
+              <div className='col-4' key={index}>
+                <ItemCard item={item} onClick={handleShow(index)} />
+                <Modal
+                  contentClassName='rounded-xxl border-0 p-0 m-0'
+                  size='lg'
+                  show={show.includes(index)}
+                  onHide={handleClose(index)}
+                >
+                  <ItemDetail
+                    item={item}
+                    onAction={sellNFT}
+                    actionName={'sell'}
+                    price={price}
+                    setPrice={setPrice}
+                  />
+                </Modal>
               </div>
-            </div>
-          </div>
+            ))
+          )}
         </div>
       </div>
     </div>
   );
+};
+
+Assets.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Assets;

@@ -1,49 +1,29 @@
-import { Fragment } from 'react';
-import Header from '../../components/header/Header';
-import LeftNav from '../../components/leftnav/LeftNav';
-import PageTitle from '../../components/pagetitle/PageTitle';
-import RightNav from '../../components/rightnav/RightNav';
-import EventCard from '../../components/eventcard/EventCard';
+import Layout from 'components/Layout';
+import PageTitle from 'components/pagetitle/PageTitle';
+import EventCard from 'components/eventcard/EventCard';
 
 const Event = () => {
   return (
-    <Fragment>
-      <Header />
-      <LeftNav />
-      <RightNav />
-
-      <div className='main-content right-chat-active'>
-        <div className='middle-sidebar-bottom'>
-          <div className='middle-sidebar-left pe-0'>
-            <div className='row'>
-              <div className='col-xl-12'>
-                <PageTitle title='Follower' />
-                <div className='row ps-2 pe-2'>
-                  {/* api get list follow */}
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                  <EventCard />
-                </div>
+    <div className='row w-100'>
+      <div className='col-xl-12 pe-0'>
+        <PageTitle title='Event' />
+        <div className='row ps-2 pt-0'>
+          {/* api get list follow */}
+          {[1, 2, 3, 4, 5, 6, 7].map((value) => {
+            return (
+              <div key={value} className='col p-0 mb-3 ms-1'>
+                <EventCard />
               </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
-    </Fragment>
+    </div>
   );
+};
+
+Event.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Event;

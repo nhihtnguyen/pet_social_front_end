@@ -1,47 +1,40 @@
-import Link from "next/link";
-import { FiGithub, FiUser, FiArrowUp } from "react-icons/fi";
-import { useState } from "react";
+import Link from 'next/link';
+import { FiGithub, FiUser } from 'react-icons/fi';
+import { useState } from 'react';
+import Image from 'next/image';
 
 const EventCard = () => {
   const [toggle, setToggle] = useState(true);
   return (
-    // w-100
     <div
-      className='card shadow-xss rounded-xxl overflow-hidden border-0 mb-3 mt-3 pb-3 hover-overlay hover-shadow'
-      style={{ width: 282, marginRight: "0.5rem", padding: "0" }}
+      className='card shadow-xss p-0 rounded-xxl overflow-hidden border-0 hover-overlay hover-shadow'
+      style={{ width: 236 }}
+      onMouseEnter={() => setToggle(false)}
+      onMouseLeave={() => setToggle(true)}
     >
       <div
         className={`${
-          toggle ? "h150" : "h150"
-        } card-body position-relative bg-image-cover bg-image-center`}
+          toggle ? 'd-block' : 'd-none'
+        } bg-image-cover bg-image-center w-100 h-100 position-absolute`}
         style={{
-          backgroundImage: `url("https://picsum.photos/282/429")`,
+          backgroundImage: `url("https://picsum.photos/300/430")`,
+          zIndex: 11,
         }}
       ></div>
-      {toggle && (
-        <div
-          className={`bg-image-cover bg-image-center`}
-          style={{
-            backgroundImage: `url("https://picsum.photos/300/430")`,
-            position: "absolute",
-            height: "100%",
-            width: "100%",
-            zIndex: 10,
-          }}
-        ></div>
-      )}
-
       <div>
         <div className='card-body d-block pt-4 text-center'>
-          <figure className='avatar mt--6 position-relative w75 z-index-1 w100 z-index-1 ms-auto me-auto'>
-            <img
-              src='https://picsum.photos/200'
-              alt='avater'
-              className='p-1 bg-white rounded-xl w-100'
-            />
+          <figure className='avatar mt-6 position-relative w75 z-index-1 w100 z-index-1 ms-auto me-auto'>
+            <div className={`image-container`}>
+              <Image
+                layout='fill'
+                src='https://picsum.photos/200'
+                alt='avatar'
+                className='image p-1 bg-white rounded-xl w-100'
+              />
+            </div>
           </figure>
           <h4 className='font-xs ls-1 fw-700 text-grey-900'>
-            Surfiya Zakir{" "}
+            Surfiya Zakir{' '}
             <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
               @surfiyazakir22
             </span>
@@ -50,20 +43,20 @@ const EventCard = () => {
         <div className='card-body d-flex align-items-center ps-4 pe-4 pt-0'>
           <h4 className='font-xsssss text-center text-grey-500 fw-600 ms-2 me-2'>
             <b className='text-grey-900 mb-1 font-xss fw-700 d-inline-block ls-3 text-dark'>
-              456{" "}
-            </b>{" "}
+              456{' '}
+            </b>{' '}
             Posts
           </h4>
           <h4 className='font-xsssss text-center text-grey-500 fw-600 ms-2 me-2'>
             <b className='text-grey-900 mb-1 font-xss fw-700 d-inline-block ls-3 text-dark'>
-              2.1k{" "}
-            </b>{" "}
+              2.1k{' '}
+            </b>{' '}
             Followers
           </h4>
           <h4 className='font-xsssss text-center text-grey-500 fw-600 ms-2 me-2'>
             <b className='text-grey-900 mb-1 font-xss fw-700 d-inline-block ls-3 text-dark'>
-              32k{" "}
-            </b>{" "}
+              32k{' '}
+            </b>{' '}
             Follow
           </h4>
         </div>
@@ -89,14 +82,6 @@ const EventCard = () => {
           </Link>
         </div>
       </div>
-
-      <button
-        className='btn'
-        onClick={() => setToggle(!toggle)}
-        style={{ zIndex: 101 }}
-      >
-        <FiArrowUp />
-      </button>
     </div>
   );
 };

@@ -1,44 +1,100 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiMail, FiMoreHorizontal } from 'react-icons/fi';
+import { useState } from 'react';
+import { FiCamera } from 'react-icons/fi';
+import axiosClient from 'axiosSetup';
+import { host as serverHost } from 'config';
 
-const ProfileBackground = ({ profile }) => {
+const ProfileBackground = ({ profile, isLoading }) => {
+  const [avatarHover, setAvatarHover] = useState(false);
+
+  const handleUploadImage = (name) => async (e) => {
+    let file = e.target.files[0];
+    console.log('upload ', name, file);
+
+    const data = new FormData();
+    data.append('image', file);
+    let result;
+    try {
+      result = await axiosClient.put(`${serverHost}/users/${name}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (result) {
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
-      <div className='card-body h250 p-0 rounded-xxl overflow-hidden m-3'>
-        <div className={`image-container`}>
-          <Image
-            className={`image`}
-            src={profile.background ? profile.background : '/'}
-            alt='background'
-            layout='fill'
+      <div
+        className='card-body h250 p-0 rounded-xxxl overflow-hidden m-3 position-relative'
+        style={{ border: `${profile?.background ? '' : '3px dashed'}` }}
+      >
+        <Image
+          width='1000px'
+          height='250px'
+          src={profile?.background || '/'}
+          alt='background'
+        />
+        <label
+          htmlFor='file-background'
+          className='position-absolute border-0 d-lg-block bg-greylight btn-round-lg rounded-3 text-grey-700'
+          style={{ top: 5, right: 5, fontSize: 32 }}
+        >
+          <span>
+            <FiCamera />
+          </span>
+          <input
+            id='file-background'
+            className='d-none'
+            type='file'
+            onChange={handleUploadImage('background')}
           />
-        </div>
+        </label>
       </div>
       <div className='card-body p-0 position-relative'>
         <figure
-          className='avatar position-absolute w100 z-index-1 image-container'
-          style={{ top: '-40px', left: '30px' }}
+          className='avatar position-absolute w100 z-index-1 rounded-circle'
+          style={{
+            top: '-40px',
+            left: '30px',
+            height: 100,
+            border: `${profile?.avatar ? '' : '3px dashed'}`,
+          }}
         >
           <Image
-            layout='fill'
-            src={profile.avatar ? profile.avatar : '/'}
+            src={profile?.avatar || '/'}
             alt='avatar'
-            className='image float-right p-1 bg-white rounded-circle w-100 h-100'
+            width='100px'
+            height='100px'
+            className='float-right p-1 bg-white rounded-circle w-100 h-100'
           />
+          <label
+            htmlFor='file-avatar'
+            style={{ bottom: 0, right: -10 }}
+            className='position-absolute border-0 d-lg-block bg-greylight btn-round-md  text-grey-700'
+          >
+            <span>
+              <FiCamera />
+            </span>
+            <input
+              id='file-avatar'
+              className='d-none'
+              type='file'
+              onChange={handleUploadImage('avatar')}
+            />
+          </label>
         </figure>
         <h4 className='fw-700 font-sm mt-2 mb-lg-5 mb-4 pl-15'>
-          {`${profile.first_name} ${profile.last_name} `}
+          {profile ? `${profile?.first_name} ${profile?.last_name} ` : 'Name'}
           <span className='fw-500 font-xssss text-grey-500 mt-1 mb-3 d-block'>
-            {profile.email}
+            {profile?.email || 'email@email.om'}
           </span>
         </h4>
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
-          <Link href='/defaultmember'>
-            <a className='d-none d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'>
-              Add Friend
-            </a>
-          </Link>
           <Link href='/defaultemailbox'>
             <a className='d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
               <i className='font-md'>
@@ -110,7 +166,7 @@ const ProfileBackground = ({ profile }) => {
           role='tablist'
         >
           <li className='active list-inline-item me-5'>
-            <Link href='/profile'>
+            <Link href='/user/1'>
               <a
                 className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block active'
                 data-toggle='tab'
@@ -120,7 +176,7 @@ const ProfileBackground = ({ profile }) => {
             </Link>
           </li>
           <li className='list-inline-item me-5'>
-            <Link href='/profile/family'>
+            <Link href='/user/1/family'>
               <a
                 className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'
@@ -139,7 +195,7 @@ const ProfileBackground = ({ profile }) => {
             </a>
           </li>
           <li className='list-inline-item me-5'>
-            <Link href='/profile/posts'>
+            <Link href='/user/1/posts'>
               <a
                 className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'

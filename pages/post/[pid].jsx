@@ -1,35 +1,31 @@
-import Header from 'components/header/Header';
-import LeftNav from 'components/leftnav/LeftNav';
-import { useEffect, useState } from 'react';
-import { Modal, Spinner } from 'react-bootstrap';
 import ItemDetail from 'components/itemdetail/PostDetail';
 import axiosClient from 'axiosSetup';
+import useSWR from 'swr';
+import { useRouter } from 'next/router';
+import Layout from 'components/Layout';
 
-const PostDetail = ({ post, pid }) => {
-  const [show, setShow] = useState(false);
+const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+const PostDetail = () => {
+  const router = useRouter();
+  const { pid } = router.query;
+  const { data: post, error } = useSWR(
+    pid ? `/posts/${pid}` : null,
+    pid ? fetcher : null
+  );
+  if (error) return <div>failed to load</div>;
   return (
-    <div>
-      <Header />
-      <LeftNav />
-      <div className='main-content'>
-        <div className='middle-sidebar-bottom'>
-          <div className='middle-sidebar-left pe-0'>
-            <div className='row w-100'>
-              <div className='col-xl-12'>
-                <div className='justify-content-center'>
-                  <ItemDetail item={post} pid={pid} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className='row ms-0 me-1 mb-3 justify-content-center w-100'>
+      <ItemDetail item={post} pid={pid} loading={!post && !error} />
     </div>
   );
 };
+
+PostDetail.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
+};
+
+/*
 
 export const getStaticProps = async ({ params }) => {
   let post = {};
@@ -61,7 +57,7 @@ export async function getStaticPaths() {
 
   // Get the paths we want to pre-render based on posts
   const paths = posts.map((post) => ({
-    params: { pid: post.id },
+    params: { pid: `${post.id}` },
   }));
 
   // We'll pre-render only these paths at build time.
@@ -69,5 +65,7 @@ export async function getStaticPaths() {
   // on-demand if the path doesn't exist.
   return { paths, fallback: 'blocking' };
 }
+
+*/
 
 export default PostDetail;

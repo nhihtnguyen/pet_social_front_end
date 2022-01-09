@@ -1,63 +1,28 @@
-import styles from '../../../styles/Explore.module.scss';
-import Header from '../../../components/header/Header';
-import LeftNav from '../../../components/leftnav/LeftNav';
-import PageTitle from '../../../components/pagetitle/PageTitle';
-import UploadImage from '../../../components/uploadimage/UploadImage';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { postActions, postSelector } from '../../../features/post/postSlice';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import CreatePost from 'components/createpost/CreatePost';
+import useSWR from 'swr';
+import { useRouter } from 'next/router';
+import Layout from 'components/Layout';
+import axiosClient from 'axiosSetup';
+const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
-const content = {
-  imageUrl: 'user.png',
-  name: 'Aliqa Macale',
-  email: 'support@gmail.com',
-  media_URL: 'https://picsum.photos/200/300',
-  caption: 'Helllele',
-};
+const Edit = () => {
+  const router = useRouter();
+  const { pid } = router.query;
+  const { data: post, error } = useSWR(
+    pid ? `/posts/${pid}` : null,
+    pid ? fetcher : null
+  );
+  if (error) return <div>failed to load</div>;
 
-const Edit = ({ query }) => {
-  const [post, setPost] = useState({});
-  const { pid } = query;
-
-  useEffect(() => {
-    console.log(pid, query);
-    if (pid) {
-      axios
-        .get('http://localhost:3001/posts/' + pid)
-        .then((req) => {
-          console.log(req.data);
-          setPost(req.data);
-        })
-        .catch((err) => {
-          // loggg
-          console.log(err);
-        });
-    }
-  }, [pid]);
   return (
-    <div>
-      <Header />
-      <LeftNav />
-      <div className='main-content'>
-        <div className='middle-sidebar-bottom'>
-          <div className='middle-sidebar-left pe-0'>
-            <div className='row w-100'>
-              <div className='col-xl-12'>
-                <div className='row ps-2 pe-1 justify-content-center'>
-                  <UploadImage isEdit={true} content={post} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className='row ms-0 pe-2 mb-3 justify-content-center w-100'>
+      <CreatePost isEdit={true} content={post} />
     </div>
   );
 };
 
-Edit.getInitialProps = async ({ query }) => {
-  return { query };
+Edit.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
 };
 
 export default Edit;
