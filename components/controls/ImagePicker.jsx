@@ -71,7 +71,7 @@ const ImagePicker = ({
     : invalidTooltip
     ? invalidTooltip
     : '';
-
+  console.log('er', tooltip);
   return (
     <DragAndDrop handleDrop={handleDrop}>
       <div

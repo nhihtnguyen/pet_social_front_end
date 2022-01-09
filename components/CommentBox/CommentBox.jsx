@@ -20,7 +20,7 @@ const getFormatDate = (date) => {
   );
 };
 
-const CommentBox = ({ className, comment, created, pid, replyFor }) => {
+const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState('');
@@ -38,6 +38,9 @@ const CommentBox = ({ className, comment, created, pid, replyFor }) => {
         reply_for: replyFor || null,
       };
       result = await axiosClient.post(`${serverHost}/comments`, newComment);
+      if (result.data) {
+        mutate({ ...result.data });
+      }
     } catch (err) {
       // logging
     }
@@ -107,12 +110,12 @@ const CommentBox = ({ className, comment, created, pid, replyFor }) => {
             </Link>
             <h6 className={`font-xsss fw-600 mb-0 d-flex`}>
               {comment
-                ? comment.User?.firstName + ' ' + comment.User?.lastName
+                ? comment.User?.first_name + ' ' + comment.User?.last_name
                 : 'UserName'}
               &nbsp;
               <span className={`text-grey-500`}>
                 Last edited:&nbsp;
-                {comment ? getFormatDate(new Date(comment.updatedAt)) : ''}
+                {comment ? getFormatDate(new Date(comment.updated_at)) : ''}
               </span>
             </h6>
             <p className={`font-xssss text-grey-900 fw-500`}>

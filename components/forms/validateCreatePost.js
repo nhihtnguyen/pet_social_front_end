@@ -21,7 +21,7 @@ const validateRegister = (values) => {
   }
   if ('image' in values) {
     if (!values.image.file && !values.image.image) {
-      errors.image = 'Image required';
+      errors.image = { type: 'invalid', text: 'Image required' };
     } else {
       errors.image = '';
     }

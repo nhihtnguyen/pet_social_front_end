@@ -89,7 +89,9 @@ export const getStaticProps = async () => {
 
   try {
     const response = await axiosClient.get(`${serverHost}/posts/explore`);
-    posts = response.data;
+    if (response.data) {
+      posts = response.data;
+    }
   } catch (error) {
     console.error(error);
   }

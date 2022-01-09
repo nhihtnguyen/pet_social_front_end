@@ -6,13 +6,17 @@ import { useState } from 'react';
 
 const Postcard = ({ value, index, as, className }) => {
   const [hover, setHover] = useState(false);
+  const width = 254;
+  const height =
+    (Number(value?.size?.split('x')[1]) * width) /
+      Number(value?.size?.split('x')[0]) || 300;
   return (
     <Card
       as={as}
       className={`${className} d-block border-0 shadow-xss rounded-xxl bg-gradient-bottom`}
       style={{
-        width: '236px',
-        margin: 'auto',
+        width: `${width}px`,
+        height: `${height}px`,
       }}
       onMouseEnter={(e) => setHover(true)}
       onMouseLeave={(e) => setHover(false)}
@@ -20,13 +24,12 @@ const Postcard = ({ value, index, as, className }) => {
       <Link href={`/post/${value.id}`}>
         <a>
           <Image
-            className={`rounded-xxl`}
-            width={236}
-            height={300}
-            src={value.media_URL || '/'}
-            alt={value.media_URL}
+            className='rounded-xxl border-0'
+            width={width}
+            height={height}
+            src={value.media_url || '/'}
+            alt={value.media_url || '/'}
           />
-
           {hover && (
             <div
               className={`position-absolute rounded-xxl top-0 w-100 h-100`}
@@ -36,32 +39,25 @@ const Postcard = ({ value, index, as, className }) => {
               }}
             >
               <div
-                className={`d-flex flex-column w-100 position-absolute bottom-0 text-center`}
+                className={`d-flex flex-column w-100 position-absolute bottom-0 mb-2 text-center`}
               >
-                <figure className='avatar ms-auto me-auto mb-0 position-relative w50 z-index-1'>
-                  <Link href={`/user/1`}>
-                    <a>
-                      <div
-                        className={`image-container float-right p-0 bg-white rounded-circle shadow-xss`}
-                      >
-                        <Image
-                          layout='fill'
-                          src={
-                            value?.user_avatar
-                              ? value.user_avatar
-                              : `/assets/images/${'user.png'}`
-                          }
-                          alt='avatar'
-                          className='image rounded-circle w-100 shadow-xss'
-                        />
-                      </div>
-                    </a>
-                  </Link>
-                </figure>
+                <Link href={`/user/${value.User.id}` || `/user`}>
+                  <a className='avatar ms-auto me-auto mb-0 position-relative w50'>
+                    <Image
+                      width={50}
+                      height={50}
+                      src={value?.User.avatar || `/assets/images/${'user.png'}`}
+                      alt='avatar'
+                      className='float-right p-0 bg-white rounded-circle shadow-xss w-100 h-100'
+                    />
+                  </a>
+                </Link>
 
                 <div className='clearfix'></div>
-                <h4 className='fw-600 position-relative z-index-1 ls-3 font-xssss text-white mt-2 mb-1'>
-                  {value.name || 'name'}
+                <h4 className='fw-600 position-relative z-index-1 ls-3 font-xssss text-white mt-0 mb-1'>
+                  {value?.User.first_name && value?.User.last_name
+                    ? `${value.User.first_name} ${value.User.last_name}`
+                    : 'Full Name'}
                 </h4>
               </div>
             </div>

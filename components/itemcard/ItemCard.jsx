@@ -2,14 +2,18 @@ import Image from 'next/image';
 
 const ItemCard = ({ item, onClick, href }) => {
   return (
-    <div className='card w-100 border-0 mt-4' style={{ maxWidth: 300 }}>
-      <div className='card-image w-100 p-0 text-center bg-greylight rounded-3 mb-2'>
+    <div className='card w-100 border-0 rounded-xxl' style={{ maxWidth: 300 }}>
+      <div className='card-image w-100 p-0 text-center bg-greylight rounded-xxl mb-2'>
         <a href={href ? href : '#'} onClick={onClick}>
           <div className='image-container'>
             <Image
-              className='image w-100 mt-0 mb-0 rounded-3'
+              className='image w-100 mt-0 mb-0 rounded-xxl'
               src={item.image}
               layout='fill'
+              style={{
+                borderBottomLeftRadius: '0 !important',
+                borderBottomRightRadius: '0 !important',
+              }}
               alt={item.name}
             />
           </div>
@@ -24,7 +28,7 @@ const ItemCard = ({ item, onClick, href }) => {
             {item.name}
           </a>
         </h2>
-        <h6 className='font-xsss fw-600 text-grey-500 ls-2'>Œ{item.price}</h6>
+        <h6 className='font-xss fw-600 text-current ls-2'>Œ{item.price}</h6>
       </div>
     </div>
   );

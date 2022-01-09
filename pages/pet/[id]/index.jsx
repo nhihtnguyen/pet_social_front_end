@@ -2,12 +2,21 @@ import Layout from 'components/Layout';
 import ProfileBackground from 'components/profilebackground/ProfileBackground2';
 import ProfileDetail from 'components/profiledetail/ProfileDetail';
 import useSWR, { SWRConfig } from 'swr';
+import { useRouter } from 'next/router';
 import axiosClient from 'axiosSetup';
-import { host as serverHost } from 'config';
 
 const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
-const Profile = ({ pet, id }) => {
+const Profile = () => {
+  const router = useRouter();
+  const { id } = router.query;
+  const { data: pet, error } = useSWR(
+    id ? `/pets/${id}` : null,
+    id ? fetcher : null
+  );
+  if (error) return <div>failed to load</div>;
+  if (!pet) return <div>loading...</div>;
+
   const properties = [
     { key: 'Age', value: pet.age },
     { key: 'Gender', value: pet.gender ? 'Male' : 'Female' },
@@ -30,6 +39,7 @@ Profile.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
+/*
 export const getStaticProps = async ({ params }) => {
   let pet = {};
   const { id } = params;
@@ -67,5 +77,5 @@ export async function getStaticPaths() {
   // on-demand if the path doesn't exist.
   return { paths, fallback: 'blocking' };
 }
-
+*/
 export default Profile;

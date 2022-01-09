@@ -12,10 +12,14 @@ const useForm = (
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
+    setValues(initValues);
+  }, [initValues]);
+
+  useEffect(() => {
     console.log(errors);
     if (isSubmitted && Object.values(errors).every((x) => x === '')) {
       console.log('submit');
-      callback(values, setErrors);
+      callback(values, setErrors, errors);
     }
     setIsSubmitted(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -10,28 +10,64 @@ import useForm from 'hooks/useForm';
 import validateCreatePost from './validateCreatePost';
 import useSWR from 'swr';
 import axiosClient from 'axiosSetup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
-const CreatePostForm = ({ onSubmit, validated, loaded }) => {
+const CreatePostForm = ({
+  onSubmit,
+  validated,
+  loaded,
+  values,
+  isMint,
+  setIsMint,
+}) => {
   const { data: mentionOptions, error: loadMentionOptionsError } = useSWR(
     `/pets/owner`,
     fetcher
   );
 
-  const [isMint, setIsMint] = useState(false);
-
+  // const [isMint, setIsMint] = useState(false);
+  console.log('1', isMint);
+  /*
   const initValues = {
-    name: '',
-    price: '',
+    name: values?.name || '',
+    price: values?.price || '',
     image: {
       file: '',
-      image: '',
+      image: values?.media_url || '',
     },
-    caption: '',
+    caption: values?.caption || '',
     mentions: [],
   };
+  */
+  const [initValues, setInitValues] = useState({
+    name: values?.name || '',
+    price: values?.price || '',
+    image: {
+      file: '',
+      image: values?.media_url || '',
+    },
+    caption: values?.caption || '',
+    mentions: [],
+  });
+
+  useEffect(() => {
+    if (values) {
+      setInitValues({
+        name: values?.name || '',
+        price: values?.price || '',
+        image: {
+          file: '',
+          image: values?.media_url || '',
+        },
+        caption: values?.caption || '',
+        mentions: values?.mentions.map((pet) => {
+          return { value: pet.pet_id };
+        }),
+      });
+    }
+  }, [values]);
 
   const {
     handleChange: onChange,
@@ -44,7 +80,9 @@ const CreatePostForm = ({ onSubmit, validated, loaded }) => {
     true,
     validateCreatePost,
     onSubmit,
-    isMint ? null : ['image', 'caption', 'mentions']
+    isMint
+      ? ['name', 'price', 'image', 'caption']
+      : ['image', 'caption', 'mentions']
   );
 
   return (
@@ -58,7 +96,19 @@ const CreatePostForm = ({ onSubmit, validated, loaded }) => {
         name='image'
         value={info.image.image}
         onChange={onChange('image')}
-        invalidTooltip={errors['image']}
+        invalidTooltip={
+          errors['image']?.type === 'invalid'
+            ? errors['image']?.text
+            : undefined
+        }
+        validTooltip={
+          errors['image']?.type === 'valid' ? errors['image']?.text : undefined
+        }
+        warningTooltip={
+          errors['image']?.type === 'warning'
+            ? errors['image']?.text
+            : undefined
+        }
       />
 
       <div className={`position-relative w-100 ms-3`}>

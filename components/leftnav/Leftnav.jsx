@@ -83,7 +83,7 @@ const LeftNav = () => {
               </li>
               <li>
                 <Link
-                  href='/user/1'
+                  href='/user/me'
                   className='nav-content-bttn open-font h-auto pt-2 pb-2'
                 >
                   <a>

@@ -1,5 +1,4 @@
 import Layout from 'components/Layout';
-import Slide from '../../components/carousel/Carousel';
 import ItemCard from '../../components/itemcard/ItemCard';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
@@ -17,8 +16,10 @@ import { ethers } from 'ethers';
 import { nftaddress, nftmarketaddress } from '../../config';
 import NFT from '../../artifacts/contracts/NFT.sol/NFT.json';
 import NFTMarket from '../../artifacts/contracts/NFTMarket.sol/NFTMarket.json';
+import { useRouter } from 'next/router';
 
 const Market = () => {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const arrayItems = useAppSelector(marketSelector);
 
@@ -26,32 +27,43 @@ const Market = () => {
     dispatch(marketActions.fetchItems());
   }, []);
 
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState([]);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = (index) => () => {
+    let temp = [...show];
+    temp.splice(temp.indexOf(index), 1);
+    setShow(temp);
+  };
+  const handleShow = (index) => () => {
+    setShow([...show, index]);
+  };
 
   const buyNft = async (nft) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-    const contract = new ethers.Contract(
-      nftmarketaddress,
-      NFTMarket.abi,
-      signer
-    );
+    try {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+      const contract = new ethers.Contract(
+        nftmarketaddress,
+        NFTMarket.abi,
+        signer
+      );
 
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+      const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
 
-    const transaction = await contract.createMarketSale(
-      nftaddress,
-      nft.marketId,
-      {
-        value: price,
-      }
-    );
-    await transaction.wait();
+      const transaction = await contract.createMarketSale(
+        nftaddress,
+        nft.marketId,
+        {
+          value: price,
+        }
+      );
+      await transaction.wait();
+      router.push('/assets');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -60,7 +72,7 @@ const Market = () => {
         <FloatingButton icon={<FiPlus />} href={`/create`} />
         <FloatingButton icon={<FiBriefcase />} href={`/assets`} index={1} />
         <PageTitle title={'Market'} />
-        <div className='row justify-content-center'>
+        <div className='row m-0 p-0'>
           {arrayItems.isLoading ? (
             <Spinner animation='border' role='status'>
               <span className='visually-hidden'>Loading...</span>
@@ -69,9 +81,14 @@ const Market = () => {
             <h3>No item</h3>
           ) : (
             arrayItems.data.map((item, index) => (
-              <div className='col-4' key={index}>
-                <ItemCard item={item} onClick={handleShow} />
-                <Modal size='lg' show={show} onHide={handleClose}>
+              <div className='col-4 mt-0 pt-0' key={index}>
+                <ItemCard item={item} onClick={handleShow(index)} />
+                <Modal
+                  contentClassName='rounded-xxl'
+                  size='lg'
+                  show={show.includes(index)}
+                  onHide={handleClose(index)}
+                >
                   <ItemDetail item={item} onAction={buyNft} />
                 </Modal>
               </div>
