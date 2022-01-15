@@ -20,9 +20,9 @@ const NavItem = ({ icon, href, children, className }) => (
   </li>
 );
 
-const LeftNav = () => {
+const LeftNav = ({ className }) => {
   return (
-    <div className={`navigation`}>
+    <div className={`navigation bg-transparent-card ${className || ''}`}>
       <div className='container ps-0 pe-0'>
         <div className='nav-content'>
           <div className='nav-wrap bg-white bg-transparent-card rounded-xxl shadow-xss pt-3 pb-1 mb-3 mt-3'>
