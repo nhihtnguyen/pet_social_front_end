@@ -90,3 +90,40 @@
         border-radius: 7px;
     }
 }
+
+.search-form {
+    position: relative;
+    input {
+        height: 55px;
+        line-height: 55px;
+        padding-left: 20px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+    i {
+        position: absolute;
+        top: 18px;
+        right: 15px;
+        color: #999;
+    }
+}
+.searchbox-close {
+    float: right;
+}
+
+.search-form-2 {
+    position: relative;
+    input {
+        height: 45px;
+        line-height: 45px;
+        padding-left: 20px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+    i {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        color: #999;
+    }
+}

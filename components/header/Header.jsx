@@ -7,6 +7,7 @@ import {
   FiMessageCircle,
   FiMessageSquare,
   FiBell,
+  FiX,
 } from 'react-icons/fi';
 import styles from './Header.module.scss';
 import { useRouter } from 'next/router';
@@ -132,6 +133,8 @@ const Header = () => {
 
   const navClass = `${isOpenLeftNav ? ' nav-active' : ''}`;
   const searchClass = `${isOpenSearch ? ' show' : ''}`;
+  const buttonClass = `${isOpenLeftNav ? ' active' : ''}`;
+
   const notificationClass = `${isOpenNotification ? ' show' : ''}`;
 
   const toggleLeftNav = () => setIsOpenLeftNav(!isOpenLeftNav);
@@ -154,6 +157,23 @@ const Header = () => {
             </span>
           </a>
         </Link>
+        <Link href='/message'>
+          <a className='mob-menu ms-auto me-2 chat-active-btn'>
+            <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
+              <FiMessageCircle />
+            </span>
+          </a>
+        </Link>
+
+        <span onClick={toggleSearch} className='me-2 menu-search-icon mob-menu'>
+          <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
+            <FiSearch />
+          </span>
+        </span>
+        <button
+          onClick={toggleLeftNav}
+          className={`nav-menu me-0 ms-2 ${buttonClass}`}
+        ></button>
       </div>
 
       <form onSubmit={handleSubmit} className='float-left header-search ms-3'>
@@ -266,7 +286,9 @@ const Header = () => {
               ></ion-icon>
             </i>
             <span className='ms-1 mt-1 d-inline-block close searchbox-close'>
-              <i className='ti-close font-xs' onClick={toggleSearch}></i>
+              <span className='font-xs' onClick={toggleSearch}>
+                <FiX />
+              </span>
             </span>
           </div>
         </form>
