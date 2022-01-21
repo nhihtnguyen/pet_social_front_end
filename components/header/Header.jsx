@@ -269,22 +269,15 @@ const Header = () => {
 
       <LeftNav className={`scroll-bar ${navClass}`} />
 
-      <div className={`app-header-search ${searchClass}`}>
-        <form className='search-form'>
-          <div className='form-group searchbox mb-0 border-0 p-1'>
+      <div className={`app-header-search bg-transparent  ${searchClass}`}>
+        <form className='search-form bg-transparent'>
+          <div className='form-group searchbox mb-0 border-0 p-1 bg-transparent'>
             <input
               type='text'
               className='form-control border-0'
               placeholder='Search...'
             />
-            <i className='input-icon'>
-              <ion-icon
-                name='search-outline'
-                role='img'
-                className='md hydrated'
-                aria-label='search outline'
-              ></ion-icon>
-            </i>
+
             <span className='ms-1 mt-1 d-inline-block close searchbox-close'>
               <span className='font-xs' onClick={toggleSearch}>
                 <FiX />

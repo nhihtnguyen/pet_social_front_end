@@ -23,7 +23,7 @@ const MyPet = () => {
         <div className='row'>
           {data?.map((value, index) => (
             <div className='col-md-6 col-sm-6 pb-3' key={index}>
-              <PetCard pet={value} />
+              <PetCard pet={value} hideButton={true} />
             </div>
           ))}
         </div>
