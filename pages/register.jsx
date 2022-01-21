@@ -1,12 +1,9 @@
 import Link from 'next/link';
 import { LayoutLogin } from 'components/Layout';
 import { useRouter } from 'next/router';
-import { host as serverHost } from 'config';
 import axiosClient from 'axiosSetup';
 import RegisterForm from 'components/forms/RegisterForm';
 import { useState } from 'react';
-import useForm from 'hooks/useForm';
-import validateRegister from 'components/forms/validateRegister';
 import Backdrop from 'components/backdrop/Backdrop';
 import { Spinner } from 'react-bootstrap';
 
@@ -49,7 +46,7 @@ const Register = () => {
                 Create <br />
                 your account
               </h2>
-              <RegisterForm onSubmit={handleRegister} />
+              <RegisterForm onSubmit={handleRegister} validated={validated} />
 
               <div className='col-sm-12 p-0 text-left'>
                 <h6 className='text-grey-500 font-xsss fw-500 mt-0 mb-0 lh-32'>

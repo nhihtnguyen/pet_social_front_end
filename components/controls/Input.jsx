@@ -14,7 +14,10 @@ const Input = ({
 }) => {
   const icon = startIcon ? 'icon-input' : endIcon ? 'icon-right-input' : '';
   return (
-    <Form.Group className={`${className} ${icon} form-group`} style={style}>
+    <Form.Group
+      className={`${className || ''} ${icon} form-group`}
+      style={style}
+    >
       {label && <Form.Label>{label}</Form.Label>}
       {icon && <span className='font-sm text-grey-500 pe-0'>{startIcon}</span>}
       <Form.Control

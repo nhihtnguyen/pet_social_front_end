@@ -2,11 +2,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from 'react-bootstrap';
 import styles from './Postcard.module.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Postcard = ({ value, index, as, className }) => {
   const [hover, setHover] = useState(false);
-  const width = 254;
+  const [width, setWidth] = useState(window.innerWidth < 991 ? 160 : 236);
+  useEffect(() => {
+    const handleWindowResize = () => {
+      if (window.innerWidth < 991) {
+        if (width !== 160) setWidth(160);
+      } else {
+        if (width !== 236) setWidth(236);
+      }
+    };
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  });
   const height =
     (Number(value?.size?.split('x')[1]) * width) /
       Number(value?.size?.split('x')[0]) || 300;
@@ -32,14 +43,14 @@ const Postcard = ({ value, index, as, className }) => {
           />
           {hover && (
             <div
-              className={`position-absolute rounded-xxl top-0 w-100 h-100`}
+              className={`d-flex position-absolute rounded-xxl top-0 w-100 h-100`}
               style={{
                 background:
                   'radial-gradient(circle, rgba(244,238,241,0) 0%, rgba(71,71,71,0.8) 85%)',
               }}
             >
               <div
-                className={`d-flex flex-column w-100 position-absolute bottom-0 mb-2 text-center`}
+                className={`d-flex flex-column w-100 mb-2 text-center justify-content-end`}
               >
                 <Link href={`/user/${value.User.id}` || `/user`}>
                   <a className='avatar ms-auto me-auto mb-0 position-relative w50'>

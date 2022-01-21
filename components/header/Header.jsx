@@ -7,6 +7,7 @@ import {
   FiMessageCircle,
   FiMessageSquare,
   FiBell,
+  FiX,
 } from 'react-icons/fi';
 import styles from './Header.module.scss';
 import { useRouter } from 'next/router';
@@ -20,6 +21,7 @@ import {
   Highlighter,
 } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import Image from 'next/image';
 
 const options = [
   {
@@ -132,6 +134,8 @@ const Header = () => {
 
   const navClass = `${isOpenLeftNav ? ' nav-active' : ''}`;
   const searchClass = `${isOpenSearch ? ' show' : ''}`;
+  const buttonClass = `${isOpenLeftNav ? ' active' : ''}`;
+
   const notificationClass = `${isOpenNotification ? ' show' : ''}`;
 
   const toggleLeftNav = () => setIsOpenLeftNav(!isOpenLeftNav);
@@ -147,13 +151,30 @@ const Header = () => {
         <Link href='/'>
           <a>
             <span className='d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0'>
-              <i className='display2-size me-3 ms-0'>
+              <span className='display2-size me-3 ms-0'>
                 <FiGithub />
-              </i>
+              </span>
               Pet's Friend
             </span>
           </a>
         </Link>
+        <Link href='/message'>
+          <a className='mob-menu ms-auto me-2 chat-active-btn'>
+            <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
+              <FiMessageCircle />
+            </span>
+          </a>
+        </Link>
+
+        <span onClick={toggleSearch} className='me-2 menu-search-icon mob-menu'>
+          <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
+            <FiSearch />
+          </span>
+        </span>
+        <button
+          onClick={toggleLeftNav}
+          className={`nav-menu me-0 ms-2 ${buttonClass}`}
+        ></button>
       </div>
 
       <form onSubmit={handleSubmit} className='float-left header-search ms-3'>
@@ -239,34 +260,31 @@ const Header = () => {
       <DarkModeToggle />
       <Link href='/settings'>
         <a className='p-0 ms-3 menu-icon'>
-          <img
-            src='assets/images/user.png'
+          <Image
+            src='https://via.placeholder.com/40'
             alt='user'
-            className='w40 mt--1 rounded-circle'
+            className='rounded-circle'
+            width={40}
+            height={40}
           />
         </a>
       </Link>
 
       <LeftNav className={`scroll-bar ${navClass}`} />
 
-      <div className={`app-header-search ${searchClass}`}>
-        <form className='search-form'>
-          <div className='form-group searchbox mb-0 border-0 p-1'>
+      <div className={`app-header-search bg-transparent  ${searchClass}`}>
+        <form className='search-form bg-transparent'>
+          <div className='form-group searchbox mb-0 border-0 p-1 bg-transparent'>
             <input
               type='text'
               className='form-control border-0'
               placeholder='Search...'
             />
-            <i className='input-icon'>
-              <ion-icon
-                name='search-outline'
-                role='img'
-                className='md hydrated'
-                aria-label='search outline'
-              ></ion-icon>
-            </i>
+
             <span className='ms-1 mt-1 d-inline-block close searchbox-close'>
-              <i className='ti-close font-xs' onClick={toggleSearch}></i>
+              <span className='font-xs' onClick={toggleSearch}>
+                <FiX />
+              </span>
             </span>
           </div>
         </form>

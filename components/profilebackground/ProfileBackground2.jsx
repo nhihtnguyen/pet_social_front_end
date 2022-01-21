@@ -1,15 +1,47 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiMail, FiMoreHorizontal } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import axiosClient from 'axiosSetup';
 
 const ProfileBackground = ({ profile }) => {
+  const [followed, setFollowed] = useState(false);
+  useEffect(() => {
+    if (profile) {
+      axiosClient
+        .get(`/following/${profile.id}`)
+        .then((response) => {
+          if (response.data.pet_id === profile.id) {
+            setFollowed(true);
+          }
+        })
+        .catch((error) => {});
+    }
+  }, [profile]);
+
+  const follow = async () => {
+    try {
+      setFollowed(true);
+      await axiosClient.post(`/following/follow`, { pet_id: profile.id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const unfollow = async () => {
+    try {
+      setFollowed(false);
+      await axiosClient.post(`/following/unfollow`, { pet_id: profile.id });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
       <div className='card-body h240 p-0 rounded-xxxl overflow-hidden m-3'>
         <div className={`image-container`}>
           <Image
             className={`image`}
-            src={profile.background || '/https://picsum.photos/1200/500'}
+            src={profile.background || 'https://picsum.photos/1200/500'}
             alt='background'
             layout='fill'
           />
@@ -54,10 +86,22 @@ const ProfileBackground = ({ profile }) => {
           </h4>
         </div>
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
-          <Link href='/defaultmember'>
-            <a className='d-none d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'>
-              Follow
-            </a>
+          <Link href='#'>
+            {followed ? (
+              <a
+                onClick={unfollow}
+                className='d-none d-lg-block bg-danger p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
+              >
+                Unfollow
+              </a>
+            ) : (
+              <a
+                onClick={follow}
+                className='d-none d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
+              >
+                Follow
+              </a>
+            )}
           </Link>
           <Link href='/defaultemailbox'>
             <a className='d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
@@ -161,14 +205,14 @@ const ProfileBackground = ({ profile }) => {
           <li className='list-inline-item me-5'>
             <a
               className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='.pet/1/follower'
+              href='/pet/1/follower'
               data-toggle='tab'
             >
               Followers
             </a>
           </li>
           <li className='list-inline-item me-5'>
-            <Link href='/pet/1/posts'>
+            <Link href='/posts'>
               <a
                 className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'

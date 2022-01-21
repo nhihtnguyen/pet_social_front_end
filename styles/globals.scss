@@ -55,3 +55,17 @@ a {
   background: grey;
   margin-bottom: 30px;
 }
+
+.temp-grid {
+  column-gap: 0;
+  column-width: 236px;
+}
+
+@media (max-width: 991px) {
+  .temp-grid {
+    column-width: 160px;
+    & > * {
+      width: 160px;
+    }
+  }
+}

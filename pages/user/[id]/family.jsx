@@ -15,7 +15,8 @@ const MyPet = () => {
     id ? fetcher : null
   );
   if (error) return <div>failed to load</div>;
-  if (!data || !id) return <div>loading...</div>;
+  if (!data) return <div>loading...</div>;
+
   return (
     <div className='row w-100'>
       <div className='col-xl-12 pe-0'>
@@ -23,7 +24,7 @@ const MyPet = () => {
         <div className='row'>
           {data?.map((value, index) => (
             <div className='col-md-6 col-sm-6 pb-3' key={index}>
-              <PetCard pet={value} />
+              <PetCard pet={value} hideButton={true} />
             </div>
           ))}
         </div>

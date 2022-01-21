@@ -28,7 +28,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
   const router = useRouter();
 
   const [loaded, setLoaded] = useState(-1);
-  const [isMint, setIsMint] = useState(true);
+  const [isMint, setIsMint] = useState(false);
 
   const handleUpload = (action) => async (data, setErrors, errors) => {
     console.log('datada', data);

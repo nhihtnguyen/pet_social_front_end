@@ -1,11 +1,37 @@
 import Link from 'next/link';
 import Image from 'next/image';
-const PetCard = ({ pet }) => {
+import axiosClient from 'axiosSetup';
+
+const PetCard = ({ pet, as, hideButton, className, followed, mutate }) => {
+  const follow = async () => {
+    try {
+      await axiosClient.post(`/following/follow`, { pet_id: pet.id });
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const unfollow = async () => {
+    try {
+      await axiosClient.post(`/following/unfollow`, { pet_id: pet.id });
+      mutate();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
-    <div className='card d-block border-0 shadow-xss rounded-3 overflow-hidden rounded-xxl'>
+    <div
+      className={`${
+        className || ''
+      } card d-block border-0 shadow-xss rounded-3 overflow-hidden rounded-xxl`}
+      as={as || 'div'}
+    >
       <div
         className='card-body position-relative h100 bg-image-cover bg-image-center'
-        style={{ backgroundImage: `url("https://picsum.photos/200/300")` }}
+        style={{
+          backgroundImage:
+            pet?.background || `url("https://via.placeholder.com/427x100")`,
+        }}
       ></div>
       <div className='card-body d-block w-100 pl-10 pe-4 pb-4 pt-0 text-left position-relative'>
         <figure
@@ -15,7 +41,7 @@ const PetCard = ({ pet }) => {
           <div className={`image-container`}>
             <Image
               layout='fill'
-              src={'https://picsum.photos/200'}
+              src={'https://via.placeholder.com/100'}
               alt='avatar'
               className='image float-right p-1 bg-white rounded-circle w-100 '
             />
@@ -26,13 +52,16 @@ const PetCard = ({ pet }) => {
         <p className='fw-500 font-xsssss text-grey-500 mt-0 mb-3 lh-3'>
           @mickey
         </p>
-        <span className='position-absolute right-15 top-0 d-flex align-items-center'>
-          <Link href='/defaultgroup'>
-            <a className='text-center p-2 lh-24 w100 ms-1 ls-3 d-inline-block rounded-xl bg-current font-xsssss fw-700 ls-lg text-white'>
-              FOLLOW
+        {!hideButton && (
+          <span className='position-absolute right-15 top-0 d-flex align-items-center'>
+            <a
+              onClick={followed ? unfollow : follow}
+              className='cursor-pointer text-center p-2 lh-24 w100 ms-1 ls-3 d-inline-block rounded-xl bg-current font-xsssss fw-700 ls-lg text-white'
+            >
+              {followed ? 'Un-follow' : 'Follow'}
             </a>
-          </Link>
-        </span>
+          </span>
+        )}
       </div>
     </div>
   );

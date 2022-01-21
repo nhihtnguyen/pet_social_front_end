@@ -19,7 +19,7 @@ const CreatePostForm = ({
   validated,
   loaded,
   values,
-  isMint,
+  isMint = false,
   setIsMint,
 }) => {
   const { data: mentionOptions, error: loadMentionOptionsError } = useSWR(
@@ -167,7 +167,6 @@ const CreatePostForm = ({
           />
 
           <div
-            style={{}}
             className={`${styles['action-button']} position-absolute w-100 left-0 bottom-0`}
           >
             <FiHash /> Tag

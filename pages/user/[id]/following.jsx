@@ -1,22 +1,23 @@
 import PostUser from 'components/postuser/PostUser';
 import Layout from 'components/Layout';
 import PageTitle from 'components/pagetitle/PageTitle';
-import UserCard from '../../../components/usercard/UserCard';
+import PetCard from '../../../components/petcard/PetCard';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 import Link from 'next/link';
 
-const Follower = () => {
+const Following = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { data, error } = useSWR(
-    id ? `/following/followers/${id}` : null,
+  const { data, error, mutate } = useSWR(
+    id ? `/following/following` : null,
     id ? fetcher : null
   );
   if (error) return <div>failed to load</div>;
   if (!data || !id) return <div>loading...</div>;
+  console.log(data);
   return (
     <div className='row w-100'>
       <div className='col-xl-12 pe-0'>
@@ -24,8 +25,8 @@ const Follower = () => {
         <div className='row'>
           {data.map((value) => {
             return (
-              <div key={value} className='col-md-3 col-sm-4 pe-2'>
-                <UserCard as={'a'} profile={value} />
+              <div key={value} className='col-md-6 col-sm-6 pe-2'>
+                <PetCard pet={value} followed={true} mutate={mutate} />
               </div>
             );
           })}
@@ -35,8 +36,8 @@ const Follower = () => {
   );
 };
 
-Follower.getLayout = function getLayout(page) {
+Following.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default Follower;
+export default Following;

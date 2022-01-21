@@ -35,12 +35,7 @@ const Content = () => {
           <span className='visually-hidden'>Loading...</span>
         </Spinner>
       ) : (
-        <ul
-          style={{
-            columnGap: '0',
-            columnWidth: 236,
-          }}
-        >
+        <ul className='temp-grid'>
           {posts?.map((data) =>
             data?.map((value, index) => (
               <Postcard

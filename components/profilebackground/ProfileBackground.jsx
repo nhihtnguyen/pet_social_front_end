@@ -6,12 +6,11 @@ import { FiCamera } from 'react-icons/fi';
 import axiosClient from 'axiosSetup';
 import { host as serverHost } from 'config';
 
-const ProfileBackground = ({ profile, isLoading }) => {
+const ProfileBackground = ({ profile, isLoading, className }) => {
   const [avatarHover, setAvatarHover] = useState(false);
 
   const handleUploadImage = (name) => async (e) => {
     let file = e.target.files[0];
-    console.log('upload ', name, file);
 
     const data = new FormData();
     data.append('image', file);
@@ -41,11 +40,11 @@ const ProfileBackground = ({ profile, isLoading }) => {
         />
         <label
           htmlFor='file-background'
-          className='position-absolute border-0 d-lg-block bg-greylight btn-round-lg rounded-3 text-grey-700'
-          style={{ top: 5, right: 5, fontSize: 32 }}
+          className='top-0 m-1 cursor-pointer position-absolute border-0 d-lg-block bg-greylight btn-round-lg rounded-3 text-grey-700'
+          style={{ right: 0 }}
         >
           <span>
-            <FiCamera />
+            <FiCamera fontSize={32} />
           </span>
           <input
             id='file-background'
@@ -74,8 +73,8 @@ const ProfileBackground = ({ profile, isLoading }) => {
           />
           <label
             htmlFor='file-avatar'
-            style={{ bottom: 0, right: -10 }}
-            className='position-absolute border-0 d-lg-block bg-greylight btn-round-md  text-grey-700'
+            style={{ right: -10 }}
+            className='bottom-0 cursor-pointer position-absolute border-0 d-lg-block bg-greylight btn-round-md  text-grey-700'
           >
             <span>
               <FiCamera />
@@ -176,7 +175,9 @@ const ProfileBackground = ({ profile, isLoading }) => {
             </Link>
           </li>
           <li className='list-inline-item me-5'>
-            <Link href='/user/1/family'>
+            <Link
+              href={profile ? '/user/1/posts' : `/user/${profile.id}/family`}
+            >
               <a
                 className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'
@@ -195,7 +196,20 @@ const ProfileBackground = ({ profile, isLoading }) => {
             </a>
           </li>
           <li className='list-inline-item me-5'>
-            <Link href='/user/1/posts'>
+            <a
+              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
+              href={
+                profile ? '/user/1/following' : `/user/${profile.id}/following`
+              }
+              data-toggle='tab'
+            >
+              Following
+            </a>
+          </li>
+          <li className='list-inline-item me-5'>
+            <Link
+              href={profile ? '/user/1/posts' : `/user/${profile.id}/posts`}
+            >
               <a
                 className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'
