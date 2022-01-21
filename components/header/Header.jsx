@@ -21,6 +21,7 @@ import {
   Highlighter,
 } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
+import Image from 'next/image';
 
 const options = [
   {
@@ -150,9 +151,9 @@ const Header = () => {
         <Link href='/'>
           <a>
             <span className='d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0'>
-              <i className='display2-size me-3 ms-0'>
+              <span className='display2-size me-3 ms-0'>
                 <FiGithub />
-              </i>
+              </span>
               Pet's Friend
             </span>
           </a>
@@ -259,10 +260,12 @@ const Header = () => {
       <DarkModeToggle />
       <Link href='/settings'>
         <a className='p-0 ms-3 menu-icon'>
-          <img
-            src='assets/images/user.png'
+          <Image
+            src='https://via.placeholder.com/40'
             alt='user'
-            className='w40 mt--1 rounded-circle'
+            className='rounded-circle'
+            width={40}
+            height={40}
           />
         </a>
       </Link>

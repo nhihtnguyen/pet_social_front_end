@@ -6,14 +6,14 @@ import Link from 'next/link';
 import useForm from 'hooks/useForm';
 import validateRegister from './validateRegister';
 
-const RegisterForm = ({ onSubmit, validated }) => {
-  const initValues = {
-    last_name: '',
-    email: '',
-    first_name: '',
-    password: '',
-  };
+const initValues = {
+  last_name: '',
+  email: '',
+  first_name: '',
+  password: '',
+};
 
+const RegisterForm = ({ onSubmit, validated = false }) => {
   const {
     handleChange: onChange,
     values: info,
@@ -27,48 +27,44 @@ const RegisterForm = ({ onSubmit, validated }) => {
         onChange={onChange('first_name')}
         invalidTooltip={errors['first_name']}
         type='text'
-        id='firstname'
+        name='first_name'
         className='mb-3'
         inputClassName='style2-input ps-5'
         placeholder='First Name'
         startIcon={<FiUser />}
-        required
       />
       <Input
         value={info.last_name}
         onChange={onChange('last_name')}
         invalidTooltip={errors['last_name']}
         type='text'
-        id='lastname'
+        name='last_name'
         className='mb-3'
         inputClassName='style2-input ps-5'
         placeholder='Last Name'
         startIcon={<FiUser />}
-        required
       />
       <Input
         value={info.email}
         onChange={onChange('email')}
         invalidTooltip={errors['email']}
         type='email'
-        id='email'
+        name='email'
         className='mb-3'
         inputClassName='style2-input ps-5'
         placeholder='Your Email Address'
         startIcon={<FiMail />}
-        required
       />
       <Input
         value={info.password}
         onChange={onChange('password')}
         invalidTooltip={errors['password']}
         type='password'
-        id='password'
+        name='password'
         className='mb-3'
         inputClassName='style2-input ps-5'
         placeholder='Password'
         startIcon={<FiLock />}
-        required
       />
 
       <Check

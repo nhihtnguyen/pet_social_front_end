@@ -15,7 +15,8 @@ const MyPet = () => {
     id ? fetcher : null
   );
   if (error) return <div>failed to load</div>;
-  if (!data || !id) return <div>loading...</div>;
+  if (!data) return <div>loading...</div>;
+
   return (
     <div className='row w-100'>
       <div className='col-xl-12 pe-0'>

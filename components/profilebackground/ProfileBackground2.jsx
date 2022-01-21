@@ -41,7 +41,7 @@ const ProfileBackground = ({ profile }) => {
         <div className={`image-container`}>
           <Image
             className={`image`}
-            src={profile.background || '/https://picsum.photos/1200/500'}
+            src={profile.background || 'https://picsum.photos/1200/500'}
             alt='background'
             layout='fill'
           />
