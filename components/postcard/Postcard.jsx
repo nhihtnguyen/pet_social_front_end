@@ -2,79 +2,75 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from 'react-bootstrap';
 import styles from './Postcard.module.scss';
-import { useState, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
-const Postcard = ({ value, index, as, className }) => {
+const Postcard = ({ value, className, ...props }) => {
+  const router = useRouter();
   const [hover, setHover] = useState(false);
-  const [width, setWidth] = useState(window.innerWidth < 991 ? 160 : 236);
+  const [width, setWidth] = useState(236);
+  /*
+  const cardRef = useRef();
   useEffect(() => {
-    const handleWindowResize = () => {
-      if (window.innerWidth < 991) {
-        if (width !== 160) setWidth(160);
-      } else {
-        if (width !== 236) setWidth(236);
-      }
-    };
-    window.addEventListener('resize', handleWindowResize);
-    return () => window.removeEventListener('resize', handleWindowResize);
-  });
-  const height =
-    (Number(value?.size?.split('x')[1]) * width) /
-      Number(value?.size?.split('x')[0]) || 300;
+    console.log(cardRef.current.clientWidth);
+  }, [cardRef]);
+  */
+
+  const ratio = value?.size?.split('x')[0] / value?.size?.split('x')[1];
+  const height = width / ratio;
+  const linkToDetail = () => {
+    router.push(`/post/${value.id}`);
+  };
+  const linkToAuthor = () => {
+    router.push(`/post/${value.id}`);
+  };
+
   return (
     <Card
-      as={as}
-      className={`${className} d-block border-0 shadow-xss rounded-xxl bg-gradient-bottom`}
-      style={{
-        width: `${width}px`,
-        height: `${height}px`,
-      }}
+      className={`${
+        className || ''
+      } d-block cursor-pointer border-0 shadow-xss rounded-xxl`}
       onMouseEnter={(e) => setHover(true)}
       onMouseLeave={(e) => setHover(false)}
+      onClick={linkToDetail}
+      {...props}
     >
-      <Link href={`/post/${value.id}`}>
-        <a>
-          <Image
-            className='rounded-xxl border-0'
-            width={width}
-            height={height}
-            src={value.media_url || '/'}
-            alt={value.media_url || '/'}
-          />
-          {hover && (
-            <div
-              className={`d-flex position-absolute rounded-xxl top-0 w-100 h-100`}
-              style={{
-                background:
-                  'radial-gradient(circle, rgba(244,238,241,0) 0%, rgba(71,71,71,0.8) 85%)',
-              }}
-            >
-              <div
-                className={`d-flex flex-column w-100 mb-2 text-center justify-content-end`}
-              >
-                <Link href={`/user/${value.User.id}` || `/user`}>
-                  <a className='avatar ms-auto me-auto mb-0 position-relative w50'>
-                    <Image
-                      width={50}
-                      height={50}
-                      src={value?.User.avatar || `/assets/images/${'user.png'}`}
-                      alt='avatar'
-                      className='float-right p-0 bg-white rounded-circle shadow-xss w-100 h-100'
-                    />
-                  </a>
-                </Link>
+      <Image
+        className='rounded-xxl'
+        width={width}
+        height={height}
+        layout='responsive'
+        src={value.media_url || '/'}
+        alt={value.media_url || '/'}
+      />
 
-                <div className='clearfix'></div>
-                <h4 className='fw-600 position-relative z-index-1 ls-3 font-xssss text-white mt-0 mb-1'>
-                  {value?.User.first_name && value?.User.last_name
-                    ? `${value.User.first_name} ${value.User.last_name}`
-                    : 'Full Name'}
-                </h4>
-              </div>
-            </div>
-          )}
-        </a>
-      </Link>
+      {hover && (
+        <div
+          className={`${styles['post-card-hover']} d-flex position-absolute rounded-xxl top-0 w-100 h-100`}
+        >
+          <div
+            className={`d-flex flex-column w-100 mb-2 text-center justify-content-end`}
+          >
+            <figure className='avatar cursor-pointer ms-auto me-auto mb-0 position-relative w50'>
+              <Image
+                onClick={linkToAuthor}
+                width={50}
+                height={50}
+                src={value?.User.avatar || `/assets/images/${'user.png'}`}
+                alt='avatar'
+                className='p-0 rounded-circle shadow-xss w-100 h-100'
+              />
+            </figure>
+
+            <div className='clearfix'></div>
+            <h4 className='fw-600 position-relative z-index-1 ls-3 font-xssss text-white mt-0 mb-1'>
+              {value?.User.first_name && value?.User.last_name
+                ? `${value.User.first_name} ${value.User.last_name}`
+                : 'Full Name'}
+            </h4>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

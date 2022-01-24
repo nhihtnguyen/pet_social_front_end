@@ -5,30 +5,23 @@ import { IoPawOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import styles from './PostDetail.module.scss';
 import CommentBox from '../commentbox/CommentBox';
-import { useState, useEffect } from 'react';
-import { host as serverHost } from 'config';
-import useSWRInfinite from 'swr/infinite';
-import axiosClient from 'axiosSetup';
-const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
+import { useEffect } from 'react';
+import useInfinitePagination from 'hooks/useInfinitePagination';
+import { useAuth } from 'app/authContext';
 
 const NestedComment = ({ comment, onShowReplies }) => {
   return <CommentBox />;
 };
 
 const CommentSection = ({ pid }) => {
-  const getKey = (pageIndex, previousPageData) => {
-    console.log('page', pageIndex, previousPageData);
-    if (previousPageData && !previousPageData.length) {
-      return null;
-    }
-    return `/comments/post/${pid}?page=${pageIndex + 1}`;
-  };
   const {
-    data: comments,
+    paginatedData: comments,
     size,
     setSize,
     mutate,
-  } = useSWRInfinite(getKey, fetcher);
+    isReachedEnd,
+  } = useInfinitePagination(`/comments/post/${pid}?`);
+
   useEffect(() => {
     console.log('comment', comments);
   }, [comments]);
@@ -43,24 +36,25 @@ const CommentSection = ({ pid }) => {
           <span className='visually-hidden'>Loading...</span>
         </Spinner>
       ) : (
-        comments?.map((values) =>
-          values.map((comment, index) => (
-            <CommentBox created comment={comment} key={index} pid={pid} />
-          ))
-        )
+        comments?.map((comment, index) => (
+          <CommentBox created comment={comment} key={index} pid={pid} />
+        ))
       )}
-      <button
-        style={{ background: 'none' }}
-        className='text-current font-xsss border-0'
-        onClick={() => setSize(size + 1)}
-      >
-        Show More
-      </button>
+      {!isReachedEnd && (
+        <button
+          style={{ background: 'none' }}
+          className='text-current font-xsss border-0'
+          onClick={() => setSize(size + 1)}
+        >
+          Show More
+        </button>
+      )}
     </>
   );
 };
 
 const PostDetail = ({ item, loading, pid }) => {
+  const { user } = useAuth();
   const calVote = (vote) => {
     if (vote >= 1000000) {
       return `${vote / 1000000}m`;
@@ -72,6 +66,7 @@ const PostDetail = ({ item, loading, pid }) => {
   };
   const width = Number(item?.size?.split('x')[0]) || 300;
   const height = Number(item?.size?.split('x')[1]) || 500;
+  console.log(user);
 
   return (
     <Card className={`p-0 rounded-xxl shadow-xss ${styles['post-card']}`}>
@@ -82,8 +77,8 @@ const PostDetail = ({ item, loading, pid }) => {
               <Placeholder as='div' className={`w-100 h-100 rounded-xxxxl}`} />
             ) : (
               <Image
-                src={item?.media_url || 'https://picsum.photos/300/500'}
-                className={`image rounded-xxxxl`}
+                src={item?.media_url || 'https://via.placeholder.com/300/500'}
+                className={`rounded-xxxxl`}
                 width={width}
                 height={height}
                 alt='image'

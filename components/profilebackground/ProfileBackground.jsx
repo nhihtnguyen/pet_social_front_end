@@ -1,13 +1,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { FiMail, FiMoreHorizontal } from 'react-icons/fi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FiCamera } from 'react-icons/fi';
 import axiosClient from 'axiosSetup';
 import { host as serverHost } from 'config';
 
-const ProfileBackground = ({ profile, isLoading, className }) => {
+const ProfileBackground = ({ profile, isLoading, className, id }) => {
   const [avatarHover, setAvatarHover] = useState(false);
+  const [userID, setUserID] = useState(false);
 
   const handleUploadImage = (name) => async (e) => {
     let file = e.target.files[0];
@@ -25,6 +26,13 @@ const ProfileBackground = ({ profile, isLoading, className }) => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (profile) {
+      setUserID(profile.id);
+    }
+    console.log(profile, 'as');
+  }, [profile]);
 
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
@@ -101,19 +109,17 @@ const ProfileBackground = ({ profile, isLoading, className }) => {
               </i>
             </a>
           </Link>
-          <Link href='#'>
-            <a
-              id='dropdownMenu4'
-              className='d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
-              data-toggle='dropdown'
-              aria-haspopup='true'
-              aria-expanded='false'
-            >
-              <i className='font-md text-dark'>
-                <FiMoreHorizontal />
-              </i>
-            </a>
-          </Link>
+          <a
+            id='dropdownMenu4'
+            className='d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+            data-toggle='dropdown'
+            aria-haspopup='true'
+            aria-expanded='false'
+          >
+            <i className='font-md text-dark'>
+              <FiMoreHorizontal />
+            </i>
+          </a>
           <div
             className='dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg'
             aria-labelledby='dropdownMenu4'
@@ -175,9 +181,7 @@ const ProfileBackground = ({ profile, isLoading, className }) => {
             </Link>
           </li>
           <li className='list-inline-item me-5'>
-            <Link
-              href={profile ? '/user/1/posts' : `/user/${profile.id}/family`}
-            >
+            <Link href={`/user/${userID}/family`}>
               <a
                 className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'
@@ -198,18 +202,14 @@ const ProfileBackground = ({ profile, isLoading, className }) => {
           <li className='list-inline-item me-5'>
             <a
               className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href={
-                profile ? '/user/1/following' : `/user/${profile.id}/following`
-              }
+              href={`/user/${userID}/following`}
               data-toggle='tab'
             >
               Following
             </a>
           </li>
           <li className='list-inline-item me-5'>
-            <Link
-              href={profile ? '/user/1/posts' : `/user/${profile.id}/posts`}
-            >
+            <Link href={`/user/${userID}/posts`}>
               <a
                 className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
                 data-toggle='tab'

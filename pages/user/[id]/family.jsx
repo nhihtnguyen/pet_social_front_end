@@ -2,7 +2,6 @@ import Layout from 'components/Layout';
 import PageTitle from '../../../components/pagetitle/PageTitle';
 import PetCard from '../../../components/petcard/PetCard';
 import axiosClient from 'axiosSetup';
-import { host as serverHost } from 'config';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
@@ -17,6 +16,10 @@ const MyPet = () => {
   if (error) return <div>failed to load</div>;
   if (!data) return <div>loading...</div>;
 
+  const handleClick = (id) => () => {
+    router.push('/pet/' + id);
+  };
+
   return (
     <div className='row w-100'>
       <div className='col-xl-12 pe-0'>
@@ -24,7 +27,11 @@ const MyPet = () => {
         <div className='row'>
           {data?.map((value, index) => (
             <div className='col-md-6 col-sm-6 pb-3' key={index}>
-              <PetCard pet={value} hideButton={true} />
+              <PetCard
+                pet={value}
+                hideButton={true}
+                onClick={handleClick(value.id)}
+              />
             </div>
           ))}
         </div>

@@ -2,7 +2,15 @@ import Link from 'next/link';
 import Image from 'next/image';
 import axiosClient from 'axiosSetup';
 
-const PetCard = ({ pet, as, hideButton, className, followed, mutate }) => {
+const PetCard = ({
+  pet,
+  as,
+  hideButton,
+  className,
+  followed,
+  mutate,
+  onClick,
+}) => {
   const follow = async () => {
     try {
       await axiosClient.post(`/following/follow`, { pet_id: pet.id });
@@ -35,8 +43,9 @@ const PetCard = ({ pet, as, hideButton, className, followed, mutate }) => {
       ></div>
       <div className='card-body d-block w-100 pl-10 pe-4 pb-4 pt-0 text-left position-relative'>
         <figure
-          className='avatar position-absolute w75 z-index-1 left-15'
+          className='avatar position-absolute w75 z-index-1 left-15 cursor-pointer'
           style={{ marginTop: `-40px` }}
+          onClick={onClick}
         >
           <div className={`image-container`}>
             <Image

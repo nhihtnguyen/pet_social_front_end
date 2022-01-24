@@ -1,4 +1,3 @@
-import PostUser from 'components/postuser/PostUser';
 import Layout from 'components/Layout';
 import PageTitle from 'components/pagetitle/PageTitle';
 import UserCard from '../../../components/usercard/UserCard';

@@ -1,4 +1,5 @@
 import Layout from 'components/Layout';
+import { LayoutProfile } from 'components/Layout';
 import ProfileBackground from 'components/profilebackground/ProfileBackground';
 import ProfileDetail from '../../../components/profiledetail/ProfileDetail';
 import axiosClient from 'axiosSetup';
@@ -17,7 +18,7 @@ const Profile = () => {
   return (
     <div className='row w-100 justify-content-center'>
       <div className='col-12 mb-3 pe-0' style={{ maxWidth: 1000 }}>
-        <ProfileBackground profile={user} />
+        <ProfileBackground profile={user} id={id} />
       </div>
       <div className='col-12 pe-0' style={{ maxWidth: 1000 }}>
         <ProfileDetail />

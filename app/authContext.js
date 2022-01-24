@@ -28,18 +28,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async ({ email, password }) => {
-    console.log('Logififfn');
     const { data: token } = await axiosClient.post('auth/login', {
       email,
       password,
     });
     if (token) {
-      console.log('Got token');
       localStorage.setItem('token', token, { expires: 60 });
       axiosClient.defaults.headers.Authorization = `Bearer ${token.token}`;
       const { data: user } = await axiosClient.get('users/me');
       setUser(user);
-      console.log('Got user', user);
     }
   };
 

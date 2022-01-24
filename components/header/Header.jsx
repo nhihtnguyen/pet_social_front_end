@@ -158,15 +158,11 @@ const Header = () => {
             </span>
           </a>
         </Link>
-        <Link href='/message'>
-          <a className='mob-menu ms-auto me-2 chat-active-btn'>
-            <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
-              <FiMessageCircle />
-            </span>
-          </a>
-        </Link>
 
-        <span onClick={toggleSearch} className='me-2 menu-search-icon mob-menu'>
+        <span
+          onClick={toggleSearch}
+          className='ms-auto me-2 menu-search-icon mob-menu'
+        >
           <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
             <FiSearch />
           </span>

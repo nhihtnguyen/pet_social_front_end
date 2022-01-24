@@ -17,16 +17,24 @@ const Following = () => {
   );
   if (error) return <div>failed to load</div>;
   if (!data || !id) return <div>loading...</div>;
-  console.log(data);
+
+  const handleClick = (id) => () => {
+    router.push('/pet/' + id);
+  };
   return (
     <div className='row w-100'>
       <div className='col-xl-12 pe-0'>
-        <PageTitle title='Follower' />
+        <PageTitle title='Following' />
         <div className='row'>
           {data.map((value) => {
             return (
               <div key={value} className='col-md-6 col-sm-6 pe-2'>
-                <PetCard pet={value} followed={true} mutate={mutate} />
+                <PetCard
+                  pet={value}
+                  followed={true}
+                  mutate={mutate}
+                  onClick={handleClick(value.id)}
+                />
               </div>
             );
           })}
