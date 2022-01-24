@@ -1,6 +1,6 @@
 import image from 'next/image';
 
-const validateRegister = (values) => {
+const validateCreatePost = (values) => {
   const errors = {};
 
   if ('name' in values) {
@@ -44,4 +44,4 @@ const validateRegister = (values) => {
   return errors;
 };
 
-export default validateRegister;
+export default validateCreatePost;

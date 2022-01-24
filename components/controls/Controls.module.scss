@@ -92,6 +92,10 @@
     }
 }
 
+.form-control {
+    //height: 44.91px;
+}
+
 .primary-button {
     padding: 0.5rem 1.5rem;
     font-size: 14px;
@@ -100,7 +104,8 @@
 }
 
 .select {
-    .khoast__control {
+    background-color: darkblue;
+    .select__control {
         color: #717171;
     }
     .is-focused > Select-control {
@@ -172,4 +177,9 @@
             }
         }
     }
+}
+
+.typing-box {
+    width: 100%;
+    position: relative;
 }

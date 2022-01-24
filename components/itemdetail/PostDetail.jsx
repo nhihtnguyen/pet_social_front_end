@@ -1,19 +1,29 @@
 import { Card, Col, Row, Button, Placeholder, Spinner } from 'react-bootstrap';
 import Link from 'next/link';
-import { FiMessageCircle, FiShare2, FiMoreHorizontal } from 'react-icons/fi';
+import {
+  FiMessageCircle,
+  FiShare2,
+  FiMoreHorizontal,
+  FiEdit3,
+  FiAlertCircle,
+} from 'react-icons/fi';
+import { BsBookmarkHeart } from 'react-icons/bs';
 import { IoPawOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import styles from './PostDetail.module.scss';
 import CommentBox from '../commentbox/CommentBox';
-import { useEffect } from 'react';
+import { useEffect, forwardRef } from 'react';
 import useInfinitePagination from 'hooks/useInfinitePagination';
 import { useAuth } from 'app/authContext';
+import { calVote } from 'helpers';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 const NestedComment = ({ comment, onShowReplies }) => {
   return <CommentBox />;
 };
 
-const CommentSection = ({ pid }) => {
+const CommentSection = ({ pid, setNumberOfComments }) => {
   const {
     paginatedData: comments,
     size,
@@ -21,10 +31,6 @@ const CommentSection = ({ pid }) => {
     mutate,
     isReachedEnd,
   } = useInfinitePagination(`/comments/post/${pid}?`);
-
-  useEffect(() => {
-    console.log('comment', comments);
-  }, [comments]);
 
   return (
     <>
@@ -54,25 +60,44 @@ const CommentSection = ({ pid }) => {
 };
 
 const PostDetail = ({ item, loading, pid }) => {
+  const router = useRouter();
   const { user } = useAuth();
-  const calVote = (vote) => {
-    if (vote >= 1000000) {
-      return `${vote / 1000000}m`;
-    } else if (vote >= 1000) {
-      return `${vote / 1000}k`;
-    } else {
-      return `${vote}`;
-    }
-  };
+  const [numberOfComments, setNumberOfComments] = useState(0);
+
   const width = Number(item?.size?.split('x')[0]) || 300;
   const height = Number(item?.size?.split('x')[1]) || 500;
-  console.log(user);
+  const isOwner = user?.id === item?.User.id;
+
+  const linkToEdit = () => {
+    router.push(`/post/${item?.id}/edit`);
+  };
+
+  const handleReport = () => {};
+  const handleSavePost = () => {};
+
+  /*
+  const CustomToggle = forwardRef(({ children, onClick }, ref) => (
+    <a
+      href=''
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      <span className='text-grey-900 position-absolute top-0 right-0 me-3' html>
+        <FiMoreHorizontal fontSize={28} />
+      </span>
+      {children}
+    </a>
+  ));
+  */
 
   return (
     <Card className={`p-0 rounded-xxl shadow-xss ${styles['post-card']}`}>
       <Card.Body>
         <Row>
-          <Col xs={width > height ? '12' : '6'}>
+          <Col xs={12} md={true} className='align-content-center'>
             {loading ? (
               <Placeholder as='div' className={`w-100 h-100 rounded-xxxxl}`} />
             ) : (
@@ -86,16 +111,39 @@ const PostDetail = ({ item, loading, pid }) => {
             )}
           </Col>
 
-          <Col xs={width > height ? '12' : '6'}>
-            <h4 className='font-xss text-grey-900 fw-700 ls-2 mt-4'>About</h4>
-
-            <Link href={`/create/edit/${pid}`}>
-              <a className='ms-auto'>
-                <i className='text-grey-900 font-lg position-absolute top-0 right-0 me-3'>
-                  <FiMoreHorizontal />
-                </i>
+          <Col xs={12} md={true}>
+            <div className={`d-flex p-0 m-0 mb-3 position-relative`}>
+              <a className='d-flex cursor-pointer align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-3'>
+                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+                  <IoPawOutline />
+                </span>
+                {calVote(item?.upvote ? item.upvote : 0)}
               </a>
-            </Link>
+              <a className='d-flex cursor-pointer align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
+                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+                  <FiMessageCircle />
+                </span>
+                {numberOfComments}
+              </a>
+              <a
+                className='ms-auto cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
+                onClick={isOwner ? linkToEdit : handleSavePost}
+              >
+                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+                  {isOwner ? <FiEdit3 /> : <BsBookmarkHeart />}
+                </span>
+              </a>
+              <a
+                className='cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
+                onClick={handleReport}
+              >
+                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+                  <FiAlertCircle />
+                </span>
+              </a>
+            </div>
+            <h4 className='font-xss text-grey-900 fw-700 ls-2 '>About</h4>
+
             {loading ? (
               <Placeholder as='p' animation='glow'>
                 <Placeholder xs={7} /> <Placeholder xs={4} />{' '}
@@ -110,12 +158,12 @@ const PostDetail = ({ item, loading, pid }) => {
             <hr />
 
             <ul className='d-flex'>
-              <li className={`d-flex m-1`}>
-                <figure className='avatar me-3 '>
+              <li className={`d-flex m-1 me-3 align-items-center`}>
+                <figure className='avatar m-auto me-3'>
                   <Image
                     width={45}
                     height={45}
-                    src={item?.User?.avatar || 'https://picsum.photos/200'}
+                    src={item?.User?.avatar || 'https://via.placeholder.com/45'}
                     alt='avatar'
                     className='image  shadow-sm rounded-circle w45 '
                   />
@@ -125,18 +173,18 @@ const PostDetail = ({ item, loading, pid }) => {
                     ? `${item.User.first_name} ${item.User.last_name}`
                     : 'Full Name'}
                   <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
-                    5 Posts
+                    {/*5 Posts*/}
                   </span>
                 </h4>
               </li>
               {item?.mentions?.map(() => {
                 return (
-                  <li className={`d-flex`}>
-                    <figure className='avatar me-3'>
+                  <li className={`d-flex align-items-center`}>
+                    <figure className='avatar m-auto me-3'>
                       <Image
                         width={45}
                         height={45}
-                        src={'https://picsum.photos/200'}
+                        src={'https://via.placeholder.com/45'}
                         alt='avatar'
                         className='shadow-sm rounded-circle w45'
                       />
@@ -144,40 +192,18 @@ const PostDetail = ({ item, loading, pid }) => {
                     <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
                       Pet Name
                       <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
-                        5 Followers
+                        {/*5 Posts*/}
                       </span>
                     </h4>
                   </li>
                 );
               })}
             </ul>
-            <div className={`d-flex p-0 mt-3 position-relative`}>
-              <Link href='/'>
-                <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-3'>
-                  <i className='text-dark text-grey-900 btn-round-sm font-lg'>
-                    <IoPawOutline />
-                  </i>
-                  {calVote(item?.upvote ? item.upvote : 0)} Vote
-                </a>
-              </Link>
-              <Link href='/'>
-                <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
-                  <i className='text-dark text-grey-900 btn-round-sm font-lg'>
-                    <FiMessageCircle />
-                  </i>
-                  22 Comment
-                </a>
-              </Link>
-              <Link href='/defaultvideo'>
-                <a className='ms-auto me-3 d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
-                  <i className='text-grey-900 text-dark btn-round-sm font-lg'>
-                    <FiShare2 />
-                  </i>
-                  <span className='d-none-xs'>Share</span>
-                </a>
-              </Link>
-            </div>
-            <CommentSection pid={pid} />
+
+            <CommentSection
+              pid={pid}
+              setNumberOfComments={setNumberOfComments}
+            />
           </Col>
         </Row>
       </Card.Body>

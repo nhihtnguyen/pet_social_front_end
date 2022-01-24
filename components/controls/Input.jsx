@@ -1,4 +1,5 @@
 import { Form } from 'react-bootstrap';
+import styles from './Controls.module.scss';
 
 const Input = ({
   label,
@@ -22,7 +23,7 @@ const Input = ({
       {icon && <span className='font-sm text-grey-500 pe-0'>{startIcon}</span>}
       <Form.Control
         type={type}
-        className={`${inputClassName} text-grey-900 font-xsss fw-600`}
+        className={`${inputClassName} ${styles['typing-box']} font-xsss fw-600`}
         {...props}
       />
       <div

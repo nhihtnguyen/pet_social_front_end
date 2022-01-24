@@ -2,7 +2,6 @@ import Postcard from 'components/postcard/Postcard';
 import FloatingButton from 'components/floatingbutton/FloatingButton';
 import { FiPlus } from 'react-icons/fi';
 import { Spinner } from 'react-bootstrap';
-import { host as serverHost } from 'config';
 import axiosClient from 'axiosSetup';
 import { SWRConfig } from 'swr';
 import useInfinitePagination from 'hooks/useInfinitePagination';
@@ -12,7 +11,24 @@ import { Masonry } from 'masonic';
 import Layout from 'components/Layout';
 import Head from 'next/head';
 
-const MasonryCard = ({ data }) => <Postcard value={data} className={`m-0`} />;
+const MasonryCard = ({ data }) =>
+  data?.firstPost ? (
+    <div
+      className='cursor-pointer rounded-xxl d-flex justify-content-center align-items-center'
+      style={{
+        minHeight: 200,
+        backgroundColor: '#f1f1f1',
+        border: '3px dashed grey',
+        outline: '10px solid #f1f1f1',
+        padding: 10,
+        margin: 10,
+      }}
+    >
+      <FiPlus fontSize={32} className='text-current' />
+    </div>
+  ) : (
+    <Postcard value={data} className={`m-0`} />
+  );
 
 const Content = () => {
   const {
@@ -41,9 +57,9 @@ const Content = () => {
           <div className='masonic me-auto ms-auto'>
             <Masonry
               // Provides the data for our grid items
-              items={paginatedPosts}
+              items={paginatedPosts || []}
               // Adds 8px of space between the grid cells
-              columnGutter={8}
+              columnGutter={12}
               // Sets the minimum column width to 172px
               columnWidth={172}
               // Pre-renders 5 windows worth of content

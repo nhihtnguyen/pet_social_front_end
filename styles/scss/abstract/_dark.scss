@@ -58,9 +58,20 @@
         border-bottom: 0 !important;
     }
 
-    .form-control {
+    .form-control,
+    .myselect__control,
+    .myselect__menu {
         background-color: #333 !important;
+        color: #eee;
         border-color: var(--theme-color);
+    }
+
+    .myselect__single-value {
+        color: #eee;
+    }
+
+    .myselect__option--is-focused {
+        background-color: #132977;
     }
 
     .dropdown-menu-settings:after {

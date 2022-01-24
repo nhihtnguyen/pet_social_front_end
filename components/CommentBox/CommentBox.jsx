@@ -7,16 +7,7 @@ import { AiOutlineSend, AiOutlineCloseCircle } from 'react-icons/ai';
 import { IoPawOutline } from 'react-icons/io5';
 import axiosClient from 'axiosSetup';
 import { Spinner, Button } from 'react-bootstrap';
-
-const getFormatDate = (date) => {
-  return (
-    (date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)) +
-    '/' +
-    (date.getDate() > 9 ? date.getDate() : '0' + date.getDate()) +
-    '/' +
-    date.getFullYear()
-  );
-};
+import { getFormatDate } from 'helpers';
 
 const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,7 +81,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
     }
   }, [isEdit]);
   return (
-    <div className={`p-0 mt-3 position-relative d-flex ${className}`}>
+    <div className={`p-0 mt-3 position-relative d-flex ${className || ''}`}>
       <figure
         className={`avatar ${
           created ? 'w45' : 'w30 position-absolute'
@@ -110,13 +101,11 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
           className={`bor-0 w-100 rounded-xxl p-2 ps-3 
                      border-light-md theme-dark-bg position-relative`}
         >
-          <Link href='#'>
-            <a className='ms-auto' onClick={() => setIsEdit(true)}>
-              <i className='text-grey-900 font-xs position-absolute top-0 right-0 me-3'>
-                <FiMoreHorizontal />
-              </i>
-            </a>
-          </Link>
+          <a className='ms-auto' onClick={() => setIsEdit(true)}>
+            <span className='text-grey-900 font-xs position-absolute top-0 right-0 me-3'>
+              <FiMoreHorizontal />
+            </span>
+          </a>
           <h6 className={`font-xsss fw-600 mb-0 d-flex`}>
             {comment
               ? comment.User?.first_name + ' ' + comment.User?.last_name

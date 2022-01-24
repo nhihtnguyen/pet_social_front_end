@@ -9,20 +9,15 @@ const Postcard = ({ value, className, ...props }) => {
   const router = useRouter();
   const [hover, setHover] = useState(false);
   const [width, setWidth] = useState(236);
-  /*
-  const cardRef = useRef();
-  useEffect(() => {
-    console.log(cardRef.current.clientWidth);
-  }, [cardRef]);
-  */
 
   const ratio = value?.size?.split('x')[0] / value?.size?.split('x')[1];
   const height = width / ratio;
   const linkToDetail = () => {
     router.push(`/post/${value.id}`);
   };
-  const linkToAuthor = () => {
-    router.push(`/post/${value.id}`);
+  const linkToAuthor = (event) => {
+    event.stopPropagation();
+    router.push(`/user/${value.User.id}`);
   };
 
   return (

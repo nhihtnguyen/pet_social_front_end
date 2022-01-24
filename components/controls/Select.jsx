@@ -23,16 +23,18 @@ const options = [
   },
 ];
 
-const IconOption = (props) => (
+const IconOption = ({ data, ...props }) => (
   <Option {...props} className='d-flex align-items-center'>
-    <Image
-      className='rounded-circle'
-      src={`https://picsum.photos/200/300`}
-      height='30px'
-      width='30px'
-      alt='label'
-    />
-    <h6 className='font-xxxs ms-1'>{props.data.label}</h6>
+    {data?.hasIcon && (
+      <Image
+        className='rounded-circle'
+        src={data?.image || `https://via.placeholder.com/30`}
+        height='30px'
+        width='30px'
+        alt='label'
+      />
+    )}
+    <h6 className='font-xxxs ms-1'>{data?.label}</h6>
   </Option>
 );
 
@@ -48,28 +50,6 @@ const IconMultiValue = (props) => (
   </MultiValue>
 );
 
-const customStyles = {
-  menu: (provided, state) => ({
-    ...provided,
-    borderRadius: 16,
-  }),
-  control: (base, state) => ({
-    ...base,
-    boxShadow: 'none',
-    border: '3px solid #f1f1f1',
-    borderWidth: '3px',
-    borderColor: '#f1f1f1 !important',
-    borderRadius: 16,
-    // You can also use state.isFocused to conditionally style based on the focus state
-  }),
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    return {
-      ...styles,
-      borderRadius: 8,
-    };
-  },
-};
-
 const convertToDefEventPara = (name, value) => ({
   target: {
     name,
@@ -80,33 +60,74 @@ const convertToDefEventPara = (name, value) => ({
 const MySelect = ({
   onChange,
   label,
+  multiple,
   name,
   invalidTooltip,
   className = '',
   style = '',
+  inputStyle,
+  menuStyle,
+  singleStyle,
   ...props
-}) => (
-  <Form.Group className={`${className} form-group`}>
-    {label && <Form.Label>{label}</Form.Label>}
-    <Select
-      isMulti
-      options={options}
-      styles={customStyles}
-      components={{ MultiValue: IconMultiValue, Option: IconOption }}
-      onChange={(e) => onChange(convertToDefEventPara(name, e))}
-      name={name}
-      {...props}
-    />
-    {
-      <div
-        className={`invalid-tooltip font-xsss ${
-          invalidTooltip ? 'd-block' : 'd-none'
-        }`}
-      >
-        {invalidTooltip}
-      </div>
-    }
-  </Form.Group>
-);
+}) => {
+  const customStyles = {
+    menu: (provided, state) => ({
+      ...provided,
+      boxShadow: 'none',
+      border: '3px solid #f1f1f1',
+      borderWidth: '3px',
+      borderColor: '#f1f1f1 !important',
+      borderRadius: 16,
+      ...menuStyle,
+    }),
+    control: (base, state) => ({
+      ...base,
+      boxShadow: 'none',
+      border: '3px solid #f1f1f1',
+      borderWidth: '3px',
+      borderColor: '#f1f1f1 !important',
+      borderRadius: 16,
+      ...inputStyle,
+      // You can also use state.isFocused to conditionally style based on the focus state
+    }),
+    option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+      return {
+        ...styles,
+        borderRadius: 8,
+      };
+    },
+    singleValue: (provided, state) => {
+      const opacity = state.isDisabled ? 0.5 : 1;
+      const transition = 'opacity 300ms';
+
+      return { ...provided, opacity, transition, ...singleStyle };
+    },
+  };
+  return (
+    <Form.Group className={`${className} form-group`}>
+      {label && <Form.Label>{label}</Form.Label>}
+      <Select
+        isMulti={multiple || false}
+        options={options}
+        styles={customStyles}
+        components={{ MultiValue: IconMultiValue, Option: IconOption }}
+        onChange={(e) => onChange(convertToDefEventPara(name, e))}
+        name={name}
+        className={'myselect'}
+        classNamePrefix='myselect'
+        {...props}
+      />
+      {
+        <div
+          className={`invalid-tooltip font-xsss ${
+            invalidTooltip ? 'd-block' : 'd-none'
+          }`}
+        >
+          {invalidTooltip}
+        </div>
+      }
+    </Form.Group>
+  );
+};
 
 export default MySelect;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { host as serverHost } from 'config';
+const serverHost = 'http://localhost:3001';
 
 const client = axios.create({
   baseURL: serverHost,

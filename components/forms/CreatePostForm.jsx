@@ -146,7 +146,7 @@ const CreatePostForm = ({
             return {
               value: pet.id,
               label: pet.name,
-              image: 'https://picsum.photos/200/300',
+              image: pet.avatar || 'https://via.placeholder.com/30',
             };
           })}
         />

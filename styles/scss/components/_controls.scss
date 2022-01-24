@@ -132,6 +132,29 @@
     }
 }
 
+.myselect {
+    &__control {
+        color: #717171;
+        &:focus,
+        &:active,
+        &:visited,
+        &:focus-within {
+            webkit-box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+            box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+        }
+    }
+    &__menu {
+        color: #717171;
+    }
+    &__option {
+        background-color: white;
+
+        &--is-focused {
+            background-color: lightblue;
+        }
+    }
+}
+
 /*
 .form-control {
     //line-height: 50px;
