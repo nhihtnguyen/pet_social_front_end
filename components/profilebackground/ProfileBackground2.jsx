@@ -150,7 +150,7 @@ const ProfileBackground = ({ profile }) => {
           <Image
             width={200}
             height={200}
-            src={profile.avatar || 'https://via.placeholder.com/200'}
+            src={profile?.avatar || 'https://via.placeholder.com/200'}
             alt='avatar'
             className='p-1 bg-white rounded-xl w-100'
           />
@@ -232,51 +232,81 @@ const ProfileBackground = ({ profile }) => {
       <div className='card-body d-block w-100 shadow-none mb-0 p-0 border-top-xs'>
         <ul
           className='nav nav-tabs h55 d-flex product-info-tab border-bottom-0 ps-4'
-          id='pills-tab'
+          id='pills-tab-pet'
           role='tablist'
         >
-          <li className='active list-inline-item me-5'>
-            <Link href='/pet/1'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile.id}`}>
               <a
-                className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block active'
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 About
               </a>
             </Link>
           </li>
-          <li className='list-inline-item me-5'>
-            <Link href='/pet/1/family'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/family` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile?.id}/family`}>
               <a
-                className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]/family` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 Family
               </a>
             </Link>
           </li>
-          <li className='list-inline-item me-5'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/events` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
             <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs1'
+              className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                router.pathname == `/pet/[id]/events` ? 'active' : ''
+              }`}
               data-toggle='tab'
             >
               Events
             </a>
           </li>
-          <li className='list-inline-item me-5'>
-            <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='/pet/1/follower'
-              data-toggle='tab'
-            >
-              Followers
-            </a>
-          </li>
-          <li className='list-inline-item me-5'>
-            <Link href='/posts'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/following` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile?.id}/followers`}>
               <a
-                className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]/followers` ? 'active' : ''
+                }`}
+                data-toggle='tab'
+              >
+                Followers
+              </a>
+            </Link>
+          </li>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/posts` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile?.id}/posts`}>
+              <a
+                className={`fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]/posts` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 Posts

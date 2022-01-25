@@ -9,7 +9,7 @@ import useInfinitePagination from 'hooks/useInfinitePagination';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Spinner } from 'react-bootstrap';
 
-const Profile = () => {
+const Posts = () => {
   const router = useRouter();
   const { id } = router.query;
   const { data: user, error: errorLoadInfo } = useSWR(`/users/${id}`, fetcher);
@@ -50,8 +50,8 @@ const Profile = () => {
   );
 };
 
-Profile.getLayout = function getLayout(page) {
+Posts.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default Profile;
+export default Posts;

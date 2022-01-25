@@ -6,6 +6,7 @@ import { FiCamera, FiAlertCircle, FiLock, FiEyeOff } from 'react-icons/fi';
 import axiosClient from 'axiosSetup';
 import { useAuth } from 'app/authContext';
 import { useRouter } from 'next/router';
+import { Card, Figure } from 'react-bootstrap';
 
 const MenuItem = ({ icon, tooltip, label, className, onClick, ...props }) => (
   <div
@@ -83,12 +84,12 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
   }, [profile]);
 
   return (
-    <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
-      <div className='card-body h250 p-0 rounded-xxl overflow-hidden m-3'>
+    <Card className='w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
+      <Card.Body className='h250 p-0 rounded-xxxl overflow-hidden m-3 position-relative'>
         <Image
-          width={960}
+          width={875}
           height={250}
-          src={profile?.background || 'https://via.placeholder.com/1000x250'}
+          src={profile?.background || 'https://via.placeholder.com/875x250'}
           alt='background'
           layout='responsive'
         />
@@ -108,10 +109,10 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
             />
           </label>
         )}
-      </div>
-      <div className='card-body p-0 position-relative'>
-        <figure
-          className='avatar position-absolute w100 z-index-1 rounded-circle'
+      </Card.Body>
+      <Card.Body className='p-0 position-relative'>
+        <Figure
+          className='avatar position-absolute'
           style={{
             top: '-45px',
             left: '30px',
@@ -122,7 +123,7 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
             alt='avatar'
             width={100}
             height={100}
-            className='float-right p-1 bg-white rounded-circle'
+            className='p-1 bg-white rounded-circle bg-opacity-75'
           />
           {isOwner && (
             <label
@@ -139,7 +140,7 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
               />
             </label>
           )}
-        </figure>
+        </Figure>
         <h4 className='fw-700 font-sm mt-2 mb-lg-5 mb-4 pl-15'>
           {profile ? `${profile?.first_name} ${profile?.last_name} ` : 'Name'}
           <span className='fw-500 font-xssss text-grey-500 mt-1 mb-3 d-block'>
@@ -164,7 +165,7 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
           </a>
           <MoreActionMenu toggleMore={toggleMore} />
         </div>
-      </div>
+      </Card.Body>
 
       <div className='card-body d-block w-100 shadow-none mb-0 p-0 border-top-xs'>
         <ul
@@ -179,9 +180,9 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
           >
             <Link href={`/user/${userID}`}>
               <a
-                className={`${
-                  router.pathname == `/user/[id]` ? 'active ' : ''
-                }fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block`}
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/user/[id]` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 About
@@ -195,9 +196,9 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
           >
             <Link href={`/user/${userID}/family`}>
               <a
-                className={`${
-                  router.pathname == `/user/[id]/family` ? 'active ' : ''
-                }fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block`}
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/user/[id]/family` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 Family
@@ -210,9 +211,9 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
             }list-inline-item me-5`}
           >
             <a
-              className={`${
-                router.pathname == `/user/[id]/events` ? 'active ' : ''
-              }fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block`}
+              className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                router.pathname == `/user/[id]/events` ? 'active' : ''
+              }`}
               data-toggle='tab'
             >
               Events
@@ -225,9 +226,9 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
           >
             <Link href={`/user/${userID}/following`}>
               <a
-                className={`${
-                  router.pathname == `/user/[id]/following` ? 'active ' : ''
-                }fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block`}
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/user/[id]/following` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 Following
@@ -241,9 +242,9 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
           >
             <Link href={`/user/${userID}/posts`}>
               <a
-                className={`${
-                  router.pathname == `/user/[id]/posts` ? 'active ' : ''
-                }fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block`}
+                className={`fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/user/[id]/posts` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 Posts
@@ -252,7 +253,7 @@ const ProfileBackground = ({ profile, isLoading, className, id }) => {
           </li>
         </ul>
       </div>
-    </div>
+    </Card>
   );
 };
 

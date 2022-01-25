@@ -46,14 +46,14 @@ const Postcard = ({ value, className, ...props }) => {
           <div
             className={`d-flex flex-column w-100 mb-2 text-center justify-content-end`}
           >
-            <figure className='avatar cursor-pointer ms-auto me-auto mb-0 position-relative w50'>
+            <figure className='avatar cursor-pointer ms-auto me-auto mb-0 position-relative '>
               <Image
                 onClick={linkToAuthor}
-                width={50}
-                height={50}
-                src={value?.User.avatar || `/assets/images/${'user.png'}`}
+                width={40}
+                height={40}
+                src={value?.User.avatar || 'https://via.placeholder.com/40'}
                 alt='avatar'
-                className='p-0 rounded-circle shadow-xss w-100 h-100'
+                className='rounded-circle shadow-xss'
               />
             </figure>
 
