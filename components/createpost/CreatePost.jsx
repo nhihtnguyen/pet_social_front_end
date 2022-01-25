@@ -31,7 +31,6 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
   const [isMint, setIsMint] = useState(false);
 
   const handleUpload = (action) => async (data, setErrors, errors) => {
-    console.log('datada', data);
     let bodyFormData = new FormData();
 
     bodyFormData.append('image', data.image.file);
@@ -65,7 +64,6 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
     let captionStatus = STATUS['allowed'];
     try {
       captionStatus = checkCaptionStatus(data.caption);
-      console.log('status caption', captionStatus, data.caption);
     } catch (error) {
       // logging
       console.log(error);
@@ -87,12 +85,10 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
             headers: { 'Content-Type': 'multipart/form-data' },
           }
         );
-        console.log('rr', captionStatus);
         captionStatus =
           Number(captionStatus.data['result']) === 1.0
             ? STATUS['allowed']
             : STATUS['warning'];
-        console.log('rr2', captionStatus);
       } catch (error) {
         // logging
         console.log(error);
@@ -149,7 +145,6 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
       console.log(error);
     }
     if (result && result.data) {
-      console.log('result: ', result);
       mutate('/posts');
       router.push('/post/' + result.data.id);
     }

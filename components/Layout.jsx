@@ -56,4 +56,15 @@ export const LayoutLogin = ({ children }) => {
   );
 };
 
+export const LayoutProfile = ({ children, profileBackgroundComponent }) => {
+  return (
+    <div className='row w-100 justify-content-center'>
+      <div className='col-12 mb-3 pe-0' style={{ maxWidth: 1000 }}>
+        <profileBackgroundComponent profile={user} />
+      </div>
+      {children}
+    </div>
+  );
+};
+
 export default Layout;

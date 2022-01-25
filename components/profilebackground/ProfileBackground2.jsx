@@ -1,13 +1,79 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiMail, FiMoreHorizontal } from 'react-icons/fi';
+import {
+  FiMoreHorizontal,
+  FiAlertCircle,
+  FiLock,
+  FiEyeOff,
+  FiCamera,
+} from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import axiosClient from 'axiosSetup';
+import { useRouter } from 'next/router';
+import { useAuth } from 'app/authContext';
+
+const MenuItem = ({ icon, tooltip, label, className, onClick, ...props }) => (
+  <div
+    className={`${className} card-body p-0 d-flex cursor-pointer`}
+    onClick={onClick}
+    {...props}
+  >
+    <span className='d-flex text-grey-500 me-3 font-lg'>{icon}</span>
+    <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0'>
+      {label}
+      <span className='d-block font-xsssss fw-500 mt-1 ms-1 lh-3 text-grey-500'>
+        {tooltip}
+      </span>
+    </h4>
+  </div>
+);
+
+const MoreActionMenu = ({ toggleMore }) => (
+  <div
+    className={`${
+      toggleMore ? 'show' : ''
+    } dropdown-more-menu dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg top-100`}
+    style={{ right: 0, width: 'max-content' }}
+    aria-labelledby='dropdownMenu4'
+  >
+    <MenuItem
+      icon={<FiAlertCircle />}
+      label='Report'
+      tooltip={'Report negative behavior'}
+    />
+    <MenuItem
+      icon={<FiLock />}
+      label='Block'
+      tooltip={'Dismiss all interaction'}
+      className='mt-2'
+    />
+    <MenuItem
+      icon={<FiEyeOff />}
+      label='Hide posts'
+      tooltip={'Hide all posts'}
+      className='mt-2'
+    />
+  </div>
+);
 
 const ProfileBackground = ({ profile }) => {
+  const { user } = useAuth();
+  const router = useRouter();
+  const [isOwner, setIsOwner] = useState(false);
+
   const [followed, setFollowed] = useState(false);
+  const [toggleMore, setToggleMore] = useState(false);
+
   useEffect(() => {
     if (profile) {
+      axiosClient
+        .get(`/pets?user_id=${user.id}`)
+        .then((response) => {
+          if (response?.data) {
+            setIsOwner(!response.data.every((pet) => pet.id !== profile.id));
+          }
+        })
+        .catch((error) => {});
       axiosClient
         .get(`/following/${profile.id}`)
         .then((response) => {
@@ -35,28 +101,74 @@ const ProfileBackground = ({ profile }) => {
       console.log(error);
     }
   };
+
+  const handleUploadImage = (name) => async (e) => {
+    let file = e.target.files[0];
+
+    const data = new FormData();
+    data.append('image', file);
+    let result;
+    try {
+      result = await axiosClient.put(`/pets/${name}`, data, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      if (result) {
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
-      <div className='card-body h240 p-0 rounded-xxxl overflow-hidden m-3'>
-        <div className={`image-container`}>
-          <Image
-            className={`image`}
-            src={profile.background || 'https://picsum.photos/1200/500'}
-            alt='background'
-            layout='fill'
-          />
-        </div>
+      <div className='card-body h240 p-0 rounded-xxxl overflow-hidden m-3 position-relative'>
+        <Image
+          src={profile.background || 'https://via.placeholder.com/875x250'}
+          alt='background'
+          width={875}
+          height={250}
+        />
+        {isOwner && (
+          <label
+            htmlFor='file-background'
+            className='top-0 m-1 font-md cursor-pointer position-absolute border-0 d-lg-block bg-greylight btn-round-lg rounded-3 text-grey-700'
+            style={{ right: 0 }}
+          >
+            <FiCamera />
+
+            <input
+              id='file-background'
+              className='d-none'
+              type='file'
+              onChange={handleUploadImage('background')}
+            />
+          </label>
+        )}
       </div>
       <div className='card-body d-block p-0 text-center position-relative'>
         <figure className='avatar mt--6 position-relative w75 z-index-1 w100 z-index-1 ms-auto me-auto'>
-          <div className={`image-container`}>
-            <Image
-              layout='fill'
-              src={profile.avatar || 'https://picsum.photos/200'}
-              alt='avatar'
-              className='image p-1 bg-white rounded-xl w-100'
-            />
-          </div>
+          <Image
+            width={200}
+            height={200}
+            src={profile?.avatar || 'https://via.placeholder.com/200'}
+            alt='avatar'
+            className='p-1 bg-white rounded-xl w-100'
+          />
+          {isOwner && (
+            <label
+              htmlFor='file-avatar'
+              style={{ right: 0 }}
+              className='bottom-0 cursor-pointer position-absolute border-0 d-lg-block bg-greylight btn-round-md  text-grey-700'
+            >
+              <FiCamera />
+              <input
+                id='file-avatar'
+                className='d-none'
+                type='file'
+                onChange={handleUploadImage('avatar')}
+              />
+            </label>
+          )}
         </figure>
 
         <h4 className='font-xs ls-1 fw-700 text-grey-900'>
@@ -86,135 +198,115 @@ const ProfileBackground = ({ profile }) => {
           </h4>
         </div>
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
-          <Link href='#'>
-            {followed ? (
+          {!isOwner &&
+            (followed ? (
               <a
                 onClick={unfollow}
-                className='d-none d-lg-block bg-danger p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
+                className='d-none cursor-pointer d-lg-block bg-danger p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
               >
                 Unfollow
               </a>
             ) : (
               <a
                 onClick={follow}
-                className='d-none d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
+                className='d-none cursor-pointer d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
               >
                 Follow
               </a>
-            )}
-          </Link>
-          <Link href='/defaultemailbox'>
-            <a className='d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
-              <i className='font-md'>
-                <FiMail />
-              </i>
-            </a>
-          </Link>
-          <Link href='#'>
-            <a
-              id='dropdownMenu4'
-              className='d-none d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
-              data-toggle='dropdown'
-              aria-haspopup='true'
-              aria-expanded='false'
-            >
-              <i className='font-md text-dark'>
-                <FiMoreHorizontal />
-              </i>
-            </a>
-          </Link>
-          <div
-            className='dropdown-menu dropdown-menu-end p-4 rounded-xxl border-0 shadow-lg'
-            aria-labelledby='dropdownMenu4'
+            ))}
+
+          <a
+            id='dropdownMenu4'
+            className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+            data-toggle='dropdown'
+            aria-haspopup='true'
+            aria-expanded='false'
+            onClick={() => setToggleMore(!toggleMore)}
           >
-            <div className='card-body p-0 d-flex'>
-              <i className='feather-bookmark text-grey-500 me-3 font-lg'></i>
-              <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0'>
-                Save Link{' '}
-                <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
-                  Add this to your saved items
-                </span>
-              </h4>
-            </div>
-            <div className='card-body p-0 d-flex mt-2'>
-              <i className='feather-alert-circle text-grey-500 me-3 font-lg'></i>
-              <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0'>
-                Hide Post{' '}
-                <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
-                  Save to your saved items
-                </span>
-              </h4>
-            </div>
-            <div className='card-body p-0 d-flex mt-2'>
-              <i className='feather-alert-octagon text-grey-500 me-3 font-lg'></i>
-              <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0'>
-                Hide all from Group{' '}
-                <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
-                  Save to your saved items
-                </span>
-              </h4>
-            </div>
-            <div className='card-body p-0 d-flex mt-2'>
-              <i className='feather-lock text-grey-500 me-3 font-lg'></i>
-              <h4 className='fw-600 mb-0 text-grey-900 font-xssss mt-0 me-0'>
-                Unfollow Group{' '}
-                <span className='d-block font-xsssss fw-500 mt-1 lh-3 text-grey-500'>
-                  Save to your saved items
-                </span>
-              </h4>
-            </div>
-          </div>
+            <FiMoreHorizontal />
+          </a>
+          <MoreActionMenu toggleMore={toggleMore} />
         </div>
       </div>
 
       <div className='card-body d-block w-100 shadow-none mb-0 p-0 border-top-xs'>
         <ul
           className='nav nav-tabs h55 d-flex product-info-tab border-bottom-0 ps-4'
-          id='pills-tab'
+          id='pills-tab-pet'
           role='tablist'
         >
-          <li className='active list-inline-item me-5'>
-            <Link href='/pet/1'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile.id}`}>
               <a
-                className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block active'
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 About
               </a>
             </Link>
           </li>
-          <li className='list-inline-item me-5'>
-            <Link href='/pet/1/family'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/family` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile?.id}/family`}>
               <a
-                className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]/family` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 Family
               </a>
             </Link>
           </li>
-          <li className='list-inline-item me-5'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/events` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
             <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='#navtabs1'
+              className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                router.pathname == `/pet/[id]/events` ? 'active' : ''
+              }`}
               data-toggle='tab'
             >
               Events
             </a>
           </li>
-          <li className='list-inline-item me-5'>
-            <a
-              className='fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
-              href='/pet/1/follower'
-              data-toggle='tab'
-            >
-              Followers
-            </a>
-          </li>
-          <li className='list-inline-item me-5'>
-            <Link href='/posts'>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/following` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile?.id}/followers`}>
               <a
-                className='fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block'
+                className={`fw-700 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]/followers` ? 'active' : ''
+                }`}
+                data-toggle='tab'
+              >
+                Followers
+              </a>
+            </Link>
+          </li>
+          <li
+            className={`${
+              router.pathname == `/pet/[id]/posts` ? 'active ' : ''
+            }list-inline-item me-5`}
+          >
+            <Link href={`/pet/${profile?.id}/posts`}>
+              <a
+                className={`fw-700 me-sm-5 font-xssss text-grey-500 pt-3 pb-3 ls-1 d-inline-block ${
+                  router.pathname == `/pet/[id]/posts` ? 'active' : ''
+                }`}
                 data-toggle='tab'
               >
                 Posts

@@ -4,16 +4,30 @@ import { FiX } from 'react-icons/fi';
 import { FaArrowUp } from 'react-icons/fa';
 import DragAndDrop from 'components/draganddrop/DragAndDrop';
 import { useState } from 'react';
-import styles from './AddPetCard.module.scss';
 import Button from 'components/controls/Button';
 import Layout from 'components/Layout';
 import useSWR, { useSWRConfig } from 'swr';
 import axiosClient from 'axiosSetup';
 import { ProgressBar } from 'react-bootstrap';
-import { host as serverHost } from 'config';
 import { useRouter } from 'next/router';
 import Input from 'components/controls/Input';
+import CreatePet from 'components/createpet/CreatePet';
 
+const AddPet = () => {
+  return (
+    <div className='middle-wrap pe-3'>
+      <CreatePet />
+    </div>
+  );
+};
+
+AddPet.getLayout = function getLayout(page) {
+  return <Layout>{page}</Layout>;
+};
+
+export default AddPet;
+
+/*
 const AddPetCard = () => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
@@ -223,16 +237,4 @@ const AddPetCard = () => {
   );
 };
 
-const Account = () => {
-  return (
-    <div className='middle-wrap'>
-      <AddPetCard />
-    </div>
-  );
-};
-
-Account.getLayout = function getLayout(page) {
-  return <Layout>{page}</Layout>;
-};
-
-export default Account;
+*/

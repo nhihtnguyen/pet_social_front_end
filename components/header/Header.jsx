@@ -1,10 +1,8 @@
 import Link from 'next/link';
-import { Navbar } from 'react-bootstrap';
 import LeftNav from 'components/leftnav/LeftNav';
 import {
   FiGithub,
   FiSearch,
-  FiMessageCircle,
   FiMessageSquare,
   FiBell,
   FiX,
@@ -17,11 +15,11 @@ import {
   Typeahead,
   Menu,
   MenuItem,
-  TypeaheadMenu,
   Highlighter,
 } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Image from 'next/image';
+import { useAuth } from 'app/authContext';
 
 const options = [
   {
@@ -40,17 +38,22 @@ const options = [
 
 const NotificationSection = ({ notificationClass }) => (
   <div
-    className={`dropdown-menu p-4 right-0 rounded-xxl border-0 shadow-lg ${notificationClass}`}
+    className={`dropdown-notification dropdown-menu mt-1 me-3 p-4 right-0 rounded-xxl border-0 shadow-lg ${notificationClass}`}
     aria-labelledby='dropdownMenu3'
-    style={{ top: 100, margin: 10 }}
+    style={{ top: '100%' }}
   >
     <h4 className='fw-700 font-xss mb-4'>Notification</h4>
     <div className='card bg-transparent-card w-100 border-0 ps-5 mb-3'>
-      <img
-        src='assets/images/user.png'
-        alt='user'
-        className='w40 position-absolute left-0'
-      />
+      <span className='position-absolute left-0 overflow rounded-circle'>
+        <Image
+          src='https://via.placeholder.com/40'
+          width={40}
+          height={40}
+          alt='user'
+          className='rounded-circle'
+        />
+      </span>
+
       <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
         Hendrix Stamp{' '}
         <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
@@ -63,11 +66,15 @@ const NotificationSection = ({ notificationClass }) => (
       </h6>
     </div>
     <div className='card bg-transparent-card w-100 border-0 ps-5 mb-3'>
-      <img
-        src='assets/images/user.png'
-        alt='user'
-        className='w40 position-absolute left-0'
-      />
+      <span className='position-absolute left-0 overflow rounded-circle'>
+        <Image
+          src='https://via.placeholder.com/40'
+          width={40}
+          height={40}
+          alt='user'
+          className='rounded-circle'
+        />
+      </span>
       <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
         Goria Coast{' '}
         <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
@@ -81,11 +88,15 @@ const NotificationSection = ({ notificationClass }) => (
     </div>
 
     <div className='card bg-transparent-card w-100 border-0 ps-5 mb-3'>
-      <img
-        src='assets/images/user.png'
-        alt='user'
-        className='w40 position-absolute left-0'
-      />
+      <span className='position-absolute left-0 overflow rounded-circle'>
+        <Image
+          src='https://via.placeholder.com/40'
+          width={40}
+          height={40}
+          alt='user'
+          className='rounded-circle'
+        />
+      </span>
       <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
         Surfiya Zakir{' '}
         <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
@@ -98,11 +109,15 @@ const NotificationSection = ({ notificationClass }) => (
       </h6>
     </div>
     <div className='card bg-transparent-card w-100 border-0 ps-5'>
-      <img
-        src='assets/images/user.png'
-        alt='user'
-        className='w40 position-absolute left-0'
-      />
+      <span className='position-absolute left-0 overflow rounded-circle'>
+        <Image
+          src='https://via.placeholder.com/40'
+          width={40}
+          height={40}
+          alt='user'
+          className='rounded-circle'
+        />
+      </span>
       <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
         Victor Exrixon{' '}
         <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
@@ -118,6 +133,7 @@ const NotificationSection = ({ notificationClass }) => (
 );
 
 const Header = () => {
+  const { user, loading } = useAuth();
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState([]);
   const router = useRouter();
@@ -158,15 +174,11 @@ const Header = () => {
             </span>
           </a>
         </Link>
-        <Link href='/message'>
-          <a className='mob-menu ms-auto me-2 chat-active-btn'>
-            <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
-              <FiMessageCircle />
-            </span>
-          </a>
-        </Link>
 
-        <span onClick={toggleSearch} className='me-2 menu-search-icon mob-menu'>
+        <span
+          onClick={toggleSearch}
+          className='ms-auto me-2 menu-search-icon mob-menu'
+        >
           <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
             <FiSearch />
           </span>
@@ -261,7 +273,7 @@ const Header = () => {
       <Link href='/settings'>
         <a className='p-0 ms-3 menu-icon'>
           <Image
-            src='https://via.placeholder.com/40'
+            src={user?.avatar || 'https://via.placeholder.com/40'}
             alt='user'
             className='rounded-circle'
             width={40}
