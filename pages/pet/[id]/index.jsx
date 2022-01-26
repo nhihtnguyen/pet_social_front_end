@@ -1,7 +1,7 @@
 import Layout from 'components/Layout';
 import ProfileBackground from 'components/profilebackground/ProfileBackground2';
 import ProfileDetail from 'components/profiledetail/ProfileDetail';
-import useSWR, { SWRConfig } from 'swr';
+import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import axiosClient from 'axiosSetup';
 

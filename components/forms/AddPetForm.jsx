@@ -8,11 +8,25 @@ import validateAddPet from './validateAddPet';
 import { useState, useEffect } from 'react';
 
 const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
+  const genderOptions = [
+    {
+      value: true,
+      label: 'Male',
+      image: '/',
+    },
+    {
+      value: false,
+      label: 'Female',
+      image: '/',
+    },
+  ];
   const [initValues, setInitValues] = useState({
     name: values?.name || '',
     age: values?.age || '',
     type: values?.type || '',
-    gender: values?.gender || '',
+    gender: values
+      ? genderOptions.find((elm) => elm.value === values.gender)
+      : genderOptions[0],
   });
 
   useEffect(() => {
@@ -21,7 +35,9 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
         name: values?.name || '',
         age: values?.age || '',
         type: values?.type || '',
-        gender: values?.gender || '',
+        gender: values
+          ? genderOptions.find((elm) => elm.value === values.gender)
+          : genderOptions[0],
       });
     }
   }, [values]);
@@ -61,18 +77,7 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
             inputStyle={{ borderRadius: 8 }}
             singleStyle={{ fontWeight: 600, fontSize: 14 }}
             aria-label='gender'
-            options={[
-              {
-                value: true,
-                label: 'Male',
-                image: '/',
-              },
-              {
-                value: false,
-                label: 'Female',
-                image: '/',
-              },
-            ]}
+            options={genderOptions}
           />
         </Col>
       </Row>

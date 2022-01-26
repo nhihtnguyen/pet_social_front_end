@@ -7,6 +7,8 @@ const PetCard = ({
   pet,
   as,
   hideButton,
+  buttonCallback,
+  buttonLabel,
   className,
   followed,
   mutateFollowing,
@@ -75,10 +77,12 @@ const PetCard = ({
         {!hideButton && !isUser && (
           <span className='position-absolute right-15 top-0 d-flex align-items-center'>
             <a
-              onClick={isFollowed ? unfollow : follow}
+              onClick={
+                buttonCallback ? buttonCallback : isFollowed ? unfollow : follow
+              }
               className='cursor-pointer text-center p-2 lh-24 w100 ms-1 ls-3 d-inline-block rounded-xl bg-current font-xsssss fw-700 ls-lg text-white'
             >
-              {isFollowed ? 'Un-follow' : 'Follow'}
+              {buttonLabel ? buttonLabel : isFollowed ? 'Un-follow' : 'Follow'}
             </a>
           </span>
         )}

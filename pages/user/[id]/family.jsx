@@ -33,7 +33,9 @@ const MyPet = () => {
   const linkToAddPet = () => {
     router.push(`/pet/create`);
   };
-
+  const linkToEditPet = () => {
+    router.push(`/pet/${id}/edit`);
+  };
   const isOwner = user?.id === Number(id);
 
   return (
@@ -63,7 +65,8 @@ const MyPet = () => {
             <div className='col-md-6 col-sm-6 pb-3' key={index}>
               <PetCard
                 pet={value}
-                hideButton={isOwner}
+                buttonCallback={isOwner ? linkToEditPet : null}
+                buttonLabel={isOwner ? 'Edit' : null}
                 onClick={handleClick(value.id)}
                 mutate={mutate}
                 mutateFollowing={mutateFollowing}

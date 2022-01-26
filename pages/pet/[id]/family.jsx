@@ -26,12 +26,16 @@ const Family = () => {
   if (error || errorGetFollowing) return <div>failed to load</div>;
   if (!data || !following) return <div>loading...</div>;
 
-  const handleClick = (id) => () => {
-    router.push(`/pet/${id}`);
+  const handleClick = (id, index) => () => {
+    router.push(`/${index == 0 ? 'user' : 'pet'}/${id}`);
   };
 
   const linkToAddPet = () => {
     router.push(`/pet/create`);
+  };
+
+  const linkToEditPet = () => {
+    router.push(`/pet/${id}/edit`);
   };
 
   const isOwner = data && user?.id === data[0].id;
@@ -57,9 +61,11 @@ const Family = () => {
             <div className='col-md-6 col-sm-6 pb-3' key={index}>
               <PetCard
                 isUser={index === 0}
+                hideButton={index === 0}
                 pet={value}
-                hideButton={isOwner}
-                onClick={handleClick(value.id)}
+                buttonCallback={isOwner ? linkToEditPet : null}
+                buttonLabel={isOwner ? 'Edit' : null}
+                onClick={handleClick(value.id, index)}
                 mutate={mutate}
                 mutateFollowing={mutateFollowing}
                 followed={!following.every((pet) => pet.id !== value.id)}
