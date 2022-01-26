@@ -7,8 +7,9 @@ const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
 const useInfinitePagination = (url, pageSize = PAGE_SIZE) => {
   const getKey = (pageIndex, previousPageData) => {
+    console.log(pageIndex);
     if (previousPageData && !previousPageData.length) {
-      return null;
+      return [];
     }
     return `${url}&page=${pageIndex + 1}&limit=${pageSize}`;
   };

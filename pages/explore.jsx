@@ -10,6 +10,7 @@ import { Masonry } from 'masonic';
 
 import Layout from 'components/Layout';
 import Head from 'next/head';
+import { useEffect } from 'react';
 
 const MasonryCard = ({ data }) =>
   data?.firstPost ? (
@@ -31,6 +32,14 @@ const MasonryCard = ({ data }) =>
   );
 
 const Content = () => {
+  const pageSize = Math.floor(
+    document?.documentElement?.clientHeight &&
+      document?.documentElement?.clientWidth
+      ? (document?.documentElement?.clientHeight *
+          document?.documentElement?.clientWidth) /
+          (200 * 250)
+      : 10
+  );
   const {
     paginatedData: paginatedPosts,
     size,
@@ -39,7 +48,7 @@ const Content = () => {
     error,
     isReachedEnd,
     loadingMore,
-  } = useInfinitePagination(`/posts/explore?`, 10);
+  } = useInfinitePagination(pageSize ? `/posts/explore?` : null, pageSize);
 
   return (
     <>
@@ -53,6 +62,8 @@ const Content = () => {
           hasMore={!isReachedEnd}
           loader={<Spinner animation='border' />}
           dataLength={paginatedPosts?.length ?? 0}
+          className='w-100'
+          pullToRefresh
         >
           <div className='masonic me-auto ms-auto'>
             <Masonry
