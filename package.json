@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@magic-ext/oauth": "^2.0.1",
     "@reduxjs/toolkit": "^1.6.2",
     "axios": "^0.23.0",
     "bootstrap": "^5.1.1",
     "ethers": "^5.5.1",
     "ipfs-http-client": "^55.0.0",
+    "magic-sdk": "^8.0.1",
     "masonic": "^3.6.1",
     "next": "^11.1.2",
     "next-redux-wrapper": "^7.0.5",

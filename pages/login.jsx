@@ -20,10 +20,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    login({
-      email: e.currentTarget.username.value,
-      password: e.currentTarget.password.value,
-    });
+    login(e.currentTarget.username.value);
 
     /*setLoading(true);
     const body = {
