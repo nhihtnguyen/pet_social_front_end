@@ -133,7 +133,7 @@ const NotificationSection = ({ notificationClass }) => (
 );
 
 const Header = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, isAuthenticated } = useAuth();
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState([]);
   const router = useRouter();
@@ -248,39 +248,55 @@ const Header = () => {
         </div>
       </form>
 
-      <span
-        className={`p-2 cursor-pointer text-center ms-auto menu-icon ${notificationClass}`}
-        id='dropdownMenu3'
-        data-bs-toggle='dropdown'
-        aria-expanded='false'
-        onClick={toggleNotification}
-      >
-        <span className='dot-count bg-warning' style={{ top: 10 }} />
-        <span className='font-xl text-current'>
-          <FiBell />
-        </span>
-      </span>
-      <NotificationSection notificationClass={notificationClass} />
-
-      <Link href='/message'>
-        <a className='p-2 text-center ms-3 menu-icon chat-active-btn'>
-          <span className='font-xl text-current'>
-            <FiMessageSquare />
+      {isAuthenticated ? (
+        <>
+          <span
+            className={`p-2 cursor-pointer text-center ms-auto menu-icon ${notificationClass}`}
+            id='dropdownMenu3'
+            data-bs-toggle='dropdown'
+            aria-expanded='false'
+            onClick={toggleNotification}
+          >
+            <span className='dot-count bg-warning' style={{ top: 10 }} />
+            <span className='font-xl text-current'>
+              <FiBell />
+            </span>
           </span>
-        </a>
-      </Link>
-      <DarkModeToggle />
-      <Link href='/settings'>
-        <a className='p-0 ms-3 menu-icon'>
-          <Image
-            src={user?.avatar || 'https://via.placeholder.com/40'}
-            alt='user'
-            className='rounded-circle'
-            width={40}
-            height={40}
-          />
-        </a>
-      </Link>
+          <NotificationSection notificationClass={notificationClass} />
+          <Link href='/message'>
+            <a className='p-2 text-center ms-3 menu-icon chat-active-btn'>
+              <span className='font-xl text-current'>
+                <FiMessageSquare />
+              </span>
+            </a>
+          </Link>
+          <DarkModeToggle />
+          <Link href='/settings'>
+            <a className='p-0 ms-3 menu-icon'>
+              <Image
+                src={user?.avatar || 'https://via.placeholder.com/40'}
+                alt='user'
+                className='rounded-circle'
+                width={40}
+                height={40}
+              />
+            </a>
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link href='/login'>
+            <a className='header-btn d-none d-lg-block bg-dark fw-500 text-white font-xsss p-3 ms-auto w100 text-center lh-20 rounded-xl'>
+              Login
+            </a>
+          </Link>
+          <Link href='/register'>
+            <a className='header-btn d-none d-lg-block bg-current fw-500 text-white font-xsss p-3 ms-2 w100 text-center lh-20 rounded-xl'>
+              Register
+            </a>
+          </Link>
+        </>
+      )}
 
       <LeftNav className={`scroll-bar ${navClass}`} />
 

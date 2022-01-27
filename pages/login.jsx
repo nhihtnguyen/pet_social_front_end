@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import useForm from 'hooks/useForm';
 import { useRouter } from 'next/router';
 import { LayoutLogin } from 'components/Layout';
 import Backdrop from 'components/backdrop/Backdrop';
@@ -9,39 +7,43 @@ import { Spinner } from 'react-bootstrap';
 import LoginForm from 'components/forms/LoginForm';
 import { useAuth } from 'app/authContext';
 
+import { FcGoogle } from 'react-icons/fc';
+
+const SocialLogin = () => {
+  return (
+    <div className='col-sm-12 p-0 text-center mt-2'>
+      <h6 className='mb-0 d-inline-block bg-white fw-500 font-xsss text-grey-500 mb-3'>
+        Or, Sign in with your social account{' '}
+      </h6>
+      <div className='form-group mb-1'>
+        <span className='d-flex justify-content-center align-items-center style2-input text-white fw-600 bg-facebook border-0 p-0 mb-2'>
+          <span
+            className='font-xxl bg-white w40 rounded-circle d-flex justify-content-center align-items-center me-2'
+            style={{ height: 40 }}
+          >
+            <FcGoogle />
+          </span>{' '}
+          Sign in with Google
+        </span>
+      </div>
+    </div>
+  );
+};
+
 const Login = () => {
   const router = useRouter();
-  //const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
   const { isAuthenticated, loading, login } = useAuth();
   if (isAuthenticated) {
     router.replace('/');
   }
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    login(e.currentTarget.username.value);
-
-    /*setLoading(true);
-    const body = {
-      email: e.currentTarget.username.value,
-      password: e.currentTarget.password.value,
-    };
-    /*
-    try {
-      const response = await axiosClient.post(`${serverHost}/auth/login`, body);
-      console.log(response);
-      if (response.status === 200) {
-        router.push('/');
-      } else {
-        throw new Error(response.data.msg);
-      }
-    } catch (error) {
-      console.error('An unexpected error happened occurred:', error);
-    } finally {
-      setLoading(false);
+  const handleLogin = async (data, errors, setErrors) => {
+    const email = data.email;
+    if (email) {
+      console.log(email);
+      login(email);
     }
-    */
   };
 
   return (
@@ -70,45 +72,8 @@ const Login = () => {
                   </Link>
                 </h6>
               </div>
-              <div className='col-sm-12 p-0 text-center mt-2'>
-                <h6 className='mb-0 d-inline-block bg-white fw-500 font-xsss text-grey-500 mb-3'>
-                  Or, Sign in with your social account{' '}
-                </h6>
-                <div className='form-group mb-1'>
-                  <Link href='/register'>
-                    <a className='d-flex text-left style2-input text-white fw-600 bg-facebook border-0 p-0 mb-2'>
-                      <div
-                        className={`d-flex justify-content-center image-container ms-2 w40 me-5`}
-                      >
-                        <Image
-                          layout='fill'
-                          src='/assets/images/icon-1.png'
-                          alt='icon'
-                          className='image'
-                        />
-                      </div>{' '}
-                      Sign in with Google
-                    </a>
-                  </Link>
-                </div>
-                <div className='form-group mb-1'>
-                  <Link href='/register'>
-                    <a className='d-flex text-left style2-input text-white fw-600 bg-facebook border-0 p-0 mb-2 pe-2'>
-                      <div
-                        className={`d-flex justify-content-center image-container ms-2 w40 me-5`}
-                      >
-                        <Image
-                          layout='fill'
-                          src='/assets/images/icon-3.png'
-                          alt='icon'
-                          className='image'
-                        />
-                      </div>{' '}
-                      Sign in with Facebook
-                    </a>
-                  </Link>
-                </div>
-              </div>
+
+              <SocialLogin />
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { magic } from 'app/magic';
+import { magicLocal as magic } from 'app/magic';
 
 //api here is an axios instance which has the baseURL set according to the env.
 import axiosClient from 'axiosSetup';
@@ -41,6 +41,12 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  async function handleLoginWithSocial(provider) {
+    await magic.oauth.loginWithRedirect({
+      provider,
+    });
+  }
 
   const handleLoginWithEmail = async (email) => {
     try {

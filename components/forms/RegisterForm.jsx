@@ -19,9 +19,21 @@ const RegisterForm = ({ onSubmit, validated = false }) => {
     values: info,
     errors,
     handleSubmit,
+    resetForm,
   } = useForm(initValues, true, validateRegister, onSubmit);
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <Input
+        value={info.email}
+        onChange={onChange('email')}
+        invalidTooltip={errors['email']}
+        type='email'
+        name='email'
+        className='mb-3'
+        inputClassName='style2-input ps-5'
+        placeholder='Your Email Address'
+        startIcon={<FiMail />}
+      />
       <Input
         value={info.first_name}
         onChange={onChange('first_name')}
@@ -43,28 +55,6 @@ const RegisterForm = ({ onSubmit, validated = false }) => {
         inputClassName='style2-input ps-5'
         placeholder='Last Name'
         startIcon={<FiUser />}
-      />
-      <Input
-        value={info.email}
-        onChange={onChange('email')}
-        invalidTooltip={errors['email']}
-        type='email'
-        name='email'
-        className='mb-3'
-        inputClassName='style2-input ps-5'
-        placeholder='Your Email Address'
-        startIcon={<FiMail />}
-      />
-      <Input
-        value={info.password}
-        onChange={onChange('password')}
-        invalidTooltip={errors['password']}
-        type='password'
-        name='password'
-        className='mb-3'
-        inputClassName='style2-input ps-5'
-        placeholder='Password'
-        startIcon={<FiLock />}
       />
 
       <Check
