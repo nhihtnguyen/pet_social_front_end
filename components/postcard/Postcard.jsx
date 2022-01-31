@@ -35,8 +35,8 @@ const Postcard = ({ value, className, ...props }) => {
         width={width}
         height={height}
         layout='responsive'
-        src={value.media_url || '/'}
-        alt={value.media_url || '/'}
+        src={value.media_url || `https://via.placeholder.com/400`}
+        alt={value.media_url || 'image'}
       />
 
       {hover && (

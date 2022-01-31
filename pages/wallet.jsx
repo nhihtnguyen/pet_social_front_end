@@ -1,25 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { magicLocal, localWeb3 } from 'app/magic';
-import { Spinner, Card } from 'react-bootstrap';
+import { Spinner, Card, Placeholder } from 'react-bootstrap';
 import { Layout } from 'components/Layout';
-
-function Info({ user, magic, balance }) {
-  return (
-    <Card className='rounded-xxl'>
-      <Card.Body>
-        <h2>Network</h2>
-        <div className='info'>local</div>
-        <h2>Public Address</h2>
-        <div className='info'>{user.publicAddress}</div>
-        <h2>Balance</h2>
-        <div className='info'>
-          {balance.toString().substring(0, 6)}{' '}
-          {magic.network === 'matic' ? 'MATIC' : 'ETH'}
-        </div>
-      </Card.Body>
-    </Card>
-  );
-}
+import PageTitle from 'components/pagetitle/PageTitle';
+import WalletCard from 'components/walletcard/WalletCard';
 
 const Wallet = () => {
   const [magic, setMagic] = useState(magicLocal);
@@ -51,12 +35,22 @@ const Wallet = () => {
       .then((bal) => setBalance(web3.utils.fromWei(bal)));
   };
 
-  return userMetadata ? (
+  const loading = !userMetadata;
+  return (
     <div className='middle-wrap pe-3'>
-      <Info balance={balance} user={userMetadata} magic={magic} />
+      <PageTitle title={'Wallet'} />
+
+      <div className='row w-100'>
+        <div className='col-sm-6 mb-3 justify-content-between'>
+          <WalletCard
+            balance={balance}
+            user={userMetadata}
+            magic={magic}
+            loading={loading}
+          />
+        </div>
+      </div>
     </div>
-  ) : (
-    <Spinner animation='border' />
   );
 };
 

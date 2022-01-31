@@ -7,15 +7,17 @@ import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 
 import { ethers } from 'ethers';
-import Web3Modal, { filterProviderChecks } from 'web3modal';
+import Web3Modal from 'web3modal';
 import { nftaddress, nftmarketaddress } from 'config';
 import NFT from 'artifacts/contracts/NFT.sol/NFT.json';
 import NFTMarket from 'artifacts/contracts/NFTMarket.sol/NFTMarket.json';
-import { create as ipfsHttpClient } from 'ipfs-http-client';
+import { client as ipfsClient } from 'app/ipfs';
 import { checkImageStatus, checkCaptionStatus } from 'temp';
 import { getKeyByValue } from 'helpers';
-
-const client = ipfsHttpClient({ url: 'https://ipfs.infura.io:5001/api/v0' });
+import { localWeb3, magicLocal } from 'app/magic';
+import InvolveCard from 'components/InvolveCard';
+import { Modal } from 'react-bootstrap';
+import Button from 'components/controls/Button';
 
 const STATUS = {
   allowed: 1,
@@ -23,12 +25,35 @@ const STATUS = {
   denied: 3,
 };
 
+const InvolveModal = ({ show, handleClose, data, loading }) => (
+  <Modal
+    show={show}
+    onHide={handleClose}
+    backdrop='static'
+    keyboard={false}
+    contentClassName='bg-transparent p-0 m-0 border-0'
+  >
+    <InvolveCard data={data} loading={loading} />
+    <div className='ms-auto mt-2'>
+      <Button variant='danger' onClick={handleClose}>
+        Reject
+      </Button>{' '}
+      <Button variant='primary' onClick={handleClose}>
+        Confirm
+      </Button>
+    </div>
+  </Modal>
+);
+
 const CreatePost = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
 
   const [loaded, setLoaded] = useState(-1);
   const [isMint, setIsMint] = useState(false);
+  const [showInvolve, setShowInvolve] = useState(false);
+  const [involve, setInvolve] = useState({});
+  const web3 = localWeb3();
 
   const handleUpload = (action) => async (data, setErrors, errors) => {
     let bodyFormData = new FormData();
@@ -153,7 +178,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
   const uploadImageIPFS = async (file) => {
     // Upload image
     try {
-      const added = await client.add(file, {
+      const added = await ipfsClient.add(file, {
         progress: (prog) => {
           setLoaded(prog / 3);
           console.log(`received: ${prog}`);
@@ -190,7 +215,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
     });
 
     try {
-      const added = await client.add(data);
+      const added = await ipfsClient.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
       const web3Modal = new Web3Modal();
@@ -203,6 +228,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
       let transaction = await contract.createToken(url);
       // After transaction
       let tx = await transaction.wait();
+      console.log('lometa', tx);
       let event = tx.events[0];
       let value = event.args[2];
       let tokenId = value.toNumber();
@@ -227,19 +253,102 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
     }
   };
 
-  const handleMint = async () => {};
+  const handleMint = async (values, setErrors, errors) => {
+    try {
+      // Upload image
+      const user = await magicLocal.user.getMetadata();
+      const from = user.publicAddress;
+      console.log('Mint', values);
+      const fileUrl = await uploadImageIPFS(values?.image?.file);
+
+      if (
+        !values.name ||
+        !values.caption ||
+        !values.price ||
+        !fileUrl ||
+        fileUrl === ''
+      ) {
+        return;
+      }
+
+      // Upload to IPFS
+      const data = JSON.stringify({
+        name: values.name,
+        description: values.caption,
+        image: fileUrl,
+      });
+
+      const added = await ipfsClient.add(data);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      // Create the item token
+      // Change nft address to marketplace address
+      const contract = new web3.eth.Contract(NFT.abi, nftaddress);
+      console.log('estimate...');
+
+      // Estimate gas and mint token
+      let gas = await contract.methods.createToken(url).estimateGas();
+      console.log('estimate...', gas);
+      let gasPrice = await web3.eth.getGasPrice();
+      console.log(gasPrice);
+      setInvolve({
+        'Estimated gas fee': web3.utils.fromWei(String(gas * gasPrice)),
+      });
+      setShowInvolve(true);
+      // Show confirm modal
+      /*
+      let transaction = await contract.methods.createToken(url).send({
+        from,
+        gas,
+      });*/
+      console.log('estimate...');
+
+      // // After transaction
+      // let tokenID = transaction.events['Transfer'].raw.topics[3];
+      // tokenID = web3.utils.hexToNumber(tokenID);
+      // const priceParsed = ethers.utils.parseUnits(values.price, 'ether');
+
+      // // List the item for sale on the marketplace
+      // contract = new web3.eth.Contract(NFTMarket.abi, nftmarketaddress);
+      // const listingPrice = await contract.methods.getListingPrice().call();
+      // gas = await contract.methods
+      //   .createMarketItem(nftaddress, tokenID, priceParsed)
+      //   .estimateGas({
+      //     from,
+      //     value: listingPrice,
+      //   });
+      // console.log('estimate...');
+
+      // transaction = await contract.methods
+      //   .createMarketItem(nftaddress, tokenId, priceParsed)
+      //   .send({
+      //     from,
+      //     value: listingPrice,
+      //     gas,
+      //   });
+
+      // console.log('tx result: ', transaction);
+      setLoaded(-1);
+      router.push('/market');
+    } catch (error) {
+      console.log(error);
+      setLoaded(-1);
+    }
+  };
 
   return (
     <Card className={`border-0 shadow-xss rounded-xxl`}>
       <Card.Body className='d-flex' style={{ margin: 20 }}>
         <CreatePostForm
-          onSubmit={
-            isMint ? handleMintAndSell : handleUpload(isEdit ? 'put' : 'post')
-          }
+          onSubmit={isMint ? handleMint : handleUpload(isEdit ? 'put' : 'post')}
           loaded={loaded}
           values={content}
           isMint={isMint}
           setIsMint={setIsMint}
+        />
+        <InvolveModal
+          show={showInvolve}
+          handleClose={() => setShowInvolve(false)}
+          data={involve}
         />
       </Card.Body>
     </Card>

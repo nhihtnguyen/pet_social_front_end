@@ -95,7 +95,7 @@ const Explore = ({ fallback }) => {
       </Head>
       <div className='row w-100 m-0'>
         <div className='col-xl-12'>
-          <FloatingButton icon={<FiPlus />} href={`/create`} />
+          <FloatingButton icon={<FiPlus />} href={`/post/create`} />
           <div className='row'>
             <SWRConfig value={{ fallback }}>
               <Content />

@@ -24,6 +24,7 @@ const NavItem = ({ icon, href, children, className }) => (
 
 const LeftNav = ({ className }) => {
   const { user, loading, isAuthenticated } = useAuth();
+  console.log('auth', isAuthenticated);
   return (
     <div className={`navigation bg-transparent-card ${className || ''}`}>
       <div className='container ps-0 pe-0'>
@@ -71,7 +72,7 @@ const LeftNav = ({ className }) => {
             </div>
             <ul className='mb-1'>
               <li className='logo d-none d-xl-block d-lg-block'></li>
-              {!isAuthenticated ? (
+              {isAuthenticated ? (
                 <>
                   <li>
                     <Link
