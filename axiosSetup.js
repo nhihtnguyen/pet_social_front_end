@@ -1,5 +1,5 @@
 import axios from 'axios';
-const serverHost = 'http://localhost:3001';
+const serverHost = 'https://petsocial-backend.herokuapp.com/';
 
 const client = axios.create({
   baseURL: serverHost,
