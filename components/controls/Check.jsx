@@ -20,7 +20,9 @@ const Check = ({
           className={`${inputClassName} form-check-input mt-2`}
         />
         {label && (
-          <Form.Check.Label className={`${labelClassName} form-check-label`}>
+          <Form.Check.Label
+            className={`${labelClassName} form-check-label text-dark`}
+          >
             {label}
           </Form.Check.Label>
         )}

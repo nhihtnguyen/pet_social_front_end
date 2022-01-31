@@ -11,13 +11,13 @@ const ItemDetail = ({ item, onAction, actionName, price, setPrice }) => {
   }
 
   return (
-    <Card className='rounded-xxl border-0'>
+    <Card className='rounded-xxl border-0 overflow-hidden'>
       <Row>
         <Col xs='7'>
           <div className='image-container '>
             <Image
               src={item.image}
-              className={'image rounded-xxl'}
+              className={'image'}
               layout='fill'
               alt='image'
             />

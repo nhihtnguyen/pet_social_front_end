@@ -16,7 +16,7 @@ const createMagic = (key) => {
   return (
     typeof window !== 'undefined' &&
     new Magic(key, {
-      network: localNet,
+      network: customNodeOptions,
       extensions: [new OAuthExtension()],
     })
   );

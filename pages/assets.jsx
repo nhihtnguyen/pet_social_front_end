@@ -14,6 +14,33 @@ import NFTMarket from 'artifacts/contracts/NFTMarket.sol/NFTMarket.json';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { localWeb3, magicLocal } from 'app/magic';
+import { Masonry } from 'masonic';
+
+const MasonryCard = ({ data }) => {
+  const [show, setShow] = useState(false);
+  const [price, setPrice] = useState('');
+
+  return (
+    <>
+      <ItemCard item={data} className={`m-0`} onClick={() => setShow(true)} />
+
+      <Modal
+        contentClassName='rounded-xxl border-0 p-0 m-0 bg-transparent'
+        size='lg'
+        show={show}
+        onHide={() => setShow(false)}
+      >
+        <ItemDetail
+          item={data}
+          onAction={() => {}}
+          actionName={'sell'}
+          price={price}
+          setPrice={setPrice}
+        />
+      </Modal>
+    </>
+  );
+};
 
 const Assets = () => {
   const [nfts, setNfts] = useState([]);
@@ -61,6 +88,7 @@ const Assets = () => {
       console.log(error);
     }
   };
+  const sellNFTsLocal = async () => {};
   const loadNFTs = async () => {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -170,6 +198,7 @@ const Assets = () => {
           nftContract: String(i.nftContract),
         };
         items.push(item);
+        //setNfts(items);
       }
       // if owner == msg.sender then we know he owns this token id
     }
@@ -183,35 +212,27 @@ const Assets = () => {
         <FloatingButton icon={<FiPlus />} href={`/post/create`} />
         <FloatingButton icon={<FiShoppingBag />} href={`/market`} index={1} />
         <PageTitle title={'My Assets'} />
-        <div className='row ms-0 2-100'>
-          {loading ? (
-            <Spinner animation='border' role='status'>
-              <span className='visually-hidden'>Loading...</span>
-            </Spinner>
-          ) : nfts.length < 1 ? (
-            <h3>No item</h3>
-          ) : (
-            nfts.map((item, index) => (
-              <div className='col p-0 mb-3 me-1' key={index}>
-                <ItemCard item={item} onClick={handleShow(index)} />
-                <Modal
-                  contentClassName='rounded-xxl border-0 p-0 m-0'
-                  size='lg'
-                  show={show.includes(index)}
-                  onHide={handleClose(index)}
-                >
-                  <ItemDetail
-                    item={item}
-                    onAction={sellNFT}
-                    actionName={'sell'}
-                    price={price}
-                    setPrice={setPrice}
-                  />
-                </Modal>
-              </div>
-            ))
-          )}
-        </div>
+        {loading ? (
+          <Spinner animation='border' role='status' className='text-dark'>
+            <span className='visually-hidden'>Loading...</span>
+          </Spinner>
+        ) : (
+          <div className='masonic m-auto p-0'>
+            <Masonry
+              // Provides the data for our grid items
+              items={nfts || []}
+              // Adds 8px of space between the grid cells
+              columnGutter={12}
+              // Sets the minimum column width to 172px
+              columnWidth={172}
+              // Pre-renders 5 windows worth of content
+              overscanBy={5}
+              // This is the grid item component
+              render={MasonryCard}
+            />
+          </div>
+        )}
+        {!loading && nfts.length < 1 && <h3>No item</h3>}
       </div>
     </div>
   );
@@ -222,3 +243,9 @@ Assets.getLayout = function getLayout(page) {
 };
 
 export default Assets;
+
+//  nfts.map((item, index) => (
+//    <div className='col-3 p-0 mb-3 me-3' key={index}>
+//      <ItemCard item={item} onClick={handleShow(index)} />
+//    </div>
+//  ));
