@@ -21,18 +21,21 @@ const nftMarketAddress = process.env.NEXT_PUBLIC_MARKET_ADDRESS;
 const MasonryCard =
   (method) =>
   ({ data }) => {
+    const [info, setInfo] = useState({});
     const [show, setShow] = useState(false);
     const [price, setPrice] = useState('');
     const [listingPrice, setListingPrice] = useState('');
     const [involve, setInvolve] = useState({});
     const [contract, setContract] = useState('');
     const [loading, setLoading] = useState(false);
+    const [listing, setListing] = useState(false);
+
     const [showInvolve, setShowInvolve] = useState(false);
     const router = useRouter();
 
     const estimateGas = (nft) => async () => {
       try {
-        setLoading(true);
+        setListing(true);
         setShowInvolve(true);
         let signer = null;
         switch (method) {
@@ -92,7 +95,7 @@ const MasonryCard =
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false);
+        setListing(false);
       }
     };
 
@@ -113,9 +116,44 @@ const MasonryCard =
       }
     };
 
+    const loadToken = async (tokenID) => {
+      try {
+        setLoading(true);
+        const provider = new ethers.providers.JsonRpcProvider();
+        const tokenContract = new ethers.Contract(
+          nftAddress,
+          NFT.abi,
+          provider
+        );
+        console.log('object', tokenID);
+        const tokenUri = await tokenContract.tokenURI(tokenID);
+        const meta = await axios.get(tokenUri);
+        let item = {
+          tokenId: Number(tokenID),
+          image: String(meta.data.image),
+          name: String(meta.data.name),
+          description: String(meta.data.description),
+          nftContract: String(nftAddress),
+        };
+        setInfo(item);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      loadToken(data?.id);
+    }, []);
     return (
       <>
-        <ItemCard item={data} className={`m-0`} onClick={() => setShow(true)} />
+        <ItemCard
+          item={info}
+          className={`m-0`}
+          onClick={() => setShow(true)}
+          loading={loading}
+        />
 
         <Modal
           contentClassName='rounded-xxl border-0 p-0 m-0 bg-transparent'
@@ -124,8 +162,8 @@ const MasonryCard =
           onHide={() => setShow(false)}
         >
           <ItemDetail
-            item={data}
-            onAction={estimateGas(data)}
+            item={info}
+            onAction={estimateGas(info)}
             actionName={'sell'}
             price={price}
             setPrice={setPrice}
@@ -135,8 +173,8 @@ const MasonryCard =
           show={showInvolve}
           handleClose={() => setShowInvolve(false)}
           data={involve}
-          onConfirm={sellNFTs(data)}
-          loading={loading}
+          onConfirm={sellNFTs(info)}
+          loading={listing}
           action={`Create market item`}
         />
       </>
@@ -147,8 +185,9 @@ const Assets = () => {
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [chosen, setChosen] = useState('');
+  const [address, setAddress] = useState('');
 
-  const getPrimaryWallet = () => {
+  const getPrimaryWallet = async () => {
     try {
       let primaryWallet = localStorage.getItem('primary_wallet');
       let selected;
@@ -163,9 +202,16 @@ const Assets = () => {
         String(selected).toLowerCase()
           ? 'metamask'
           : null;
-
+      let address = String(primaryWallet?.asset).toLowerCase();
+      if (!address) {
+        address = await magic.user.getMetadata();
+        address = address.publicAddress.toLowerCase();
+      }
       setChosen(chosen);
-      return chosen;
+      setAddress(address);
+      loadLocal2(address);
+
+      return chosen, address;
     } catch (error) {
       console.log(error);
     }
@@ -173,64 +219,35 @@ const Assets = () => {
 
   useEffect(() => {
     try {
-      let chosen = getPrimaryWallet();
-      loadLocal2(chosen);
+      getPrimaryWallet();
     } catch (error) {
       console.log(error);
     }
   }, []);
 
-  const loadLocal2 = async (method) => {
-    let signer = null;
-    switch (method) {
-      case 'metamask': {
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
-        const provider = new ethers.providers.Web3Provider(connection);
-        signer = await provider.getSigner();
-        break;
+  const loadLocal2 = async (address) => {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider();
+      const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider);
+      let addressBalance = await tokenContract.balanceOf(address);
+
+      let tokenID = 0;
+      let supply = await tokenContract.totalSupply();
+      const items = [];
+      for (tokenID = 1; tokenID <= supply; tokenID++) {
+        let owner = await tokenContract.ownerOf(tokenID);
+        if (owner.toLowerCase() == address) {
+          items.push({ id: tokenID });
+        }
       }
-      default: {
-        const provider = new ethers.providers.Web3Provider(
-          magicLocal.rpcProvider
-        );
-        signer = await provider.getSigner();
-        break;
-      }
+      console.log(address, items);
+
+      setNfts(items);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-    let from = await signer.getAddress();
-
-    const tokenContract = new ethers.Contract(nftAddress, NFT.abi, signer);
-    //let balance = await tokenContract.methods.balanceOf(from).call();
-
-    let i = 0;
-    let supply = await tokenContract.totalSupply();
-    const items = [];
-    for (i = 1; i <= supply; i++) {
-      // this will check each nft owner
-      // i is the id of each nft.
-
-      // this will return the owner address
-      let owner = await tokenContract.ownerOf(i);
-      if (owner == from) {
-        items.push;
-        const tokenUri = await tokenContract.tokenURI(i);
-        const meta = await axios.get(tokenUri);
-        let item = {
-          tokenId: Number(i),
-          image: String(meta.data.image),
-          name: String(meta.data.name),
-          description: String(meta.data.description),
-          nftContract: String(nftAddress),
-        };
-        items.push(item);
-        //setNfts(items);
-      }
-      // if owner == msg.sender then we know he owns this token id
-    }
-
-    setNfts(items);
-    setLoading(false);
   };
 
   return (
