@@ -8,194 +8,220 @@ import PageTitle from 'components/pagetitle/PageTitle';
 import { FiPlus, FiShoppingBag } from 'react-icons/fi';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
-import { nftaddress, nftmarketaddress } from 'config';
-import NFT from 'artifacts/contracts/NFT.sol/NFT.json';
-import NFTMarket from 'artifacts/contracts/NFTMarket.sol/NFTMarket.json';
+import NFT from 'contracts/NFT.json';
+import NFTMarket from 'contracts/NFTMarket.json';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { localWeb3, magicLocal } from 'app/magic';
+import { localWeb3 as web3, magicLocal } from 'app/magic';
 import { Masonry } from 'masonic';
+import InvolveModal from 'components/modal/InvolveModal';
+const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
+const nftMarketAddress = process.env.NEXT_PUBLIC_MARKET_ADDRESS;
 
-const MasonryCard = ({ data }) => {
-  const [show, setShow] = useState(false);
-  const [price, setPrice] = useState('');
+const MasonryCard =
+  (method) =>
+  ({ data }) => {
+    const [show, setShow] = useState(false);
+    const [price, setPrice] = useState('');
+    const [listingPrice, setListingPrice] = useState('');
+    const [involve, setInvolve] = useState({});
+    const [contract, setContract] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showInvolve, setShowInvolve] = useState(false);
+    const router = useRouter();
 
-  return (
-    <>
-      <ItemCard item={data} className={`m-0`} onClick={() => setShow(true)} />
+    const estimateGas = (nft) => async () => {
+      try {
+        setLoading(true);
+        setShowInvolve(true);
+        let signer = null;
+        switch (method) {
+          case 'metamask': {
+            const web3Modal = new Web3Modal();
+            const connection = await web3Modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            signer = await provider.getSigner();
+            break;
+          }
+          default: {
+            const provider = new ethers.providers.Web3Provider(
+              magicLocal.rpcProvider
+            );
+            signer = await provider.getSigner();
+            break;
+          }
+        }
+        // Estimate gas and mint token
+        const _contract = new ethers.Contract(
+          nftMarketAddress,
+          NFTMarket.abi,
+          signer
+        );
+        setContract(_contract);
+        const priceParsed = ethers.utils.parseUnits(price, 'ether');
+        let listingPrice = await _contract.getListingPrice();
+        listingPrice = listingPrice.toString();
+        setListingPrice(listingPrice);
+        const gas = await _contract.estimateGas.createMarketItem(
+          nft.nftContract,
+          nft.tokenId,
+          priceParsed,
+          { value: listingPrice }
+        );
 
-      <Modal
-        contentClassName='rounded-xxl border-0 p-0 m-0 bg-transparent'
-        size='lg'
-        show={show}
-        onHide={() => setShow(false)}
-      >
-        <ItemDetail
-          item={data}
-          onAction={() => {}}
-          actionName={'sell'}
-          price={price}
-          setPrice={setPrice}
+        const gasData = await signer.getFeeData();
+        const gasFee =
+          ethers.utils.formatEther(gasData.gasPrice.toString()) *
+          gas.toNumber();
+
+        setInvolve({
+          'Estimated gas fee': gasFee,
+          'Gas limit': gas.toString(),
+          'Gas Price':
+            ethers.utils.formatUnits(gasData.gasPrice.toString(), 'gwei') +
+            ' gwei',
+          'Max fee per gas':
+            ethers.utils.formatUnits(gasData.maxFeePerGas.toString(), 'gwei') +
+            ' gwei',
+          Amount: ethers.utils.formatEther(listingPrice).toString(),
+          total: Number(
+            Number(ethers.utils.formatEther(listingPrice).toString()) +
+              Number(gasFee)
+          ),
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const sellNFTs = (nft) => async () => {
+      try {
+        const priceParsed = ethers.utils.parseUnits(price, 'ether');
+
+        const transaction = await contract.createMarketItem(
+          nft.nftContract,
+          nft.tokenId,
+          priceParsed,
+          { value: listingPrice }
+        );
+
+        router.push('/market');
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    return (
+      <>
+        <ItemCard item={data} className={`m-0`} onClick={() => setShow(true)} />
+
+        <Modal
+          contentClassName='rounded-xxl border-0 p-0 m-0 bg-transparent'
+          size='lg'
+          show={show}
+          onHide={() => setShow(false)}
+        >
+          <ItemDetail
+            item={data}
+            onAction={estimateGas(data)}
+            actionName={'sell'}
+            price={price}
+            setPrice={setPrice}
+          />
+        </Modal>
+        <InvolveModal
+          show={showInvolve}
+          handleClose={() => setShowInvolve(false)}
+          data={involve}
+          onConfirm={sellNFTs(data)}
+          loading={loading}
+          action={`Create market item`}
         />
-      </Modal>
-    </>
-  );
-};
+      </>
+    );
+  };
 
 const Assets = () => {
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [price, setPrice] = useState('');
+  const [chosen, setChosen] = useState('');
 
-  useEffect(() => {
-    loadLocal2();
-  }, []);
-
-  const [show, setShow] = useState([]);
-
-  const handleClose = (index) => () => {
-    let temp = [...show];
-    temp.splice(temp.indexOf(index), 1);
-    setShow(temp);
-  };
-  const handleShow = (index) => () => {
-    setShow([...show, index]);
-  };
-
-  const sellNFT = async (nft) => {
+  const getPrimaryWallet = () => {
     try {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
-      let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-      await contract.approve(nftmarketaddress, nft.tokenId);
-      const priceParsed = ethers.utils.parseUnits(price, 'ether');
+      let primaryWallet = localStorage.getItem('primary_wallet');
+      let selected;
+      if (primaryWallet) {
+        primaryWallet = JSON.parse(primaryWallet);
+      }
+      if (window.ethereum) {
+        selected = window.ethereum.selectedAddress;
+      }
+      let chosen =
+        String(primaryWallet?.asset).toLowerCase() ==
+        String(selected).toLowerCase()
+          ? 'metamask'
+          : null;
 
-      contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
-      let listingPrice = await contract.getListingPrice();
-      listingPrice = listingPrice.toString();
-      const transaction = await contract.createMarketItem(
-        nft.nftContract,
-        nft.tokenId,
-        priceParsed,
-        { value: listingPrice }
-      );
-
-      await transaction.wait();
-      router.push('/market');
+      setChosen(chosen);
+      return chosen;
     } catch (error) {
       console.log(error);
     }
   };
-  const sellNFTsLocal = async () => {};
-  const loadNFTs = async () => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
 
-    const marketContract = new ethers.Contract(
-      nftmarketaddress,
-      NFTMarket.abi,
-      signer
-    );
-    const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
-    const data = await marketContract.fetchMyNFTs();
+  useEffect(() => {
+    try {
+      let chosen = getPrimaryWallet();
+      loadLocal2(chosen);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-        let item = {
-          marketId: 0,
-          tokenId: Number(i.tokenId.toNumber()),
-          seller: String(i.seller),
-          owner: String(i.owner),
-          image: String(meta.data.image),
-          name: String(meta.data.name),
-          description: String(meta.data.description),
-          price: Number(price),
-          nftContract: String(i.nftContract),
-        };
-        return item;
-      })
-    );
-    setNfts(items);
-    setLoading(false);
-  };
+  const loadLocal2 = async (method) => {
+    let signer = null;
+    switch (method) {
+      case 'metamask': {
+        const web3Modal = new Web3Modal();
+        const connection = await web3Modal.connect();
+        const provider = new ethers.providers.Web3Provider(connection);
+        signer = await provider.getSigner();
+        break;
+      }
+      default: {
+        const provider = new ethers.providers.Web3Provider(
+          magicLocal.rpcProvider
+        );
+        signer = await provider.getSigner();
+        break;
+      }
+    }
+    let from = await signer.getAddress();
 
-  const loadLocal = async () => {
-    const web3 = localWeb3();
-    const user = await magicLocal.user.getMetadata();
-    const from = user.publicAddress;
+    const tokenContract = new ethers.Contract(nftAddress, NFT.abi, signer);
+    //let balance = await tokenContract.methods.balanceOf(from).call();
 
-    const marketContract = new web3.eth.Contract(
-      NFTMarket.abi,
-      nftmarketaddress
-    );
-
-    const tokenContract = new web3.eth.Contract(NFT.abi, nftaddress);
-    const data = await marketContract.methods
-      .fetchMyNFTs()
-      .call({ from: '0x66ef075aa37E5e0D77A764009F35352BFaE4b898' });
-    console.log('assest', data);
-
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.methods.tokenURI(i.tokenId).call();
-        console.log(tokenUri);
-        const meta = await axios.get(tokenUri);
-
-        let price = ethers.utils.formatUnits(i.price.toString(), 'ether');
-        let item = {
-          marketId: 0,
-          tokenId: Number(i.tokenId),
-          seller: String(i.seller),
-          owner: String(i.owner),
-          image: String(meta.data.image),
-          name: String(meta.data.name),
-          description: String(meta.data.description),
-          price: Number(price),
-          nftContract: String(i.nftContract),
-        };
-        console.log('object', item);
-        return item;
-      })
-    );
-    setNfts(items);
-    setLoading(false);
-  };
-
-  const loadLocal2 = async () => {
-    const web3 = localWeb3();
-    const user = await magicLocal.user.getMetadata();
-    const from = user.publicAddress;
-
-    const tokenContract = new web3.eth.Contract(NFT.abi, nftaddress);
-    let balance = await tokenContract.methods.balanceOf(from).call();
     let i = 0;
-    let supply = await tokenContract.methods.totalSupply().call();
+    let supply = await tokenContract.totalSupply();
     const items = [];
-    console.log(supply);
     for (i = 1; i <= supply; i++) {
       // this will check each nft owner
       // i is the id of each nft.
 
       // this will return the owner address
-      let owner = await tokenContract.methods.ownerOf(i).call();
-      console.log(owner);
+      let owner = await tokenContract.ownerOf(i);
       if (owner == from) {
         items.push;
-        const tokenUri = await tokenContract.methods.tokenURI(i).call();
+        const tokenUri = await tokenContract.tokenURI(i);
         const meta = await axios.get(tokenUri);
         let item = {
-          tokenId: Number(i.tokenId),
+          tokenId: Number(i),
           image: String(meta.data.image),
           name: String(meta.data.name),
           description: String(meta.data.description),
-          nftContract: String(i.nftContract),
+          nftContract: String(nftAddress),
         };
         items.push(item);
         //setNfts(items);
@@ -206,6 +232,7 @@ const Assets = () => {
     setNfts(items);
     setLoading(false);
   };
+
   return (
     <div className='row w-100'>
       <div className='col-xl-12 pe-0 middle-wrap'>
@@ -226,9 +253,9 @@ const Assets = () => {
               // Sets the minimum column width to 172px
               columnWidth={172}
               // Pre-renders 5 windows worth of content
-              overscanBy={5}
+              overscanBy={4}
               // This is the grid item component
-              render={MasonryCard}
+              render={MasonryCard(chosen)}
             />
           </div>
         )}

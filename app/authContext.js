@@ -19,8 +19,16 @@ export const AuthProvider = ({ children }) => {
         console.log('Got a token in the localStorage', token);
         axiosClient.defaults.headers.Authorization = `Bearer ${token}`;
         const { data: user } = await axiosClient.get('/users/me');
-        console.log('object', user);
-        user ? setUser(user) : router.push('/login');
+        const magicIsLoggedIn = await magic.user.isLoggedIn();
+        if (magicIsLoggedIn) {
+          const metadata = await magic.user.getMetadata();
+          setUser({ ...user, metadata });
+        } else {
+          // If no user is logged in, redirect to `/login`
+          // router.push('/login');
+          router.push('/login');
+          console.log('retrieve to login');
+        }
       }
       setLoading(false);
     }
@@ -62,7 +70,6 @@ export const AuthProvider = ({ children }) => {
       const result = await axiosClient.post('/auth/login');
 
       if (result.status === 200) {
-        console.log('In: ', result, didToken);
         const { metadata, accessToken } = result.data;
         const { data: user } = await axiosClient.get('users/me');
         localStorage.setItem('access_token', accessToken);

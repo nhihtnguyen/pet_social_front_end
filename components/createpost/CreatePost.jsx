@@ -9,43 +9,19 @@ import { useRouter } from 'next/router';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 import { nftaddress, nftmarketaddress } from 'config';
-import NFT from 'artifacts/contracts/NFT.sol/NFT.json';
-import NFTMarket from 'artifacts/contracts/NFTMarket.sol/NFTMarket.json';
+import NFT from 'contracts/NFT.json';
+import NFTMarket from 'contracts/NFTMarket.json';
 import { client as ipfsClient } from 'app/ipfs';
 import { checkImageStatus, checkCaptionStatus } from 'temp';
 import { getKeyByValue } from 'helpers';
-import { localWeb3, magicLocal } from 'app/magic';
-import InvolveCard from 'components/InvolveCard';
-import { Modal } from 'react-bootstrap';
-import Button from 'components/controls/Button';
+import { localWeb3 as web3, magicLocal } from 'app/magic';
+import InvolveModal from 'components/modal/InvolveModal';
 
 const STATUS = {
   allowed: 1,
   warning: 2,
   denied: 3,
 };
-
-const InvolveModal = ({ show, handleClose, data, loading, onConfirm }) => (
-  <Modal
-    show={show}
-    onHide={handleClose}
-    backdrop='static'
-    keyboard={false}
-    contentClassName='bg-transparent p-0 m-0 border-0'
-  >
-    <InvolveCard data={data} loading={loading} />
-    {!loading && (
-      <div className='ms-auto mt-2'>
-        <Button variant='danger' onClick={handleClose}>
-          Reject
-        </Button>{' '}
-        <Button variant='primary' onClick={() => onConfirm()}>
-          Confirm
-        </Button>
-      </div>
-    )}
-  </Modal>
-);
 
 const CreatePost = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
@@ -54,12 +30,35 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
   const [loaded, setLoaded] = useState(-1);
   const [isMint, setIsMint] = useState(false);
   const [showInvolve, setShowInvolve] = useState(false);
-  const [involve, setInvolve] = useState({});
   const [url, setUrl] = useState('');
-  const [price, setPrice] = useState('');
-  const web3 = localWeb3();
-  const [estimatedGas, setEstimatedGas] = useState('auto');
+  const [contract, setContract] = useState('');
+  const [chosen, setChosen] = useState('');
+  const [involve, setInvolve] = useState({});
 
+  useEffect(() => {
+    getChosenWallet();
+  }, []);
+
+  const getChosenWallet = () => {
+    try {
+      let primaryWallet = localStorage.getItem('primary_wallet');
+      let selected;
+      if (primaryWallet) {
+        primaryWallet = JSON.parse(primaryWallet);
+      }
+      if (window.ethereum) {
+        selected = window.ethereum.selectedAddress;
+      }
+      const _chosen =
+        String(primaryWallet?.asset).toLowerCase() ==
+        String(selected).toLowerCase()
+          ? 'metamask'
+          : null;
+      setChosen(_chosen);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleUpload = (action) => async (data, setErrors, errors) => {
     let bodyFormData = new FormData();
 
@@ -257,27 +256,19 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
       console.log('Error uploading file: ', error);
     }
   };
-  const getEstimateGasFeeMintInvolve = async (values, setErrors, errors) => {
+  const estimateGasMint = async (values, setErrors, errors) => {
     try {
       setLoaded(0);
       setShowInvolve(true);
-      setPrice(values.price);
 
       // Upload image
-      console.log('Mint', values);
       const fileUrl = await uploadImageIPFS(values?.image?.file);
 
-      if (
-        !values.name ||
-        !values.caption ||
-        !values.price ||
-        !fileUrl ||
-        fileUrl === ''
-      ) {
+      if (!fileUrl || fileUrl === '') {
         return;
       }
 
-      // Upload to IPFS
+      // Upload to IPFS // Apply a template
       const data = JSON.stringify({
         name: values.name,
         description: values.caption,
@@ -288,74 +279,60 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setUrl(url);
 
-      const contract = new web3.eth.Contract(NFT.abi, nftaddress);
-      console.log('estimate...');
+      let signer;
+      switch (chosen) {
+        case 'metamask': {
+          const web3Modal = new Web3Modal();
+          const connection = await web3Modal.connect();
+          const provider = new ethers.providers.Web3Provider(connection);
+          signer = await provider.getSigner();
+          break;
+        }
+        default: {
+          const provider = new ethers.providers.Web3Provider(
+            magicLocal.rpcProvider
+          );
+          signer = await provider.getSigner();
+          break;
+        }
+      }
 
+      let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+      setContract(contract);
       // Estimate gas and mint token
-      let gas = await contract.methods.createToken(url).estimateGas();
-      console.log('estimate...', gas);
-      let gasPrice = await web3.eth.getGasPrice();
-      console.log(gasPrice);
+      const gas = await contract.estimateGas.createToken(url);
+
+      const gasData = await signer.getFeeData();
+      const gasFee =
+        ethers.utils.formatEther(gasData.gasPrice.toString()) * gas.toNumber();
+
       setInvolve({
-        'Estimated gas fee': web3.utils.fromWei(String(gas * gasPrice)),
+        'Estimated gas fee': gasFee,
+        'Gas limit': gas.toString(),
+        'Gas Price':
+          ethers.utils.formatUnits(gasData.gasPrice.toString(), 'gwei') +
+          ' gwei',
+        'Max fee per gas':
+          ethers.utils.formatUnits(gasData.maxFeePerGas.toString(), 'gwei') +
+          ' gwei',
+        total: gasFee,
       });
-      setEstimatedGas(gas);
-      setLoaded(-1);
+      console.log('fee', gasFee);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoaded(-1);
     }
   };
   const handleMint = async () => {
     try {
-      setLoaded(99);
+      setLoaded(50);
       setShowInvolve(false);
-      const user = await magicLocal.user.getMetadata();
-      const from = user.publicAddress;
-
-      // Create the item token
-      let contract = new web3.eth.Contract(NFT.abi, nftaddress);
-      console.log('estimate...');
-      // Estimate gas and mint token
-      let gas = await contract.methods.createToken(url).estimateGas();
-      console.log('estimate...', gas);
-
-      // Show confirm modal
-      console.log('gas', estimatedGas);
-      let transaction = await contract.methods.createToken(url).send({
-        from,
-        gas: estimatedGas,
-      });
-      console.log('estimate...');
-
-      // After transaction
-      let tokenID = transaction.events['Transfer'].raw.topics[3];
-      tokenID = web3.utils.hexToNumber(tokenID);
-      const priceParsed = ethers.utils.parseUnits(price, 'ether');
-
-      // List the item for sale on the marketplace
-      contract = new web3.eth.Contract(NFTMarket.abi, nftmarketaddress);
-      const listingPrice = await contract.methods.getListingPrice().call();
-      gas = await contract.methods
-        .createMarketItem(nftaddress, tokenID, priceParsed)
-        .estimateGas({
-          from,
-          value: listingPrice,
-        });
-      console.log('estimate...');
-
-      transaction = await contract.methods
-        .createMarketItem(nftaddress, tokenID, priceParsed)
-        .send({
-          from,
-          value: listingPrice,
-          gas,
-        });
-
-      console.log('tx result: ', transaction);
-      setLoaded(-1);
+      let transaction = await contract.createToken(url);
       router.push('/assets');
     } catch (error) {
       console.log(error);
+    } finally {
       setLoaded(-1);
     }
   };
@@ -365,9 +342,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
       <Card.Body className='d-flex' style={{ margin: 20 }}>
         <CreatePostForm
           onSubmit={
-            isMint
-              ? getEstimateGasFeeMintInvolve
-              : handleUpload(isEdit ? 'put' : 'post')
+            isMint ? estimateGasMint : handleUpload(isEdit ? 'put' : 'post')
           }
           loaded={loaded}
           values={content}
@@ -380,6 +355,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
           data={involve}
           onConfirm={handleMint}
           loading={loaded > -1}
+          action={`Create token`}
         />
       </Card.Body>
     </Card>

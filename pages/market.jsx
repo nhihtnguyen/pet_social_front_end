@@ -1,7 +1,5 @@
 import Layout from 'components/Layout';
 import ItemCard from 'components/itemcard/ItemCard';
-import { useAppSelector, useAppDispatch } from 'app/hooks';
-import { marketActions, marketSelector } from 'features/market/marketSlice';
 import { useEffect, useState } from 'react';
 import { Modal, Spinner } from 'react-bootstrap';
 import ItemDetail from 'components/itemdetail/ItemDetail';
@@ -10,143 +8,237 @@ import PageTitle from 'components/pagetitle/PageTitle';
 import { FiPlus, FiBriefcase } from 'react-icons/fi';
 import Web3Modal from 'web3modal';
 import { ethers } from 'ethers';
-import { nftaddress, nftmarketaddress } from '../config';
-import NFT from 'artifacts/contracts/NFT.sol/NFT.json';
-import NFTMarket from 'artifacts/contracts/NFTMarket.sol/NFTMarket.json';
+import NFTMarket from 'contracts/NFTMarket.json';
+import NFT from 'contracts/NFT.json';
 import { useRouter } from 'next/router';
-import { localWeb3, magicLocal } from 'app/magic';
+import { localWeb3 as web3, magicLocal } from 'app/magic';
+import { useAuth } from 'app/authContext';
+import axios from 'axios';
+import { Masonry } from 'masonic';
+import InvolveModal from 'components/modal/InvolveModal';
+const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
+const nftMarketAddress = process.env.NEXT_PUBLIC_MARKET_ADDRESS;
+
+const MasonryCard =
+  (method) =>
+  ({ data }) => {
+    const [show, setShow] = useState(false);
+    const [involve, setInvolve] = useState({});
+    const [contract, setContract] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showInvolve, setShowInvolve] = useState(false);
+    const router = useRouter();
+
+    const estimateGas = (nft) => async () => {
+      try {
+        setLoading(true);
+        setShowInvolve(true);
+        let signer = null;
+        switch (method) {
+          case 'metamask': {
+            const web3Modal = new Web3Modal();
+            const connection = await web3Modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            signer = await provider.getSigner();
+            break;
+          }
+          default: {
+            const provider = new ethers.providers.Web3Provider(
+              magicLocal.rpcProvider
+            );
+            signer = await provider.getSigner();
+            break;
+          }
+        }
+        // Estimate gas and mint token
+        const _contract = new ethers.Contract(
+          nftMarketAddress,
+          NFTMarket.abi,
+          signer
+        );
+        setContract(_contract);
+        const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+
+        const gas = await _contract.estimateGas.createMarketSale(
+          nftAddress,
+          nft.marketId,
+          {
+            value: price,
+          }
+        );
+
+        const gasData = await signer.getFeeData();
+        const gasFee =
+          ethers.utils.formatEther(gasData.gasPrice.toString()) *
+          gas.toNumber();
+
+        setInvolve({
+          'Estimated gas fee': gasFee,
+          'Gas limit': gas.toString(),
+          'Gas Price':
+            ethers.utils.formatUnits(gasData.gasPrice.toString(), 'gwei') +
+            ' gwei',
+          'Max fee per gas':
+            ethers.utils.formatUnits(gasData.maxFeePerGas.toString(), 'gwei') +
+            ' gwei',
+          Amount: nft.price.toString(),
+          total: Number(Number(nft.price.toString()) + Number(gasFee)),
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const buyNft = (nft) => async () => {
+      try {
+        setShowInvolve(false);
+        const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+
+        transaction = await contract.createMarketSale(
+          nftAddress,
+          nft.marketId,
+          {
+            value: price,
+          }
+        );
+        // Check result and show them for caller
+        // Re-direct to assets page
+        router.push('/assets');
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    return (
+      <>
+        <ItemCard item={data} onClick={() => setShow(true)} />
+
+        <Modal
+          contentClassName='rounded-xxl border-0 p-0 m-0 bg-transparent'
+          size='lg'
+          show={show}
+          onHide={() => setShow(false)}
+        >
+          <ItemDetail item={data} onAction={estimateGas(data)} />
+        </Modal>
+        <InvolveModal
+          show={showInvolve}
+          handleClose={() => setShowInvolve(false)}
+          data={involve}
+          onConfirm={buyNft(data)}
+          loading={loading}
+          action={`Create market sale`}
+        />
+      </>
+    );
+  };
+
+const toMarketItems = async (data, tokenContract) => {
+  const items = await Promise.all(
+    data.map(async (item) => {
+      const tokenUri = await tokenContract.tokenURI(item.tokenId);
+      const meta = await axios.get(tokenUri);
+      let price = ethers.utils.formatUnits(item.price.toString(), 'ether');
+      let itemParsed = {
+        marketId: Number(item.itemId.toNumber()),
+        tokenId: Number(item.tokenId.toNumber()),
+        seller: String(item.seller),
+        owner: String(item.owner),
+        image: String(meta.data.image),
+        name: String(meta.data.name),
+        description: String(meta.data.description),
+        nftContract: String(item.nftContract),
+        price,
+      };
+      return itemParsed;
+    })
+  );
+  return items;
+};
 
 const Market = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const arrayItems = useAppSelector(marketSelector);
+  const { user } = useAuth();
+  const [marketItems, setMarketItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [chosen, setChosen] = useState('');
 
-  const [magic, setMagic] = useState(magicLocal);
-  const web3 = localWeb3();
-  const [userMetadata, setUserMetadata] = useState();
-  const [balance, setBalance] = useState('...');
+  const loadMarketItems = async () => {
+    try {
+      const provider = new ethers.providers.JsonRpcProvider();
+      const tokenContract = new ethers.Contract(nftAddress, NFT.abi, provider);
+      const marketContract = new ethers.Contract(
+        nftMarketAddress,
+        NFTMarket.abi,
+        provider
+      );
+      const data = await marketContract.fetchMarketItems();
+      console.log(data);
+      setMarketItems(data);
 
-  useEffect(() => {
-    magic.user.isLoggedIn().then((magicIsLoggedIn) => {
-      if (magicIsLoggedIn) {
-        magic.user.getMetadata().then((user) => {
-          setUserMetadata(user);
-        });
-      } else {
-        console.log('retrieve to login');
+      const items = await toMarketItems(data, tokenContract);
+      setMarketItems(items);
+    } catch (error) {
+      // Logging, do something
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPrimaryWallet = () => {
+    try {
+      let primaryWallet = localStorage.getItem('primary_wallet');
+      let selected;
+      if (primaryWallet) {
+        primaryWallet = JSON.parse(primaryWallet);
       }
-    });
-  }, [magicLocal]);
+      if (window.ethereum) {
+        selected = window.ethereum.selectedAddress;
+      }
+      const _chosen =
+        String(primaryWallet?.asset).toLowerCase() ==
+        String(selected).toLowerCase()
+          ? 'metamask'
+          : null;
 
+      setChosen(_chosen);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    dispatch(marketActions.fetchItems());
+    // On mounted
+    loadMarketItems();
+    getPrimaryWallet();
   }, []);
 
-  const [show, setShow] = useState([]);
-
-  const handleClose = (index) => () => {
-    let temp = [...show];
-    temp.splice(temp.indexOf(index), 1);
-    setShow(temp);
-  };
-  const handleShow = (index) => () => {
-    setShow([...show, index]);
-  };
-
-  const buyNft = async (nft) => {
-    try {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        nftmarketaddress,
-        NFTMarket.abi,
-        signer
-      );
-
-      const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
-
-      const transaction = await contract.createMarketSale(
-        nftaddress,
-        nft.marketId,
-        {
-          value: price,
-        }
-      );
-      await transaction.wait();
-      router.push('/assets');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const fetchBalance = (address) => {
-    web3.eth
-      .getBalance(address)
-      .then((bal) => setBalance(web3.utils.fromWei(bal)));
-  };
-
-  const buyNftLocal = async (nft) => {
-    try {
-      const from = userMetadata.publicAddress;
-      const contract = new web3.eth.Contract(NFTMarket.abi, nftmarketaddress);
-      const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
-
-      // Estimate gas and get balance
-      const gas = await contract.methods
-        .createMarketSale(nftaddress, nft.marketId)
-        .estimateGas({
-          from,
-          value: price,
-        });
-      // Show caller balance and estimate fee
-      // Send transaction
-      const transaction = await contract.methods
-        .createMarketSale(nftaddress, nft.marketId)
-        .send({
-          from,
-          value: price,
-          gas,
-        });
-      // Check result and show them for caller
-      // Re-direct to assets page
-      router.push('/assets');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
-    <div className='row w-100'>
-      <div className='col-xl-12 pe-0 middle-wrap'>
-        <FloatingButton icon={<FiPlus />} href={`/post/create`} />
-        <FloatingButton icon={<FiBriefcase />} href={`/assets`} index={1} />
-        <PageTitle title={'Market'} />
-        <div className='row ms-0 w-100'>
-          {arrayItems.isLoading ? (
-            <Spinner animation='border' role='status'>
-              <span className='visually-hidden'>Loading...</span>
-            </Spinner>
-          ) : arrayItems.data.length < 1 ? (
-            <h3>No item</h3>
-          ) : (
-            arrayItems.data.map((item, index) => (
-              <div className='col-sm-4 p-0 me-3 mb-3' key={index}>
-                <ItemCard item={item} onClick={handleShow(index)} />
-                <Modal
-                  contentClassName='rounded-xxl'
-                  size='lg'
-                  show={show.includes(index)}
-                  onHide={handleClose(index)}
-                >
-                  <ItemDetail item={item} onAction={buyNftLocal} />
-                </Modal>
-              </div>
-            ))
-          )}
-        </div>
+    <div className='middle-wrap me-3'>
+      <FloatingButton icon={<FiPlus />} href={`/post/create`} />
+      <FloatingButton icon={<FiBriefcase />} href={`/assets`} index={1} />
+      <PageTitle title={'Market'} />
+      {loading && (
+        <Spinner animation='border' role='status' className='text-dark' />
+      )}
+      <div className='masonic'>
+        <Masonry
+          // Provides the data for our grid items
+          items={marketItems}
+          // Adds 12px of space between the grid cells
+          columnGutter={12}
+          // Sets the minimum column width to 172px
+          columnWidth={172}
+          // Pre-renders 5 windows worth of content
+          overscanBy={5}
+          // This is the grid item component
+          render={MasonryCard(chosen)}
+        />
       </div>
+
+      {!loading && marketItems?.length < 1 && <h3>No item</h3>}
     </div>
   );
 };

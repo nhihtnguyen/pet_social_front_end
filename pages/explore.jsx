@@ -62,10 +62,10 @@ const Content = () => {
           hasMore={!isReachedEnd}
           loader={<Spinner animation='border' />}
           dataLength={paginatedPosts?.length ?? 0}
-          className='w-100'
+          className='w-100 p-0'
           pullToRefresh
         >
-          <div className='masonic me-auto ms-auto'>
+          <div className='masonic'>
             <Masonry
               // Provides the data for our grid items
               items={paginatedPosts || []}
