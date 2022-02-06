@@ -14,7 +14,7 @@ const PetCard = ({
   mutateFollowing,
   mutate,
   onClick,
-  isUser,
+  isUser = false,
 }) => {
   const [isFollowed, setIsFollowed] = useState(followed);
   const follow = async () => {

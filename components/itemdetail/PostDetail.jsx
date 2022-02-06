@@ -66,7 +66,7 @@ const PostDetail = ({ item, loading, pid }) => {
 
   const width = Number(item?.size?.split('x')[0]) || 300;
   const height = Number(item?.size?.split('x')[1]) || 500;
-  const isOwner = user?.id === item?.User.id;
+  const isOwner = String(user?.id) === String(item?.User.id);
 
   const linkToEdit = () => {
     router.push(`/post/${item?.id}/edit`);
@@ -167,13 +167,13 @@ const PostDetail = ({ item, loading, pid }) => {
                   </span>
                 </h4>
               </li>
-              {item?.mentions?.map((pet, index) => {
+              {item?.mentions?.map((mention, index) => {
                 return (
                   <li
                     className={`d-flex align-items-center cursor-pointer`}
                     key={index}
                   >
-                    <Link href={`/pet/${pet?.id}`}>
+                    <Link href={`/pet/${mention?.pet_id}`}>
                       <figure as='a' className='avatar m-auto me-3'>
                         <Image
                           width={45}

@@ -23,7 +23,7 @@ const Following = () => {
   const handleClick = (id) => () => {
     router.push('/pet/' + id);
   };
-  const isOwner = user?.id === id;
+  const isOwner = String(user?.id) === String(id);
 
   return (
     <div className='row w-100'>
