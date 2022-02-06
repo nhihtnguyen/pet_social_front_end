@@ -1,6 +1,6 @@
 import Layout from 'components/Layout';
-import PageTitle from 'components/pagetitle/PageTitle';
-import UserCard from '../../../components/usercard/UserCard';
+import PageTitle from 'components/PageTitle';
+import UserCard from '../../../components/UserCard';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
@@ -24,7 +24,7 @@ const Follower = () => {
           {data.map((value) => {
             return (
               <div key={value} className='col-md-3 col-sm-4 pe-2'>
-                <UserCard as={'a'} profile={value} />
+                <UserCard profile={value} />
               </div>
             );
           })}

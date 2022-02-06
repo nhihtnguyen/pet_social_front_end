@@ -10,13 +10,14 @@ const Input = ({
   iconClassName,
   type,
   style,
+  inputStyle,
   invalidTooltip,
   ...props
 }) => {
   const icon = startIcon ? 'icon-input' : endIcon ? 'icon-right-input' : '';
   return (
     <Form.Group
-      className={`${className || ''} ${icon} form-group`}
+      className={`${icon} form-group ${className || ''}`}
       style={style}
     >
       {label && <Form.Label>{label}</Form.Label>}
@@ -28,6 +29,7 @@ const Input = ({
       <Form.Control
         type={type}
         className={`${inputClassName} ${styles['typing-box']} font-xsss fw-600`}
+        style={inputStyle}
         {...props}
       />
       <div

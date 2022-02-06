@@ -1,6 +1,6 @@
 import Layout from 'components/Layout';
 import ProfileBackground from 'components/profilebackground/ProfileBackground';
-import ProfileDetail from '../../../components/profiledetail/ProfileDetail';
+import ProfileDetail from '../../../components/ProfileDetail';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);

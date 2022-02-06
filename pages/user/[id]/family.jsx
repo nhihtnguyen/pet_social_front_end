@@ -1,6 +1,6 @@
 import Layout from 'components/Layout';
-import PageTitle from 'components/pagetitle/PageTitle';
-import PetCard from 'components/petcard/PetCard';
+import PageTitle from 'components/PageTitle';
+import PetCard from 'components/PetCard';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';

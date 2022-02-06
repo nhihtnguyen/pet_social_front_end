@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from './CommentBox.module.scss';
 import { FiMessageCircle, FiMoreHorizontal, FiSend } from 'react-icons/fi';
 import { AiOutlineSend, AiOutlineCloseCircle } from 'react-icons/ai';
 import { IoPawOutline } from 'react-icons/io5';
 import axiosClient from 'axiosSetup';
 import { Spinner, Button } from 'react-bootstrap';
 import { getFormatDate } from 'helpers';
+import Input from 'components/controls/Input';
 
 const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -85,7 +85,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
       <figure
         className={`avatar ${
           created ? 'w45' : 'w30 position-absolute'
-        } me-2 ms-2 mt-1 top-5`}
+        } me-2 ms-2 mt-1 top-5 z-index-1`}
       >
         <Image
           width={`${created ? 45 : 30}`}
@@ -140,13 +140,15 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
         </div>
       ) : (
         <>
-          <textarea
+          <Input
             value={content}
             onChange={(e) => setContent(e.target.value)}
             name='message'
-            className={`${styles['textarea-resize-lock']} 
-                            h100 bor-0 w-100 rounded-xxl p-2 ps-5 
+            as='textarea'
+            className='w-100'
+            inputClassName={`h100 rounded-xxl p-2 ps-5 
                             font-xssss text-grey-900 fw-500 border-light-md theme-dark-bg`}
+            inputStyle={{ resize: 'none', overflow: 'hidden' }}
             cols='30'
             rows='10'
             placeholder="What's on your mind?"

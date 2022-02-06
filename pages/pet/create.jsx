@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiX } from 'react-icons/fi';
 import { FaArrowUp } from 'react-icons/fa';
-import DragAndDrop from 'components/draganddrop/DragAndDrop';
+import DragAndDrop from 'components/DragAndDrop';
 import { useState } from 'react';
 import Button from 'components/controls/Button';
 import Layout from 'components/Layout';

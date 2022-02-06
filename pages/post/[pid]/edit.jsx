@@ -1,4 +1,4 @@
-import CreatePost from 'components/createpost/CreatePost';
+import CreatePost from 'components/CreatePost';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import Layout from 'components/Layout';

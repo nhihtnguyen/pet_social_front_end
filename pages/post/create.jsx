@@ -1,4 +1,4 @@
-import CreatePost from 'components/createpost/CreatePost';
+import CreatePost from 'components/CreatePost';
 import Layout from 'components/Layout';
 
 const Create = () => {

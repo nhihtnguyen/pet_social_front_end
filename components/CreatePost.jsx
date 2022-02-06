@@ -1,21 +1,19 @@
-import { Card, Form } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import CreatePostForm from 'components/forms/CreatePostForm';
-
 import { useState, useEffect } from 'react';
 import axiosClient from 'axiosSetup';
-import useSWR, { useSWRConfig } from 'swr';
+import { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
-
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
-import { nftaddress, nftmarketaddress } from 'config';
 import NFT from 'contracts/NFT.json';
-import NFTMarket from 'contracts/NFTMarket.json';
 import { client as ipfsClient } from 'app/ipfs';
 import { checkImageStatus, checkCaptionStatus } from 'temp';
-import { getKeyByValue } from 'helpers';
+import { getKeyByValue, getPrimaryWallet } from 'helpers';
 import { localWeb3 as web3, magicLocal } from 'app/magic';
 import InvolveModal from 'components/modal/InvolveModal';
+
+const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
 
 const STATUS = {
   allowed: 1,
@@ -36,29 +34,21 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
   const [involve, setInvolve] = useState({});
 
   useEffect(() => {
+    let mounted = true;
+    const getChosenWallet = () => {
+      try {
+        let chosen = getPrimaryWallet();
+        if (mounted) {
+          setChosen(chosen);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
     getChosenWallet();
+    return () => (mounted = false);
   }, []);
 
-  const getChosenWallet = () => {
-    try {
-      let primaryWallet = localStorage.getItem('primary_wallet');
-      let selected;
-      if (primaryWallet) {
-        primaryWallet = JSON.parse(primaryWallet);
-      }
-      if (window.ethereum) {
-        selected = window.ethereum.selectedAddress;
-      }
-      const _chosen =
-        String(primaryWallet?.asset).toLowerCase() ==
-        String(selected).toLowerCase()
-          ? 'metamask'
-          : null;
-      setChosen(_chosen);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const handleUpload = (action) => async (data, setErrors, errors) => {
     let bodyFormData = new FormData();
 
@@ -185,10 +175,9 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
       const added = await ipfsClient.add(file, {
         progress: (prog) => {
           setLoaded(prog / 3);
-          console.log(`received: ${prog}`);
         },
       });
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      const url = `${process.env.NEXT_PUBLIC_IPFS_ROOT_URL}/${added.path}`;
 
       return url;
     } catch (error) {
@@ -196,66 +185,6 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
     }
   };
 
-  const handleMintAndSell = async (values, setErrors, errors) => {
-    // Upload image
-    console.log('Mint', values);
-    const fileUrl = await uploadImageIPFS(values?.image?.file);
-
-    if (
-      !values.name ||
-      !values.caption ||
-      !values.price ||
-      !fileUrl ||
-      fileUrl === ''
-    ) {
-      return;
-    }
-
-    // Upload to IPFS
-    const data = JSON.stringify({
-      name: values.name,
-      description: values.caption,
-      image: fileUrl,
-    });
-
-    try {
-      const added = await ipfsClient.add(data);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
-
-      // Create the item token
-      let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
-      let transaction = await contract.createToken(url);
-      // After transaction
-      let tx = await transaction.wait();
-      console.log('lometa', tx);
-      let event = tx.events[0];
-      let value = event.args[2];
-      let tokenId = value.toNumber();
-      const priceParsed = ethers.utils.parseUnits(values.price, 'ether');
-
-      // List the item for sale on the marketplace
-      contract = new ethers.Contract(nftmarketaddress, NFTMarket.abi, signer);
-      let listingPrice = await contract.getListingPrice();
-      listingPrice = listingPrice.toString();
-
-      transaction = await contract.createMarketItem(
-        nftaddress,
-        tokenId,
-        priceParsed,
-        { value: listingPrice }
-      );
-      await transaction.wait();
-
-      router.push('/market');
-    } catch (error) {
-      console.log('Error uploading file: ', error);
-    }
-  };
   const estimateGasMint = async (values, setErrors, errors) => {
     try {
       setLoaded(0);
@@ -297,7 +226,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
         }
       }
 
-      let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
+      let contract = new ethers.Contract(nftAddress, NFT.abi, signer);
       setContract(contract);
       // Estimate gas and mint token
       const gas = await contract.estimateGas.createToken(url);

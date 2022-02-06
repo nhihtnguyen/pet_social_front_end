@@ -1,4 +1,4 @@
-import DragAndDrop from 'components/draganddrop/DragAndDrop';
+import DragAndDrop from 'components/DragAndDrop';
 import { FiX } from 'react-icons/fi';
 import { FaArrowUp } from 'react-icons/fa';
 import Image from 'next/image';

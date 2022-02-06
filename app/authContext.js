@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
     async function loadUserFromToken() {
       const token = localStorage.getItem('access_token');
       if (token) {
-        console.log('Got a token in the localStorage', token);
         axiosClient.defaults.headers.Authorization = `Bearer ${token}`;
         const { data: user } = await axiosClient.get('/users/me');
         const magicIsLoggedIn = await magic.user.isLoggedIn();

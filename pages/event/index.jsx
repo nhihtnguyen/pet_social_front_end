@@ -1,6 +1,6 @@
 import Layout from 'components/Layout';
-import PageTitle from 'components/pagetitle/PageTitle';
-import EventCard from 'components/eventcard/EventCard';
+import PageTitle from 'components/PageTitle';
+import EventCard from 'components/EventCard';
 
 const Event = () => {
   return (

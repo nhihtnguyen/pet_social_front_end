@@ -15,7 +15,7 @@ const EventCard = () => {
       <div
         className={`${
           toggle ? 'd-block' : 'd-none'
-        } bg-image-cover bg-image-center w-100 h-100 position-absolute`}
+        } bg-image-cover bg-image-center w-100 h-100 position-absolute bg-white`}
         style={{
           backgroundImage: `url("https://picsum.photos/300/430")`,
           zIndex: 11,
