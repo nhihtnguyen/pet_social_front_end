@@ -127,4 +127,5 @@ const LeftNav = ({ className }) => {
     </div>
   );
 };
+
 export default LeftNav;
