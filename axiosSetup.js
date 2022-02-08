@@ -1,5 +1,5 @@
 import axios from 'axios';
-const serverHost = 'http://localhost:3001';
+const serverHost = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const client = axios.create({
   baseURL: serverHost,
