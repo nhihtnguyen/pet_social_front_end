@@ -14,7 +14,6 @@ const Register = () => {
 
   const handleRegister = async (body) => {
     setLoading(true);
-    console.log('eef', body);
 
     try {
       const response = await axiosClient.post(`/auth/register`, body);

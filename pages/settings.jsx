@@ -19,7 +19,7 @@ const Settings = () => {
     logout();
   };
   return (
-    <div className='middle-wrap pe-2'>
+    <div className='middle-wrap pe-sm-3'>
       <div className='card w-100 border-0 bg-white shadow-xss p-0 mb-4 rounded-xxl'>
         <div className='card-body p-lg-5 p-4 w-100 border-0'>
           <div className='row'>
@@ -32,13 +32,13 @@ const Settings = () => {
               </div>
               <ul className='list-inline mb-4'>
                 <li className='list-inline-item d-block border-bottom me-0'>
-                  <Link href='/accountinformation'>
+                  <Link href='/personal'>
                     <a className='pt-2 pb-2 d-flex align-items-center'>
                       <span className='btn-round-md bg-primary-gradient text-white font-md me-3'>
                         <FiHome />
                       </span>{' '}
                       <h4 className='fw-600 font-xsss mb-0 mt-0'>
-                        Acount Information
+                        Personal Information
                       </h4>
                       <span className='font-xsss text-grey-500 ms-auto mt-3'>
                         <FiChevronRight />
@@ -87,7 +87,7 @@ const Settings = () => {
                       <span className='btn-round-md bg-blue-gradient text-white font-md me-3'>
                         <FiLock />
                       </span>{' '}
-                      <h4 className='fw-600 font-xsss mb-0 mt-0'>Password</h4>
+                      <h4 className='fw-600 font-xsss mb-0 mt-0'>Logs</h4>
                       <span className='font-xsss text-grey-500 ms-auto mt-3'>
                         <FiChevronRight />
                       </span>

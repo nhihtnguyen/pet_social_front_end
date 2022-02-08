@@ -1,10 +1,9 @@
 import axiosClient from 'axiosSetup';
-import { host as serverHost } from 'config';
 
-const fetcher = (...args) => axiosClient(...args).then((res) => res.json());
+const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
 const useUser = (id) => {
-  const { data, error } = useSWR(`${serverHost}/user/${id}`, fetcher);
+  const { data, error } = useSWR(`/user/${id}`, fetcher);
 
   return {
     user: data,

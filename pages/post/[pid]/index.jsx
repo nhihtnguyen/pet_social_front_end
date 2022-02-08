@@ -15,7 +15,7 @@ const PostDetail = () => {
   );
   if (error) return <div>failed to load</div>;
   return (
-    <div className='row m-0 pe-3 mb-3 justify-content-center w-100'>
+    <div className='row m-0 pe-sm-3 mb-3 justify-content-center w-100'>
       <ItemDetail item={post} pid={pid} loading={!post && !error} />
     </div>
   );
