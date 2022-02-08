@@ -1,8 +1,8 @@
 import { Fragment } from 'react';
-import Header from '../../components/header/Header';
-import LeftNav from '../../components/leftnav/LeftNav';
-import NotificationBanner from '../../components/notificationbanner/NotificationBanner';
-import RightNav from '../../components/rightnav/RightNav';
+import Header from 'components/header/Header';
+import LeftNav from 'components/leftnav/LeftNav';
+import NotificationBanner from 'components/notificationbanner/NotificationBanner';
+import RightNav from 'components/rightnav/RightNav';
 
 const Notification = () => {
   return (
