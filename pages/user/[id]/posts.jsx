@@ -1,6 +1,6 @@
 import Layout from 'components/Layout';
 import ProfileBackground from 'components/profilebackground/ProfileBackground';
-import PostUser from 'components/postuser/PostUser';
+import PostUser from 'components/PostCardRow';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
@@ -29,11 +29,11 @@ const Posts = () => {
   if (!user || !paginatedPosts) return <div>loading...</div>;
 
   return (
-    <div className='row w-100'>
-      <div className='col-xl-12 mb-3 pe-0'>
+    <div className='row w-100 m-0 p-0 pe-sm-3'>
+      <div className='col-xl-12 mb-3 p-0'>
         <ProfileBackground profile={user} />
       </div>
-      <div className='col pe-0'>
+      <div className='col p-0'>
         <InfiniteScroll
           next={() => setSize(size + 1)}
           hasMore={!isReachedEnd}

@@ -1,7 +1,7 @@
 import Layout from 'components/Layout';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import CreatePet from 'components/createpet/CreatePet';
+import CreatePet from 'components/CreatePet';
 import { useAuth } from 'app/authContext';
 import axiosClient from 'axiosSetup';
 
@@ -21,7 +21,7 @@ const AddPet = () => {
     router.replace(`/pet/${id}`);
   }
   return (
-    <div className='middle-wrap pe-3'>
+    <div className='middle-wrap pe-sm-3'>
       <CreatePet isEdit={true} content={pet} />
     </div>
   );

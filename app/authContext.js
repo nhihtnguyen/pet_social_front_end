@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { magicLocal as magic } from 'app/magic';
 
 //api here is an axios instance which has the baseURL set according to the env.
 import axiosClient from 'axiosSetup';
@@ -15,11 +16,17 @@ export const AuthProvider = ({ children }) => {
     async function loadUserFromToken() {
       const token = localStorage.getItem('access_token');
       if (token) {
-        console.log('Got a token in the localStorage');
         axiosClient.defaults.headers.Authorization = `Bearer ${token}`;
-        const { data: user } = await axiosClient.get('users/me');
-        if (user) {
-          setUser(user);
+        const { data: user } = await axiosClient.get('/users/me');
+        const magicIsLoggedIn = await magic.user.isLoggedIn();
+        if (magicIsLoggedIn) {
+          //const metadata = await magic.user.getMetadata();
+          setUser({ ...user });
+        } else {
+          // If no user is logged in, redirect to `/login`
+          // router.push('/login');
+          router.push('/login');
+          console.log('retrieve to login');
         }
       }
       setLoading(false);
@@ -27,29 +34,65 @@ export const AuthProvider = ({ children }) => {
     loadUserFromToken();
   }, []);
 
-  const login = async ({ email, password }) => {
-    const { data: token } = await axiosClient.post('auth/login', {
-      email,
-      password,
-    });
-    if (token) {
-      localStorage.setItem('token', token, { expires: 60 });
-      axiosClient.defaults.headers.Authorization = `Bearer ${token.token}`;
-      const { data: user } = await axiosClient.get('users/me');
-      setUser(user);
+  const logout = async (email, password) => {
+    try {
+      const result = await axiosClient.get('/auth/logout');
+      if (result.status === 302) {
+        localStorage.removeItem('access_token');
+        setUser(null);
+        delete axiosClient.defaults.headers.Authorization;
+        router.push('/login');
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
     }
   };
 
-  const logout = (email, password) => {
-    localStorage.removeItem('token');
-    setUser(null);
-    delete axiosClient.defaults.headers.Authorization;
-    router.replace('/login');
+  async function handleLoginWithSocial(provider) {
+    await magic.oauth.loginWithRedirect({
+      provider,
+    });
+  }
+
+  const handleLoginWithEmail = async (email) => {
+    try {
+      setLoading(true);
+
+      // Trigger Magic link to be sent to user
+      let didToken = await magic.auth.loginWithMagicLink({ email });
+      // Set token
+      console.log('hallo', didToken);
+      axiosClient.defaults.headers.Authorization = `Bearer ${didToken}`;
+
+      // Validate didToken with server
+      const result = await axiosClient.post('/auth/login');
+
+      if (result.status === 200) {
+        const { metadata, accessToken } = result.data;
+        const { data: user } = await axiosClient.get('users/me');
+        localStorage.setItem('access_token', accessToken);
+        axiosClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+        console.log({ ...user, metadata });
+        setUser({ ...user, metadata });
+        setLoading(false);
+        router.push('/user/me');
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated: !!user, user, login, loading, logout }}
+      value={{
+        isAuthenticated: !!user,
+        user,
+        login: handleLoginWithEmail,
+        loading,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -11,7 +11,7 @@ import { BsBookmarkHeart } from 'react-icons/bs';
 import { IoPawOutline } from 'react-icons/io5';
 import Image from 'next/image';
 import styles from './PostDetail.module.scss';
-import CommentBox from '../commentbox/CommentBox';
+import CommentBox from '../CommentBox';
 import { useEffect, forwardRef } from 'react';
 import useInfinitePagination from 'hooks/useInfinitePagination';
 import { useAuth } from 'app/authContext';
@@ -66,32 +66,15 @@ const PostDetail = ({ item, loading, pid }) => {
 
   const width = Number(item?.size?.split('x')[0]) || 300;
   const height = Number(item?.size?.split('x')[1]) || 500;
-  const isOwner = user?.id === item?.User.id;
+  const isOwner = String(user?.id) === String(item?.User.id);
 
   const linkToEdit = () => {
     router.push(`/post/${item?.id}/edit`);
   };
 
+  const linkToUser = () => {};
   const handleReport = () => {};
   const handleSavePost = () => {};
-
-  /*
-  const CustomToggle = forwardRef(({ children, onClick }, ref) => (
-    <a
-      href=''
-      ref={ref}
-      onClick={(e) => {
-        e.preventDefault();
-        onClick(e);
-      }}
-    >
-      <span className='text-grey-900 position-absolute top-0 right-0 me-3' html>
-        <FiMoreHorizontal fontSize={28} />
-      </span>
-      {children}
-    </a>
-  ));
-  */
 
   return (
     <Card className={`p-0 rounded-xxl shadow-xss ${styles['post-card']}`}>
@@ -158,16 +141,23 @@ const PostDetail = ({ item, loading, pid }) => {
             <hr />
 
             <ul className='d-flex'>
-              <li className={`d-flex m-1 me-3 align-items-center`}>
-                <figure className='avatar m-auto me-3'>
-                  <Image
-                    width={45}
-                    height={45}
-                    src={item?.User?.avatar || 'https://via.placeholder.com/45'}
-                    alt='avatar'
-                    className='image  shadow-sm rounded-circle w45 '
-                  />
-                </figure>
+              <li
+                className={`d-flex m-1 me-3 align-items-center cursor-pointer`}
+              >
+                <Link href={`/user/${item?.User?.id}` || '/user'}>
+                  <figure as='a' className='avatar m-auto me-3'>
+                    <Image
+                      width={45}
+                      height={45}
+                      src={
+                        item?.User?.avatar || 'https://via.placeholder.com/45'
+                      }
+                      alt='avatar'
+                      className='image  shadow-sm rounded-circle w45 '
+                    />
+                  </figure>
+                </Link>
+
                 <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
                   {item?.User
                     ? `${item.User.first_name} ${item.User.last_name}`
@@ -177,18 +167,24 @@ const PostDetail = ({ item, loading, pid }) => {
                   </span>
                 </h4>
               </li>
-              {item?.mentions?.map(() => {
+              {item?.mentions?.map((mention, index) => {
                 return (
-                  <li className={`d-flex align-items-center`}>
-                    <figure className='avatar m-auto me-3'>
-                      <Image
-                        width={45}
-                        height={45}
-                        src={'https://via.placeholder.com/45'}
-                        alt='avatar'
-                        className='shadow-sm rounded-circle w45'
-                      />
-                    </figure>
+                  <li
+                    className={`d-flex align-items-center cursor-pointer`}
+                    key={index}
+                  >
+                    <Link href={`/pet/${mention?.pet_id}`}>
+                      <figure as='a' className='avatar m-auto me-3'>
+                        <Image
+                          width={45}
+                          height={45}
+                          src={'https://via.placeholder.com/45'}
+                          alt='avatar'
+                          className='shadow-sm rounded-circle w45'
+                        />
+                      </figure>
+                    </Link>
+
                     <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
                       Pet Name
                       <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>

@@ -7,7 +7,6 @@ const fetcher = async (url) => axiosClient.get(url).then((res) => res.data);
 
 const useInfinitePagination = (url, pageSize = PAGE_SIZE) => {
   const getKey = (pageIndex, previousPageData) => {
-    console.log(pageIndex);
     if (previousPageData && !previousPageData.length) {
       return [];
     }
@@ -19,7 +18,6 @@ const useInfinitePagination = (url, pageSize = PAGE_SIZE) => {
     fetcher,
     { persistSize: true }
   );
-  console.log(data);
   const _mutate = (newData) => {
     mutate(() => [[newData], ...data]);
   };

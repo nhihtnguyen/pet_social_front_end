@@ -1,6 +1,6 @@
 import Postcard from 'components/postcard/Postcard';
 import FloatingButton from 'components/floatingbutton/FloatingButton';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiGrid, FiList } from 'react-icons/fi';
 import { Spinner } from 'react-bootstrap';
 import axiosClient from 'axiosSetup';
 import { SWRConfig } from 'swr';
@@ -10,82 +10,11 @@ import { Masonry } from 'masonic';
 
 import Layout from 'components/Layout';
 import Head from 'next/head';
-import { useEffect } from 'react';
-
-const MasonryCard = ({ data }) =>
-  data?.firstPost ? (
-    <div
-      className='cursor-pointer rounded-xxl d-flex justify-content-center align-items-center'
-      style={{
-        minHeight: 200,
-        backgroundColor: '#f1f1f1',
-        border: '3px dashed grey',
-        outline: '10px solid #f1f1f1',
-        padding: 10,
-        margin: 10,
-      }}
-    >
-      <FiPlus fontSize={32} className='text-current' />
-    </div>
-  ) : (
-    <Postcard value={data} className={`m-0`} />
-  );
-
-const Content = () => {
-  const pageSize = Math.floor(
-    document?.documentElement?.clientHeight &&
-      document?.documentElement?.clientWidth
-      ? (document?.documentElement?.clientHeight *
-          document?.documentElement?.clientWidth) /
-          (200 * 250)
-      : 10
-  );
-  const {
-    paginatedData: paginatedPosts,
-    size,
-    setSize,
-    mutate,
-    error,
-    isReachedEnd,
-    loadingMore,
-  } = useInfinitePagination(pageSize ? `/posts/explore?` : null, pageSize);
-
-  return (
-    <>
-      {!paginatedPosts && !error ? (
-        <Spinner animation='border' role='status'>
-          <span className='visually-hidden'>Loading...</span>
-        </Spinner>
-      ) : (
-        <InfiniteScroll
-          next={() => setSize(size + 1)}
-          hasMore={!isReachedEnd}
-          loader={<Spinner animation='border' />}
-          dataLength={paginatedPosts?.length ?? 0}
-          className='w-100'
-          pullToRefresh
-        >
-          <div className='masonic me-auto ms-auto'>
-            <Masonry
-              // Provides the data for our grid items
-              items={paginatedPosts || []}
-              // Adds 8px of space between the grid cells
-              columnGutter={12}
-              // Sets the minimum column width to 172px
-              columnWidth={172}
-              // Pre-renders 5 windows worth of content
-              overscanBy={5}
-              // This is the grid item component
-              render={MasonryCard}
-            />
-          </div>
-        </InfiniteScroll>
-      )}
-    </>
-  );
-};
+import { useState } from 'react';
+import LoadExplore from 'components/LoadExplore';
 
 const Explore = ({ fallback }) => {
+  const [grid, setGrid] = useState(true);
   return (
     <>
       <Head>
@@ -95,10 +24,16 @@ const Explore = ({ fallback }) => {
       </Head>
       <div className='row w-100 m-0'>
         <div className='col-xl-12'>
-          <FloatingButton icon={<FiPlus />} href={`/create`} />
+          <FloatingButton icon={<FiPlus />} href={`/post/create`} />
+          <FloatingButton
+            icon={grid ? <FiGrid /> : <FiList />}
+            index={1}
+            onClick={() => setGrid(!grid)}
+          />
+
           <div className='row'>
             <SWRConfig value={{ fallback }}>
-              <Content />
+              <LoadExplore grid={grid} />
             </SWRConfig>
           </div>
         </div>

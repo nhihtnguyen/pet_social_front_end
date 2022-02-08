@@ -1,7 +1,7 @@
 import Layout from 'components/Layout';
-import PageTitle from 'components/pagetitle/PageTitle';
+import PageTitle from 'components/PageTitle';
 import { FiPlusCircle } from 'react-icons/fi';
-import PetCard from 'components/petcard/PetCard';
+import PetCard from 'components/PetCard';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
@@ -40,8 +40,8 @@ const Family = () => {
 
   const isOwner = data && user?.id === data[0].id;
   return (
-    <div className='row w-100'>
-      <div className='col-xl-12 pe-0'>
+    <div className='row w-100 m-0 p-0 pe-sm-3'>
+      <div className='col-xl-12 p-0'>
         <PageTitle
           title='Family'
           shortcutButtons={

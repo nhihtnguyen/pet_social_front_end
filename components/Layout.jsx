@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
 import Header from 'components/header/Header';
 import LeftNav from 'components/leftnav/LeftNav';
-import PageTitle from 'components/pagetitle/PageTitle';
+import PageTitle from 'components/PageTitle';
 import RightNav from 'components/rightnav/RightNav';
 import ProfileBackground2 from './profilebackground/ProfileBackground2';
 import ProfileBackground from './profilebackground/ProfileBackground';

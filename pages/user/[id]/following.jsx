@@ -1,6 +1,6 @@
 import Layout from 'components/Layout';
-import PageTitle from 'components/pagetitle/PageTitle';
-import PetCard from '../../../components/petcard/PetCard';
+import PageTitle from 'components/PageTitle';
+import PetCard from '../../../components/PetCard';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
@@ -23,11 +23,11 @@ const Following = () => {
   const handleClick = (id) => () => {
     router.push('/pet/' + id);
   };
-  const isOwner = user?.id === id;
+  const isOwner = String(user?.id) === String(id);
 
   return (
-    <div className='row w-100'>
-      <div className='col-xl-12 pe-0'>
+    <div className='row w-100 p-0 m-0 pe-sm-3'>
+      <div className='col-xl-12 p-0'>
         <PageTitle title='Following' />
         <div className='row'>
           {data.map((value, index) => {

@@ -10,20 +10,26 @@ const Input = ({
   iconClassName,
   type,
   style,
+  inputStyle,
   invalidTooltip,
   ...props
 }) => {
   const icon = startIcon ? 'icon-input' : endIcon ? 'icon-right-input' : '';
   return (
     <Form.Group
-      className={`${className || ''} ${icon} form-group`}
+      className={`${icon} form-group ${className || ''}`}
       style={style}
     >
       {label && <Form.Label>{label}</Form.Label>}
-      {icon && <span className='font-sm text-grey-500 pe-0'>{startIcon}</span>}
+      {icon && (
+        <span className='font-sm text-grey-500 pe-0 z-index-1'>
+          {startIcon}
+        </span>
+      )}
       <Form.Control
         type={type}
         className={`${inputClassName} ${styles['typing-box']} font-xsss fw-600`}
+        style={inputStyle}
         {...props}
       />
       <div
