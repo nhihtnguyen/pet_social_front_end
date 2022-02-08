@@ -27,8 +27,6 @@ const ImagePicker = ({
   const [file, setFile] = useState('');
 
   const handleDrop = async (file) => {
-    console.log('file', file);
-
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
@@ -71,7 +69,6 @@ const ImagePicker = ({
     : invalidTooltip
     ? invalidTooltip
     : '';
-  console.log('er', tooltip);
   return (
     <DragAndDrop handleDrop={handleDrop}>
       <div

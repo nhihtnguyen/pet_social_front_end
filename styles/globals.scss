@@ -54,35 +54,6 @@ a {
   }
 }
 
-.my-masonry-grid {
-  display: -webkit-box; /* Not needed if autoprefixing */
-  display: -ms-flexbox; /* Not needed if autoprefixing */
-  display: flex;
-  margin-left: -30px; /* gutter size offset */
-  width: auto;
-}
-.my-masonry-grid_column {
-  padding-left: 30px; /* gutter size */
-  background-clip: padding-box;
-}
-
-/* Style your items */
-.my-masonry-grid_column > div {
-  /* change div to reference your elements you put in <Masonry> */
-  background: grey;
-  margin-bottom: 30px;
-}
-
-.temp-grid {
-  column-gap: 0;
-  column-width: 236px;
-}
-
-@media (max-width: 991px) {
-  .temp-grid {
-    column-width: 160px;
-    & > * {
-      width: 160px;
-    }
-  }
+.infinite-scroll-parent > .infinite-scroll-component__outerdiv {
+  padding: 0 !important;
 }

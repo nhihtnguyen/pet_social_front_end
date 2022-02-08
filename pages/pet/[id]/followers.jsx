@@ -17,8 +17,8 @@ const Follower = () => {
   if (error) return <div>failed to load</div>;
   if (!data || !id) return <div>loading...</div>;
   return (
-    <div className='row w-100'>
-      <div className='col-xl-12 pe-0'>
+    <div className='row w-100 m-0 p-0 pe-sm-3'>
+      <div className='col-xl-12 p-0'>
         <PageTitle title='Follower' />
         <div className='row'>
           {data.map((value) => {

@@ -175,7 +175,7 @@ const ProfileBackground = ({ className }) => {
   const { id } = router.query;
   const { data: profile, error } = useSWR(`/users/${id}`, fetcher);
 
-  const loading = !error && !user;
+  let loading = !error && !profile;
 
   const [userID, setUserID] = useState(false);
   const isOwner = user?.id === profile?.id;
@@ -193,7 +193,7 @@ const ProfileBackground = ({ className }) => {
           width={875}
           height={250}
           src={
-            loading
+            loading || !profile?.background
               ? 'https://via.placeholder.com/875x250'
               : profile?.background
           }
@@ -219,7 +219,11 @@ const ProfileBackground = ({ className }) => {
           }}
         >
           <Image
-            src={loading ? 'https://via.placeholder.com/100' : profile?.avatar}
+            src={
+              loading || !profile?.avatar
+                ? 'https://via.placeholder.com/100'
+                : profile?.avatar
+            }
             alt='avatar'
             width={100}
             height={100}

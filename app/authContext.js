@@ -20,8 +20,8 @@ export const AuthProvider = ({ children }) => {
         const { data: user } = await axiosClient.get('/users/me');
         const magicIsLoggedIn = await magic.user.isLoggedIn();
         if (magicIsLoggedIn) {
-          const metadata = await magic.user.getMetadata();
-          setUser({ ...user, metadata });
+          //const metadata = await magic.user.getMetadata();
+          setUser({ ...user });
         } else {
           // If no user is logged in, redirect to `/login`
           // router.push('/login');

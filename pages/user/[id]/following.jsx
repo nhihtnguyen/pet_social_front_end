@@ -26,8 +26,8 @@ const Following = () => {
   const isOwner = String(user?.id) === String(id);
 
   return (
-    <div className='row w-100'>
-      <div className='col-xl-12 pe-0'>
+    <div className='row w-100 p-0 m-0 pe-sm-3'>
+      <div className='col-xl-12 p-0'>
         <PageTitle title='Following' />
         <div className='row'>
           {data.map((value, index) => {

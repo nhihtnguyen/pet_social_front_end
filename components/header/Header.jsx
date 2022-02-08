@@ -166,8 +166,8 @@ const Header = () => {
       <div className='nav-top'>
         <Link href='/'>
           <a>
-            <span className='d-inline-block fredoka-font ls-3 fw-600 text-current font-xxl logo-text mb-0'>
-              <span className='display2-size me-3 ms-0'>
+            <span className='cursor-pointer d-inline-block fredoka-font ls-3 fw-500 text-current font-xxl logo-text mb-0'>
+              <span className='display2-size me-2 ms-0'>
                 <FiGithub />
               </span>
               Pet's Friend

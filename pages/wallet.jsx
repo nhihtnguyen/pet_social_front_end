@@ -13,7 +13,7 @@ const Wallet = () => {
   };
 
   return (
-    <div className='middle-wrap pe-3'>
+    <div className='middle-wrap pe-sm-3'>
       <PageTitle
         title={'Wallet'}
         shortcutButtons={[

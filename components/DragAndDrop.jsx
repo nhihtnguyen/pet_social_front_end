@@ -54,7 +54,9 @@ const DragAndDrop = (props) => {
       style={{ display: 'inline-block', position: 'relative' }}
       ref={dropRef}
     >
-      <label htmlFor={props.htmlFor}>{props.children}</label>
+      <label htmlFor={props.htmlFor} className='w-100'>
+        {props.children}
+      </label>
     </div>
   );
 };

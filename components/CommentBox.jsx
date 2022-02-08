@@ -147,7 +147,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
             as='textarea'
             className='w-100'
             inputClassName={`h100 rounded-xxl p-2 ps-5 
-                            font-xssss text-grey-900 fw-500 border-light-md theme-dark-bg`}
+                            font-xssss fw-500 border-light-md theme-dark-bg`}
             inputStyle={{ resize: 'none', overflow: 'hidden' }}
             cols='30'
             rows='10'

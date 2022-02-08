@@ -40,12 +40,12 @@ const MyPet = () => {
 
   return (
     <div
-      className='row w-100'
+      className='row w-100 m-0 p-0 pe-sm-3'
       style={{
         transition: 'top 2s ease 0s',
       }}
     >
-      <div className='col-xl-12 pe-0'>
+      <div className='col-xl-12 p-0'>
         <PageTitle
           title='Family'
           shortcutButtons={

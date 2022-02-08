@@ -21,7 +21,7 @@ const Edit = () => {
   }
 
   return (
-    <div className='row ms-0 pe-2 mb-3 justify-content-center w-100'>
+    <div className='row ms-0 ps-sm-3 mb-3 justify-content-center w-100'>
       <CreatePost isEdit={true} content={post} />
     </div>
   );

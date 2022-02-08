@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import styles from './CreatePet.module.scss';
 import AddPetForm from 'components/forms/AddPetForm';
 import { useSWRConfig } from 'swr';
 import axiosClient from 'axiosSetup';
@@ -40,7 +39,7 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
 
   return (
     <div
-      className={`${styles['add-pet-card']} card w-100 border-0 bg-white shadow-xs p-0 mb-4 rounded-xxl`}
+      className={`card w-100 border-0 bg-white shadow-xs p-0 mb-4 rounded-xxl`}
     >
       <div className='card-body p-lg-5 p-4 w-100 border-0 '>
         <AddPetForm
