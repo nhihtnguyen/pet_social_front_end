@@ -27,20 +27,6 @@ const CreatePostForm = ({
     fetcher
   );
 
-  // const [isMint, setIsMint] = useState(false);
-  console.log('1', isMint);
-  /*
-  const initValues = {
-    name: values?.name || '',
-    price: values?.price || '',
-    image: {
-      file: '',
-      image: values?.media_url || '',
-    },
-    caption: values?.caption || '',
-    mentions: [],
-  };
-  */
   const [initValues, setInitValues] = useState({
     name: values?.name || '',
     price: values?.price || '',
@@ -90,7 +76,7 @@ const CreatePostForm = ({
       noValidate
       validated={validated}
       onSubmit={handleSubmit}
-      className='d-flex'
+      className='w-100'
     >
       <Row className='w-100 p-0'>
         <Col sm={6} xs={12} className=''>
@@ -118,24 +104,14 @@ const CreatePostForm = ({
         <Col sm={6} xs={12}>
           <div className={`position-relative w-100 ms-3`}>
             {isMint && (
-              <>
-                <Input
-                  value={info.name}
-                  onChange={onChange('name')}
-                  invalidTooltip={errors['name']}
-                  name='name'
-                  inputClassName={`rounded-xxl ${styles['textarea']}`}
-                  label={<h3>Name</h3>}
-                />
-                <Input
-                  value={info.price}
-                  onChange={onChange('price')}
-                  invalidTooltip={errors['price']}
-                  name='price'
-                  inputClassName={`rounded-xxl ${styles['textarea']}`}
-                  label={<h3>Price</h3>}
-                />
-              </>
+              <Input
+                value={info.name}
+                onChange={onChange('name')}
+                invalidTooltip={errors['name']}
+                name='name'
+                inputClassName={`rounded-xxl ${styles['textarea']}`}
+                label={<h3>Name</h3>}
+              />
             )}
 
             <Select
@@ -146,12 +122,14 @@ const CreatePostForm = ({
               className={`mb-2 rounded-xxl ${styles['typing-box']}`}
               isLoading={!mentionOptions && !loadMentionOptionsError}
               label={<h3>Choose pets</h3>}
+              multiple={true}
               required
               options={mentionOptions?.map((pet) => {
                 return {
-                  value: pet.id,
-                  label: pet.name,
-                  image: pet.avatar || 'https://via.placeholder.com/30',
+                  value: pet?.id,
+                  label: pet?.name,
+                  image: pet?.avatar || 'https://via.placeholder.com/30',
+                  hasIcon: true,
                 };
               })}
             />
@@ -181,18 +159,18 @@ const CreatePostForm = ({
             <Check
               checked={isMint}
               onChange={() => setIsMint(!isMint)}
-              label='Create as NFT token (wallet connected require)'
+              label='Create as NFT token'
             />
             {loaded > 0 ? (
               <ProgressBar
                 animated
                 now={loaded}
-                label={loaded > 50 ? 'Uploading' : 'Verifying'}
+                label={loaded > 50 ? 'Stage 1' : 'Stage 2'}
               />
             ) : (
               <div className={`mt-3`}>
                 <Button className='bg-current' onClick={handleSubmit}>
-                  {isMint ? 'Create token and Listing to market' : 'Post'}
+                  {isMint ? 'Create token' : 'Post'}
                 </Button>{' '}
                 <Button className='bg-secondary' onClick={resetForm}>
                   Reset

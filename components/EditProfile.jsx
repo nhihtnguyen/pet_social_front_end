@@ -23,7 +23,7 @@ const EditProfile = ({ className, ...props }) => {
     try {
       let result;
       data['gender'] = data?.gender?.value;
-      result = await axiosClient.put(`/users`, data, {
+      result = await axiosClient.put(`/users/me`, data, {
         onUploadProgress: function (progressEvent) {
           let percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total

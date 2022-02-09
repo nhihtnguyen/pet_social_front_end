@@ -15,17 +15,22 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
     let result;
     data.gender = data?.gender.value;
     try {
-      result = await axiosClient[action](`/pets`, data, {
-        onUploadProgress: function (progressEvent) {
-          let percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setLoaded(percentCompleted);
-        },
-      });
+      result = await axiosClient[action](
+        `/pets/${action === 'put' ? content?.id : ''}`,
+        data,
+        {
+          onUploadProgress: function (progressEvent) {
+            let percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setLoaded(percentCompleted);
+          },
+        }
+      );
     } catch (error) {
       // logging
       console.log(error);
+    } finally {
       setLoaded(-1);
     }
     console.log(result);

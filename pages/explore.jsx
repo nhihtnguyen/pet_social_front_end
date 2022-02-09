@@ -22,7 +22,7 @@ const Explore = ({ fallback }) => {
         <meta name='description' content="Show a post's list" />
         <link rel='icon' href='/favicon.ico' />
       </Head>
-      <div className='row w-100 m-0'>
+      <div className='row w-100 m-0 pe-sm-3'>
         <div className='col-xl-12'>
           <FloatingButton icon={<FiPlus />} href={`/post/create`} />
           <FloatingButton

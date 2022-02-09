@@ -10,7 +10,6 @@ import {
 import { BsBookmarkHeart } from 'react-icons/bs';
 import { IoPawOutline } from 'react-icons/io5';
 import Image from 'next/image';
-import styles from './PostDetail.module.scss';
 import CommentBox from '../CommentBox';
 import { useEffect, forwardRef } from 'react';
 import useInfinitePagination from 'hooks/useInfinitePagination';
@@ -18,6 +17,9 @@ import { useAuth } from 'app/authContext';
 import { calVote } from 'helpers';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import VoteButton from 'components/votebutton/VoteButton';
+import axiosClient from 'axiosSetup';
+import ReportButton from './ReportButton';
 
 const NestedComment = ({ comment, onShowReplies }) => {
   return <CommentBox />;
@@ -43,7 +45,13 @@ const CommentSection = ({ pid, setNumberOfComments }) => {
         </Spinner>
       ) : (
         comments?.map((comment, index) => (
-          <CommentBox created comment={comment} key={index} pid={pid} />
+          <CommentBox
+            created
+            comment={comment}
+            mutate={mutate}
+            key={index}
+            pid={pid}
+          />
         ))
       )}
       {!isReachedEnd && (
@@ -56,6 +64,82 @@ const CommentSection = ({ pid, setNumberOfComments }) => {
         </button>
       )}
     </>
+  );
+};
+
+const MentionItem = ({ petID }) => {
+  const [pet, setPet] = useState({ id: petID });
+
+  useEffect(() => {
+    let mounted = true;
+    const getMentionExtra = async (petID) => {
+      try {
+        const result = await axiosClient.get(`/pets/${petID}`);
+        console.log(result);
+        if (mounted) {
+          setPet(result.data);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+      }
+    };
+    getMentionExtra(petID);
+    return () => (mounted = false);
+  }, []);
+  return (
+    <li className={`d-flex align-items-center cursor-pointer`}>
+      <Link href={`/pet/${pet?.id}`}>
+        <figure as='a' className='avatar m-auto me-3'>
+          <Image
+            width={45}
+            height={45}
+            src={pet?.avatar || 'https://via.placeholder.com/45'}
+            alt='avatar'
+            className='shadow-sm rounded-circle w45'
+          />
+        </figure>
+      </Link>
+
+      <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
+        {pet?.name || 'Name'}
+        <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
+          {/*5 Posts*/}
+        </span>
+      </h4>
+    </li>
+  );
+};
+
+const MentionSection = ({ item }) => {
+  return (
+    <ul className='d-flex'>
+      <li className={`d-flex m-1 me-3 align-items-center cursor-pointer`}>
+        <Link href={`/user/${item?.User?.id}` || '/user'}>
+          <figure as='a' className='avatar m-auto me-3'>
+            <Image
+              width={45}
+              height={45}
+              src={item?.User?.avatar || 'https://via.placeholder.com/45'}
+              alt='avatar'
+              className='image  shadow-sm rounded-circle w45 '
+            />
+          </figure>
+        </Link>
+
+        <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
+          {item?.User
+            ? `${item.User.first_name} ${item.User.last_name}`
+            : 'Full Name'}
+          <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
+            {/*5 Posts*/}
+          </span>
+        </h4>
+      </li>
+      {item?.mentions?.map((mention, index) => (
+        <MentionItem petID={mention.pet_id} key={index} />
+      ))}
+    </ul>
   );
 };
 
@@ -76,8 +160,26 @@ const PostDetail = ({ item, loading, pid }) => {
   const handleReport = () => {};
   const handleSavePost = () => {};
 
+  useEffect(() => {
+    const getExtra = async () => {
+      try {
+        const result = await axiosClient.get(
+          `/posts/${item?.id}/count_comments`
+        );
+        if (result.data) {
+          setNumberOfComments(result.data.total_comments);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (item) {
+      getExtra();
+    }
+  }, [item]);
+
   return (
-    <Card className={`p-0 rounded-xxl shadow-xss ${styles['post-card']}`}>
+    <Card className={`p-0 rounded-xxl shadow-xss`}>
       <Card.Body>
         <Row>
           <Col xs={12} md={true} className='align-content-center'>
@@ -96,37 +198,26 @@ const PostDetail = ({ item, loading, pid }) => {
 
           <Col xs={12} md={true}>
             <div className={`d-flex p-0 m-0 mb-3 position-relative`}>
-              <a className='d-flex cursor-pointer align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-3'>
-                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
-                  <IoPawOutline />
-                </span>
-                {calVote(item?.upvote ? item.upvote : 0)}
-              </a>
+              <VoteButton post={item} />
               <a className='d-flex cursor-pointer align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
                 <span className='text-dark text-grey-900 btn-round-sm font-lg'>
                   <FiMessageCircle />
                 </span>
                 {numberOfComments}
               </a>
-              <a
-                className='ms-auto cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
-                onClick={isOwner ? linkToEdit : handleSavePost}
-              >
-                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
-                  {isOwner ? <FiEdit3 /> : <BsBookmarkHeart />}
-                </span>
-              </a>
-              <a
-                className='cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
-                onClick={handleReport}
-              >
-                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
-                  <FiAlertCircle />
-                </span>
-              </a>
+              {isOwner && (
+                <a
+                  className='ms-auto cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
+                  onClick={isOwner ? linkToEdit : handleSavePost}
+                >
+                  <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+                    {isOwner ? <FiEdit3 /> : <BsBookmarkHeart />}
+                  </span>
+                </a>
+              )}
+              <ReportButton item={item} className={isOwner ? '' : 'ms-auto'} />
             </div>
             <h4 className='font-xss text-grey-900 fw-700 ls-2 '>About</h4>
-
             {loading ? (
               <Placeholder as='p' animation='glow'>
                 <Placeholder xs={7} /> <Placeholder xs={4} />{' '}
@@ -140,61 +231,7 @@ const PostDetail = ({ item, loading, pid }) => {
             )}
             <hr />
 
-            <ul className='d-flex'>
-              <li
-                className={`d-flex m-1 me-3 align-items-center cursor-pointer`}
-              >
-                <Link href={`/user/${item?.User?.id}` || '/user'}>
-                  <figure as='a' className='avatar m-auto me-3'>
-                    <Image
-                      width={45}
-                      height={45}
-                      src={
-                        item?.User?.avatar || 'https://via.placeholder.com/45'
-                      }
-                      alt='avatar'
-                      className='image  shadow-sm rounded-circle w45 '
-                    />
-                  </figure>
-                </Link>
-
-                <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
-                  {item?.User
-                    ? `${item.User.first_name} ${item.User.last_name}`
-                    : 'Full Name'}
-                  <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
-                    {/*5 Posts*/}
-                  </span>
-                </h4>
-              </li>
-              {item?.mentions?.map((mention, index) => {
-                return (
-                  <li
-                    className={`d-flex align-items-center cursor-pointer`}
-                    key={index}
-                  >
-                    <Link href={`/pet/${mention?.pet_id}`}>
-                      <figure as='a' className='avatar m-auto me-3'>
-                        <Image
-                          width={45}
-                          height={45}
-                          src={'https://via.placeholder.com/45'}
-                          alt='avatar'
-                          className='shadow-sm rounded-circle w45'
-                        />
-                      </figure>
-                    </Link>
-
-                    <h4 className='fw-700 text-grey-900 font-xssss mt-1'>
-                      Pet Name
-                      <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
-                        {/*5 Posts*/}
-                      </span>
-                    </h4>
-                  </li>
-                );
-              })}
-            </ul>
+            <MentionSection item={item} />
 
             <CommentSection
               pid={pid}

@@ -97,21 +97,21 @@ const ItemDetail = ({
               className='pe-2'
             >
               <ul className='list-group theme-dark-bg'>
-                <li className='list-group-item'>
+                <li className='list-group-item bg-transparent'>
                   <p className='font-xsss fw-400 text-grey-700'>
                     <span className='fw-700'>{'Smart contract: '}</span>
                     <span className='font-monospace'> {item.nftContract}</span>
                   </p>
                 </li>
                 {item.seller && (
-                  <li className='list-group-item'>
+                  <li className='list-group-item bg-transparent'>
                     <p className='font-xsss fw-400 text-grey-700'>
                       <span className='fw-700'>{'Seller: '}</span>
                       <span className='font-monospace'> {item.seller}</span>
                     </p>
                   </li>
                 )}
-                <li className='list-group-item'>
+                <li className='list-group-item bg-transparent'>
                   <p className='font-xsss fw-400 text-grey-700'>
                     <span className='fw-700'>{'Description: '}</span>
                     {item.description}
@@ -134,7 +134,10 @@ const ItemDetail = ({
                 )}
                 {!loadingHolders &&
                   holders?.map((value, index) => (
-                    <li className={`list-group-item`} key={index}>
+                    <li
+                      className={`list-group-item bg-transparent`}
+                      key={index}
+                    >
                       <h6 className='font-xsss fw-700 text-grey-700 '>
                         <span className='font-monospace'>{value.seller}</span>
                         <br />

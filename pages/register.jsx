@@ -6,26 +6,20 @@ import RegisterForm from 'components/forms/RegisterForm';
 import { useState } from 'react';
 import Backdrop from 'components/backdrop/Backdrop';
 import { Spinner } from 'react-bootstrap';
+import { useAuth } from 'app/authContext';
 
 const Register = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState(false);
+  const { isAuthenticated, loading, register } = useAuth();
+  if (isAuthenticated) {
+    router.replace('/');
+  }
 
-  const handleRegister = async (body) => {
-    setLoading(true);
-
-    try {
-      const response = await axiosClient.post(`/auth/register`, body);
-      console.log(response);
-      if (response.status === 200) {
-        setLoading(false);
-        router.push('/login');
-      } else {
-        throw new Error(response.data.msg);
-      }
-    } catch (error) {
-      console.error('An unexpected error happened occurred:', error);
+  const handleRegister = async (data, errors, setErrors) => {
+    const email = data.email;
+    if (email) {
+      register(data);
     }
   };
 

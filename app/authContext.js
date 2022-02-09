@@ -79,8 +79,43 @@ export const AuthProvider = ({ children }) => {
         router.push('/user/me');
       }
     } catch (error) {
-      setLoading(false);
       console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegisterWithEmail = async ({ email, first_name, last_name }) => {
+    try {
+      setLoading(true);
+
+      // Trigger Magic link to be sent to user
+      let didToken = await magic.auth.loginWithMagicLink({ email });
+      // Set token
+      console.log('hallo', didToken);
+      axiosClient.defaults.headers.Authorization = `Bearer ${didToken}`;
+
+      // Validate didToken with server
+      const result = await axiosClient.post('/auth/login', {
+        email,
+        first_name,
+        last_name,
+      });
+
+      if (result.status === 200) {
+        const { metadata, accessToken } = result.data;
+        const { data: user } = await axiosClient.get('users/me');
+        localStorage.setItem('access_token', accessToken);
+        axiosClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
+        console.log({ ...user, metadata });
+        setUser({ ...user, metadata });
+        setLoading(false);
+        router.push('/user/me');
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,6 +125,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: !!user,
         user,
         login: handleLoginWithEmail,
+        register: handleRegisterWithEmail,
         loading,
         logout,
       }}
