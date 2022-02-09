@@ -21,7 +21,7 @@ const Wallet = () => {
         ]}
       />
 
-      <div className='row w-100'>
+      <div className='row w-100 m-0 p-0'>
         <LoadWallets refreshSignal={connect} />
       </div>
     </div>

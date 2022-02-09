@@ -61,7 +61,7 @@ const Wallet = ({ refreshSignal }) => {
         <Spinner animation='border' role='status' className='text-dark' />
       )}
       {providers?.map((provider) => (
-        <div className='col-sm-6 mb-3' key={provider.name}>
+        <div className='col-sm-6 m-0 ps-0 mb-3' key={provider.name}>
           <WalletCard
             provider={provider}
             loading={!user}

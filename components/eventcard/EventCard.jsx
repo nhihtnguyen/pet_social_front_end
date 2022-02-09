@@ -63,7 +63,7 @@ const EventCard = ({ event }) => {
           </h4>
         </Card.Body>
         <Card.Body className='d-flex align-items-center justify-content-center ps-4 pe-4 pt-0'>
-          <Link href='/'>
+          <Link href={`/event/${event?.id}`}>
             <a className='bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'>
               Visit
             </a>
