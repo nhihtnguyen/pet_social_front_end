@@ -1,0 +1,17 @@
+.event-card {
+    min-height: 350px;
+
+    &:hover > .back {
+        top: 0;
+    }
+    .back {
+        position: absolute;
+        top: -500px;
+        transition: transform 0.5s 0s ease !important;
+        z-index: 10;
+        background-color: white;
+    }
+    .front {
+        z-index: 1;
+    }
+}

@@ -1,22 +1,20 @@
 import Layout from 'components/Layout';
 import PageTitle from 'components/PageTitle';
-import EventCard from 'components/EventCard';
+import EventCard from 'components/eventcard/EventCard';
 
 const Event = () => {
   return (
-    <div className='row w-100'>
-      <div className='col-xl-12 pe-0'>
-        <PageTitle title='Event' />
-        <div className='row ps-2 pt-0'>
-          {/* api get list follow */}
-          {[1, 2, 3, 4, 5, 6, 7].map((value) => {
-            return (
-              <div key={value} className='col p-0 mb-3 ms-1'>
-                <EventCard />
-              </div>
-            );
-          })}
-        </div>
+    <div className='middle-wrap pe-sm-3'>
+      <PageTitle title='Event' />
+      <div className='row p-0 m-0 justify-content-between'>
+        {/* api get list follow */}
+        {[1, 2, 3, 4, 5, 6, 7].map((value) => {
+          return (
+            <div key={value} className='col-sm-4 col-xs-12 p-0 pe-3 m-0 mb-3 '>
+              <EventCard />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

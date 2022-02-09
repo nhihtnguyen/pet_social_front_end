@@ -10,11 +10,11 @@ import {
 } from 'react-icons/fi';
 import { IoPawOutline } from 'react-icons/io5';
 import { BsBookmarkHeart } from 'react-icons/bs';
-import ReportButton from './itemdetail/ReportButton';
 import { useAuth } from 'app/authContext';
 import { useRouter } from 'next/router';
 import { getFormatDate } from 'helpers';
-import VoteButton from './votebutton/VoteButton';
+import VoteButton from 'components/votebutton/VoteButton';
+import ReportButton from 'components/ReportButton';
 
 const PostUser = ({ post }) => {
   const { user } = useAuth();

@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import VoteButton from 'components/votebutton/VoteButton';
 import axiosClient from 'axiosSetup';
-import ReportButton from './ReportButton';
+import ReportButton from 'components/ReportButton';
 
 const NestedComment = ({ comment, onShowReplies }) => {
   return <CommentBox />;
