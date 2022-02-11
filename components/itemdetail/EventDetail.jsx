@@ -2,56 +2,135 @@ import {
   Card,
   Col,
   Row,
-  Button,
   Placeholder,
-  Spinner,
   Tabs,
   Tab,
+  Spinner,
 } from 'react-bootstrap';
-import Link from 'next/link';
-import {
-  FiMessageCircle,
-  FiShare2,
-  FiMoreHorizontal,
-  FiEdit3,
-  FiAlertCircle,
-} from 'react-icons/fi';
-import { BsBookmarkHeart } from 'react-icons/bs';
-import { IoPawOutline } from 'react-icons/io5';
-import Image from 'next/image';
-import CommentBox from '../CommentBox';
-import { useEffect, forwardRef } from 'react';
-import useInfinitePagination from 'hooks/useInfinitePagination';
+import { FiEdit3 } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
 import { useAuth } from 'app/authContext';
 import { calVote } from 'helpers';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import VoteButton from 'components/votebutton/VoteButton';
-import axiosClient from 'axiosSetup';
-import ReportButton from 'components/ReportButton';
-import { convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import ParticipantCard from 'components/ParticipantCard';
 import RegisterEventForm from 'components/forms/RegisterEventForm';
+import useInfinitePagination from 'hooks/useInfinitePagination';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import axiosClient from 'axiosSetup';
 
-const ParticipantsTab = () => {
+const STATUS = {
+  allowed: 1,
+  warning: 2,
+  denied: 3,
+};
+
+const ParticipantsTab = ({ eventId }) => {
+  const {
+    paginatedData: paginatedParticipants,
+    size,
+    setSize,
+    mutate,
+    error,
+    isReachedEnd,
+    loadingMore,
+  } = useInfinitePagination(
+    eventId ? `/events/${eventId}/participants?` : null,
+    eventId ? 10 : 0
+  );
+  console.log(paginatedParticipants);
+
   return (
-    <div className='row w-100 m-0 p-0'>
-      {[1, 2, 3, 4, 5, 6, 7].map((value) => {
-        return (
-          <div key={value} className='col-sm-4 col-xs-12 p-0 pe-3 m-0 mb-3 '>
-            <ParticipantCard />
-          </div>
-        );
-      })}
-    </div>
+    <InfiniteScroll
+      next={() => setSize(size + 1)}
+      hasMore={!isReachedEnd}
+      loader={<Spinner animation='border' />}
+      dataLength={paginatedParticipants?.length ?? 0}
+      className='w-100 p-0'
+      pullToRefresh
+    >
+      <div className='row w-100 m-0 p-0'>
+        {paginatedParticipants?.map((value, index) => {
+          return (
+            <div key={index} className='col-sm-4 col-xs-12 p-0 pe-3 m-0 mb-3 '>
+              <ParticipantCard item={value} mutate={mutate} />
+            </div>
+          );
+        })}
+      </div>
+    </InfiniteScroll>
   );
 };
 
-const RegisterTab = () => {
+const RegisterTab = ({ eventId }) => {
+  const [loaded, setLoaded] = useState(-1);
+
+  const handleRegister = async (data, setErrors, errors) => {
+    try {
+      setLoaded(0);
+      // Create form data
+      let bodyFormData = new FormData();
+
+      bodyFormData.append('image', data.image.file);
+      bodyFormData.append('caption', data.caption);
+      if (Boolean(data?.pet)) {
+        bodyFormData.append('pet_id', data.pet.value);
+      }
+      const result = await axiosClient.post(
+        `/events/${eventId}/join`,
+        bodyFormData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          onUploadProgress: (progressEvent) => {
+            let percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setLoaded(percentCompleted);
+          },
+        }
+      );
+      if (result.status == 200) {
+        // Notify here and redirect
+        console.log(result.data);
+      }
+
+      if (result.status == 400) {
+        setLoaded(-1);
+        let caption =
+          result.data?.type === 'caption'
+            ? result.data?.status === STATUS['denied']
+              ? 'Your caption content some words that are not allowed'
+              : result.data?.status === STATUS['warning']
+              ? 'Your content should be related pet or animals'
+              : ''
+            : '';
+        let image =
+          result.data?.type === 'image'
+            ? result.data?.status === STATUS['allowed']
+              ? { type: 'valid', text: 'Allowed' }
+              : result.data?.status === STATUS['warning']
+              ? {
+                  type: 'warning',
+                  text: 'Your image should be related pet or animals',
+                }
+              : { type: 'invalid', text: 'Your image is not allowed.' }
+            : '';
+
+        setErrors({
+          ...errors,
+          image,
+          caption,
+        });
+      }
+      setLoaded(-1);
+    } catch (error) {
+      setLoaded(-1);
+      console.log(error);
+    }
+  };
   return (
     <>
-      <RegisterEventForm />
+      <RegisterEventForm loaded={loaded} onSubmit={handleRegister} />
     </>
   );
 };
@@ -136,7 +215,7 @@ const EventDetail = ({ item, loading, pid }) => {
             title='Participants'
             className='pe-2'
           >
-            <ParticipantsTab />
+            <ParticipantsTab eventId={item?.id} />
           </Tab>
           <Tab
             tabClassName='text-info font-xssss fw-700 ls-2 mt-3'
@@ -144,7 +223,7 @@ const EventDetail = ({ item, loading, pid }) => {
             title='REGISTER NOW'
             className='pe-2'
           >
-            <RegisterTab />
+            <RegisterTab eventId={item?.id} />
           </Tab>
         </Tabs>
       </Card.Body>

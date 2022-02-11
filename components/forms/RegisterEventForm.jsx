@@ -26,9 +26,7 @@ const RegisterEventForm = ({ onSubmit, validated, loaded, values }) => {
       image: values?.media_url || '',
     },
     caption: values?.caption || '',
-    mentions: values?.mentions.map((pet) => {
-      return { value: pet.pet_id };
-    }),
+    pet: { value: values?.pet_id },
   });
 
   useEffect(() => {
@@ -39,9 +37,7 @@ const RegisterEventForm = ({ onSubmit, validated, loaded, values }) => {
           image: values?.media_url || '',
         },
         caption: values?.caption || '',
-        mentions: values?.mentions.map((pet) => {
-          return { value: pet.pet_id };
-        }),
+        pet: { value: values?.pet_id },
       });
     }
   }, [values]);
@@ -55,7 +51,6 @@ const RegisterEventForm = ({ onSubmit, validated, loaded, values }) => {
   } = useForm(initValues, true, validateCreatePost, onSubmit, [
     'image',
     'caption',
-    'mentions',
   ]);
 
   return (
@@ -91,14 +86,14 @@ const RegisterEventForm = ({ onSubmit, validated, loaded, values }) => {
         <Col sm={6} xs={12}>
           <div className={`position-relative w-100 ms-3`}>
             <Select
-              value={info.mentions}
-              onChange={onChange('mentions')}
-              invalidTooltip={errors['mentions']}
-              name='mentions'
+              value={info.pet}
+              onChange={onChange('pet')}
+              invalidTooltip={errors['pet']}
+              name='pet'
               className={`mb-2 rounded-xxl ${styles['typing-box']}`}
               isLoading={!mentionOptions && !loadMentionOptionsError}
               label={<h3>Choose pets</h3>}
-              multiple={true}
+              multiple={false}
               required
               options={mentionOptions?.map((pet) => {
                 return {
@@ -125,6 +120,22 @@ const RegisterEventForm = ({ onSubmit, validated, loaded, values }) => {
                 inputClassName={`rounded-xxl ${styles['textarea']}`}
               />
             </div>
+            {loaded > 0 ? (
+              <ProgressBar
+                animated
+                now={loaded}
+                label={loaded > 50 ? 'Stage 1' : 'Stage 2'}
+              />
+            ) : (
+              <div className={`mt-3`}>
+                <Button className='bg-current' onClick={handleSubmit}>
+                  Post
+                </Button>{' '}
+                <Button className='bg-secondary' onClick={resetForm}>
+                  Reset
+                </Button>
+              </div>
+            )}
           </div>
         </Col>
       </Row>

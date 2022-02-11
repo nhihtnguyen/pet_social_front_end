@@ -22,7 +22,8 @@ const useInfinitePagination = (url, pageSize = PAGE_SIZE) => {
     mutate(() => [[newData], ...data]);
   };
   /* Data export from useSWRInfinite is a array of page that include rows. Flat function is used that get 1-dimension array  */
-  const paginatedData = data?.flat();
+  console.log(data);
+  const paginatedData = data?.flat() || [];
   const isReachedEnd = data && data[data.length - 1]?.length < pageSize;
   const loadingMore = data && typeof data[size - 1] === 'undefined';
 

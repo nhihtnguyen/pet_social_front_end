@@ -37,7 +37,7 @@ client.interceptors.response.use(
         });
     }
     if (error.response) {
-      return error.response.data;
+      return error.response;
     } else {
       return Promise.reject(error);
     }

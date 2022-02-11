@@ -152,11 +152,10 @@ const CreatePost = ({ content, isEdit = false }) => {
         bodyFormData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
-          onUploadProgress: function (progressEvent) {
+          onUploadProgress: (progressEvent) => {
             let percentCompleted = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             );
-            console.log(percentCompleted);
             setLoaded(percentCompleted);
           },
         }
