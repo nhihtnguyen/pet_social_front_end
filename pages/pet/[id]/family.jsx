@@ -34,8 +34,8 @@ const Family = () => {
     router.push(`/pet/create`);
   };
 
-  const linkToEditPet = () => {
-    router.push(`/pet/${id}/edit`);
+  const linkToEditPet = (petId) => () => {
+    router.push(`/pet/${petId}/edit`);
   };
 
   const isOwner = data && user?.id === data[0].id;
@@ -63,12 +63,12 @@ const Family = () => {
                 isUser={index === 0}
                 hideButton={index === 0}
                 pet={value}
-                buttonCallback={isOwner ? linkToEditPet : null}
+                buttonCallback={isOwner ? linkToEditPet(value?.id) : null}
                 buttonLabel={isOwner ? 'Edit' : null}
-                onClick={handleClick(value.id, index)}
+                onClick={handleClick(value?.id, index)}
                 mutate={mutate}
                 mutateFollowing={mutateFollowing}
-                followed={!following.every((pet) => pet.id !== value.id)}
+                followed={!following.every((pet) => pet?.id !== value?.id)}
               />
             </div>
           ))}

@@ -26,7 +26,7 @@ const UploadImageButton = ({
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       if (result) {
-        const ret = await mutate('/users/me');
+        const ret = await mutate(mutateKey);
         console.log(mutate, ret);
       }
     } catch (err) {

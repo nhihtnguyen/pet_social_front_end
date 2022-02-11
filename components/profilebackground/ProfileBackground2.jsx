@@ -5,6 +5,7 @@ import {
   FiAlertCircle,
   FiLock,
   FiEyeOff,
+  FiEdit2,
 } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import axiosClient from 'axiosSetup';
@@ -64,27 +65,38 @@ const ProfileBackground = ({ profile }) => {
 
   const [followed, setFollowed] = useState(false);
   const [toggleMore, setToggleMore] = useState(false);
+  const [extraInfo, setExtraInfo] = useState({});
   const [extraInfoLoading, setExtraInfoLoading] = useState(true);
 
   useEffect(() => {
-    if (profile) {
-      axiosClient
-        .get(`/pets?user_id=${user.id}`)
-        .then((response) => {
-          if (response?.data) {
-            setIsOwner(!response.data.every((pet) => pet.id !== profile.id));
-          }
-        })
-        .catch((error) => {});
-      axiosClient
-        .get(`/following/${profile.id}`)
-        .then((response) => {
-          if (response.data.pet_id === profile.id) {
-            setFollowed(true);
-          }
-        })
-        .catch((error) => {});
-    }
+    const getExtra = async () => {
+      if (profile) {
+        axiosClient
+          .get(`/pets/${profile.id}/summary`)
+          .then((response) => {
+            setExtraInfo(response.data);
+            setExtraInfoLoading(false);
+          })
+          .catch((error) => {});
+        axiosClient
+          .get(`/pets?user_id=${user.id}`)
+          .then((response) => {
+            if (response?.data) {
+              setIsOwner(!response.data.every((pet) => pet.id !== profile.id));
+            }
+          })
+          .catch((error) => {});
+        axiosClient
+          .get(`/following/${profile.id}`)
+          .then((response) => {
+            if (response.data.pet_id === profile.id) {
+              setFollowed(true);
+            }
+          })
+          .catch((error) => {});
+      }
+    };
+    getExtra();
   }, [profile]);
 
   const follow = async () => {
@@ -102,6 +114,9 @@ const ProfileBackground = ({ profile }) => {
     } catch (error) {
       console.log(error);
     }
+  };
+  const linkToEditPet = () => {
+    router.push(`/pet/${profile?.id}/edit`);
   };
 
   const loading = !profile;
@@ -122,10 +137,10 @@ const ProfileBackground = ({ profile }) => {
         {isOwner && !loading && (
           <UploadImageButton
             style={{ right: 0 }}
-            url='/users/background'
+            url={`/pets/${profile?.id}/background`}
             id='profile-background'
             className='m-1 top-0 position-absolute rounded-3'
-            mutateKey={`users/me`}
+            mutateKey={`/pets/${profile?.id}`}
           />
         )}
       </div>
@@ -144,11 +159,11 @@ const ProfileBackground = ({ profile }) => {
           />
           {isOwner && !loading && (
             <UploadImageButton
-              url='/users/avatar'
+              url={`/pets/${profile?.id}/avatar`}
               id='profile-avatar-upload'
               style={{ right: 0 }}
               className='bottom-0 btn-round-md position-absolute'
-              mutateKey={`users/me`}
+              mutateKey={`/pets/${profile?.id}`}
             />
           )}
         </figure>
@@ -184,21 +199,15 @@ const ProfileBackground = ({ profile }) => {
           <div className='d-flex align-items-center pt-0 position-absolute left-15 top-0 mt-4 ms-2'>
             <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
               <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
-                456{' '}
+                {extraInfo?.total_posts || 0}{' '}
               </b>{' '}
               Posts
             </h4>
             <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
               <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
-                2.1k{' '}
+                {extraInfo?.total_followers || 0}{' '}
               </b>{' '}
               Followers
-            </h4>
-            <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
-              <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
-                32k{' '}
-              </b>{' '}
-              Follow
             </h4>
           </div>
         )}
@@ -220,7 +229,15 @@ const ProfileBackground = ({ profile }) => {
                 Follow
               </a>
             ))}
-
+          {isOwner && (
+            <a
+              id='editPet'
+              className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+              onClick={linkToEditPet}
+            >
+              <FiEdit2 />
+            </a>
+          )}
           <a
             id='dropdownMenu4'
             className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'

@@ -14,43 +14,30 @@ import { useState, useEffect } from 'react';
 
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
-const CreatePostForm = ({
-  onSubmit,
-  validated,
-  loaded,
-  values,
-  isMint = false,
-  setIsMint,
-}) => {
+const RegisterEventForm = ({ onSubmit, validated, loaded, values }) => {
   const { data: mentionOptions, error: loadMentionOptionsError } = useSWR(
     `/pets/owner`,
     fetcher
   );
 
   const [initValues, setInitValues] = useState({
-    name: values?.name || '',
-    price: values?.price || '',
     image: {
       file: '',
       image: values?.media_url || '',
     },
     caption: values?.caption || '',
-    mentions: [],
+    pet: { value: values?.pet_id },
   });
 
   useEffect(() => {
     if (values) {
       setInitValues({
-        name: values?.name || '',
-        price: values?.price || '',
         image: {
           file: '',
           image: values?.media_url || '',
         },
         caption: values?.caption || '',
-        mentions: values?.mentions.map((pet) => {
-          return { value: pet.pet_id };
-        }),
+        pet: { value: values?.pet_id },
       });
     }
   }, [values]);
@@ -61,15 +48,10 @@ const CreatePostForm = ({
     errors,
     handleSubmit,
     resetForm,
-  } = useForm(
-    initValues,
-    true,
-    validateCreatePost,
-    onSubmit,
-    isMint
-      ? ['name', 'price', 'image', 'caption']
-      : ['image', 'caption', 'mentions']
-  );
+  } = useForm(initValues, true, validateCreatePost, onSubmit, [
+    'image',
+    'caption',
+  ]);
 
   return (
     <Form
@@ -103,26 +85,15 @@ const CreatePostForm = ({
         </Col>
         <Col sm={6} xs={12}>
           <div className={`position-relative w-100 ms-3`}>
-            {isMint && (
-              <Input
-                value={info.name}
-                onChange={onChange('name')}
-                invalidTooltip={errors['name']}
-                name='name'
-                inputClassName={`rounded-xxl ${styles['textarea']}`}
-                label={<h3>Name</h3>}
-              />
-            )}
-
             <Select
-              value={info.mentions}
-              onChange={onChange('mentions')}
-              invalidTooltip={errors['mentions']}
-              name='mentions'
+              value={info.pet}
+              onChange={onChange('pet')}
+              invalidTooltip={errors['pet']}
+              name='pet'
               className={`mb-2 rounded-xxl ${styles['typing-box']}`}
               isLoading={!mentionOptions && !loadMentionOptionsError}
               label={<h3>Choose pets</h3>}
-              multiple={true}
+              multiple={false}
               required
               options={mentionOptions?.map((pet) => {
                 return {
@@ -148,19 +119,7 @@ const CreatePostForm = ({
                 }}
                 inputClassName={`rounded-xxl ${styles['textarea']}`}
               />
-
-              <div
-                className={`${styles['action-button']} position-absolute w-100 left-0 bottom-0`}
-              >
-                <FiHash /> Tag
-                <FiAtSign /> Mention
-              </div>
             </div>
-            <Check
-              checked={isMint}
-              onChange={() => setIsMint(!isMint)}
-              label='Create as NFT token'
-            />
             {loaded > 0 ? (
               <ProgressBar
                 animated
@@ -170,7 +129,7 @@ const CreatePostForm = ({
             ) : (
               <div className={`mt-3`}>
                 <Button className='bg-current' onClick={handleSubmit}>
-                  {isMint ? 'Create token' : 'Post'}
+                  Post
                 </Button>{' '}
                 <Button className='bg-secondary' onClick={resetForm}>
                   Reset
@@ -184,4 +143,4 @@ const CreatePostForm = ({
   );
 };
 
-export default CreatePostForm;
+export default RegisterEventForm;

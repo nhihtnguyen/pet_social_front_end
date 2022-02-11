@@ -183,3 +183,8 @@
     width: 100%;
     position: relative;
 }
+
+.editor {
+    min-height: 300px;
+    height: max-content !important;
+}

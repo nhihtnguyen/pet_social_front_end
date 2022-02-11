@@ -26,15 +26,6 @@ const validateRegister = (values) => {
       errors.email = '';
     }
   }
-  if ('password' in values) {
-    if (!values.password) {
-      errors.password = 'Password required';
-    } else if (values.password.length < 6) {
-      errors.password = 'Password need less than 6 characters';
-    } else {
-      errors.password = '';
-    }
-  }
 
   return errors;
 };

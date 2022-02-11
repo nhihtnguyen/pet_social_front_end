@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiMessageCircle, FiMoreHorizontal, FiSend } from 'react-icons/fi';
+import { FiMessageCircle, FiSend, FiEdit2 } from 'react-icons/fi';
 import { AiOutlineSend, AiOutlineCloseCircle } from 'react-icons/ai';
-import { IoPawOutline } from 'react-icons/io5';
 import axiosClient from 'axiosSetup';
 import { Spinner, Button } from 'react-bootstrap';
 import { getFormatDate } from 'helpers';
 import Input from 'components/controls/Input';
+import VoteButton from 'components/votebutton/VoteButton';
+import { useAuth } from 'app/authContext';
 
 const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState('');
   const [isEdit, setIsEdit] = useState(false);
+  const { user } = useAuth();
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
@@ -59,6 +61,8 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
         content,
         reply_for: comment.reply_for,
       };
+      mutate((posts) => [newComment, ...posts]);
+
       const result = await axiosClient.put(
         `/comments/${comment.id}`,
         newComment
@@ -66,6 +70,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
       console.log(result);
       if (result) {
         setIsEdit(false);
+        mutate();
       }
     } catch (err) {
       console.log(err);
@@ -80,6 +85,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
       setContent(comment.content || '');
     }
   }, [isEdit]);
+  const isOwner = user?.id == comment?.user_id;
   return (
     <div className={`p-0 mt-3 position-relative d-flex ${className || ''}`}>
       <figure
@@ -101,17 +107,19 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
           className={`bor-0 w-100 rounded-xxl p-2 ps-3 
                      border-light-md theme-dark-bg position-relative`}
         >
-          <a className='ms-auto' onClick={() => setIsEdit(true)}>
-            <span className='text-grey-900 font-xs position-absolute top-0 right-0 me-3'>
-              <FiMoreHorizontal />
-            </span>
-          </a>
+          {isOwner && (
+            <a className='ms-auto' onClick={() => setIsEdit(true)}>
+              <span className='cursor-pointer text-grey-900 text-dark font-xs position-absolute top-0 right-0 me-3'>
+                <FiEdit2 />
+              </span>
+            </a>
+          )}
           <h6 className={`font-xsss fw-600 mb-0 d-flex`}>
             {comment
               ? comment.User?.first_name + ' ' + comment.User?.last_name
               : 'UserName'}
             &nbsp;
-            <span className={`text-grey-500`}>
+            <span className={`text-grey-500 font-xssss`}>
               Last edited:&nbsp;
               {comment ? getFormatDate(new Date(comment.updated_at)) : ''}
             </span>
@@ -120,20 +128,12 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
             {comment?.content}
           </p>
           <div className={`d-flex p-0 mt-3 position-relative`}>
-            <Link href='/'>
-              <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-3'>
-                <i className='text-dark text-grey-900 btn-round-sm font-xs'>
-                  <IoPawOutline />
-                </i>
-                1 Vote
-              </a>
-            </Link>
+            <VoteButton post={{ id: pid }} comment={comment} />
             <Link href='/'>
               <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
                 <i className='text-dark text-grey-900 btn-round-sm font-xs'>
                   <FiMessageCircle />
                 </i>
-                22 Comment
               </a>
             </Link>
           </div>
@@ -146,8 +146,9 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
             name='message'
             as='textarea'
             className='w-100'
-            inputClassName={`h100 rounded-xxl p-2 ps-5 
-                            font-xssss fw-500 border-light-md theme-dark-bg`}
+            inputClassName={`h100 rounded-xxl p-2 ${
+              isEdit ? '' : 'ps-5 '
+            }font-xssss border-light-md theme-dark-bg`}
             inputStyle={{ resize: 'none', overflow: 'hidden' }}
             cols='30'
             rows='10'
@@ -159,7 +160,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
               <a
                 as={'button'}
                 onClick={handleCancelEdit}
-                className='font-xss fw-600 ls-1 text-grey-700 text-dark pe-4'
+                className='cursor-pointer font-sm fw-600 ls-1 text-danger pe-4'
               >
                 <AiOutlineCloseCircle />
               </a>

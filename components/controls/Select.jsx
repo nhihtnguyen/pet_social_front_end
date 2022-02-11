@@ -5,24 +5,6 @@ import Image from 'next/image';
 import { Form } from 'react-bootstrap';
 const { Option, MultiValue } = components;
 
-const options = [
-  {
-    value: 'chocolate',
-    label: 'Chocolate',
-    image: 'https://picsum.photos/200/300',
-  },
-  {
-    value: 'strawberry',
-    label: 'Strawberry',
-    image: 'https://picsum.photos/200/300',
-  },
-  {
-    value: 'vanilla',
-    label: 'Vanilla',
-    image: 'https://picsum.photos/200/300',
-  },
-];
-
 const IconOption = ({ data, ...props }) => (
   <Option {...props} className='d-flex align-items-center'>
     {data?.hasIcon && (
@@ -38,11 +20,11 @@ const IconOption = ({ data, ...props }) => (
   </Option>
 );
 
-const IconMultiValue = (props) => (
+const IconMultiValue = ({ data, ...props }) => (
   <MultiValue {...props} className='rounded-xxl d-flex align-items-center'>
     <Image
       alt='label'
-      src={'https://picsum.photos/200/300'}
+      src={data?.image || 'https://via.placeholder.com/30'}
       height='30px'
       width='30px'
       className='rounded-circle'
@@ -108,7 +90,6 @@ const MySelect = ({
       {label && <Form.Label>{label}</Form.Label>}
       <Select
         isMulti={multiple || false}
-        options={options}
         styles={customStyles}
         components={{ MultiValue: IconMultiValue, Option: IconOption }}
         onChange={(e) => onChange(convertToDefEventPara(name, e))}

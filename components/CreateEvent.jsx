@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import AddPetForm from 'components/forms/AddPetForm';
+import AddEventForm from 'components/forms/AddEventForm';
 import { useSWRConfig } from 'swr';
 import axiosClient from 'axiosSetup';
+import { useEffect } from 'react';
 
 const CreatePet = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
@@ -13,10 +14,10 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
 
   const handleUpload = (action) => async (data, setErrors, errors) => {
     let result;
-    data.gender = data?.gender.value;
     try {
+      // data['description'] = JSON.stringify(data['description']);
       result = await axiosClient[action](
-        `/pets/${action === 'put' ? content?.id : ''}`,
+        `/events/${action === 'put' ? content?.id : ''}`,
         data,
         {
           onUploadProgress: function (progressEvent) {
@@ -38,7 +39,7 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
     if (result?.data) {
       //mutate();
       console.log(result);
-      router.push('/pet/' + result?.data?.id);
+      router.push('/event/' + result?.data?.id);
     }
   };
 
@@ -47,7 +48,7 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
       className={`card w-100 border-0 bg-white shadow-xs p-0 mb-4 rounded-xxl`}
     >
       <div className='card-body p-lg-5 p-4 w-100 border-0 '>
-        <AddPetForm
+        <AddEventForm
           onSubmit={handleUpload(isEdit ? 'put' : 'post')}
           loaded={loaded}
           values={content}

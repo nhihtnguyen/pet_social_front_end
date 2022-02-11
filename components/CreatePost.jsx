@@ -14,6 +14,8 @@ import { localWeb3 as web3, magicLocal } from 'app/magic';
 import InvolveModal from 'components/modal/InvolveModal';
 
 const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
+const petDetectionAPI = process.env.NEXT_PUBLIC_DETECTION_API;
+const petNLPAPI = process.env.NEXT_PUBLIC_NLP_API;
 
 const STATUS = {
   allowed: 1,
@@ -21,12 +23,12 @@ const STATUS = {
   denied: 3,
 };
 
-const CreatePost = ({ content, onSubmit, isEdit }) => {
+const CreatePost = ({ content, isEdit = false }) => {
   const { mutate } = useSWRConfig();
   const router = useRouter();
 
   const [loaded, setLoaded] = useState(-1);
-  const [isMint, setIsMint] = useState(false);
+  const [isMint, setIsMint] = useState(router.query.is_mint || false);
   const [showInvolve, setShowInvolve] = useState(false);
   const [url, setUrl] = useState('');
   const [contract, setContract] = useState('');
@@ -55,7 +57,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
     bodyFormData.append('image', data.image.file);
     bodyFormData.append('caption', data.caption);
     // Mentions
-    const mentionIds = data.mentions.map((value) => value.value);
+    const mentionIds = data.mentions?.map((value) => value.value);
     bodyFormData.append('mentions', mentionIds.join(','));
 
     // Check image
@@ -98,7 +100,7 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
         newForm.append('text', data.caption);
         newForm.append('model_choice', 'model_1');
         captionStatus = await axiosClient.post(
-          'http://localhost:5005/text',
+          `http://localhost:2005/text`,
           newForm,
           {
             headers: { 'Content-Type': 'multipart/form-data' },
@@ -150,11 +152,10 @@ const CreatePost = ({ content, onSubmit, isEdit }) => {
         bodyFormData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
-          onUploadProgress: function (progressEvent) {
+          onUploadProgress: (progressEvent) => {
             let percentCompleted = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             );
-            console.log(percentCompleted);
             setLoaded(percentCompleted);
           },
         }

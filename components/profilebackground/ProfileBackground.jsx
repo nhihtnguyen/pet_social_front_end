@@ -7,6 +7,7 @@ import {
   FiEyeOff,
   FiMail,
   FiMoreHorizontal,
+  FiEdit2,
 } from 'react-icons/fi';
 import axiosClient from 'axiosSetup';
 import useSWR from 'swr';
@@ -206,7 +207,7 @@ const ProfileBackground = ({ className }) => {
             url='/users/background'
             id='profile-background'
             className='m-1 top-0 position-absolute rounded-3'
-            mutateKey={`users/me`}
+            mutateKey={`/users/me`}
           />
         )}
       </Card.Body>
@@ -236,7 +237,7 @@ const ProfileBackground = ({ className }) => {
               id='profile-avatar-upload'
               style={{ right: 0 }}
               className='bottom-0 btn-round-md position-absolute'
-              mutateKey={`users/me`}
+              mutateKey={`/users/me`}
             />
           )}
         </Figure>
@@ -259,11 +260,19 @@ const ProfileBackground = ({ className }) => {
           </h4>
         )}
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
-          <Link href='/defaultemailbox'>
-            <a className='font-md d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
-              <FiMail />
-            </a>
-          </Link>
+          {isOwner ? (
+            <Link href='/personal'>
+              <a className='font-md d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
+                <FiEdit2 />
+              </a>
+            </Link>
+          ) : (
+            <Link href='/defaultemailbox'>
+              <a className='font-md d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
+                <FiMail />
+              </a>
+            </Link>
+          )}
 
           <MoreActionMenu />
         </div>

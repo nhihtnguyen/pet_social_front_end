@@ -5,3 +5,9 @@
     border-bottom-right-radius: 0 !important;
     border-top-right-radius: 0 !important;
 }
+.vote-button {
+    transition: all 0.1 s 0s ease !important;
+    &:hover {
+        font-size: 35px !important;
+    }
+}

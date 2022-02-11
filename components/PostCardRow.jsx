@@ -6,14 +6,30 @@ import {
   FiMessageCircle,
   FiShare2,
   FiMoreHorizontal,
+  FiEdit3,
 } from 'react-icons/fi';
 import { IoPawOutline } from 'react-icons/io5';
+import { BsBookmarkHeart } from 'react-icons/bs';
+import { useAuth } from 'app/authContext';
+import { useRouter } from 'next/router';
+import { getFormatDate } from 'helpers';
+import VoteButton from 'components/votebutton/VoteButton';
+import ReportButton from 'components/ReportButton';
 
 const PostUser = ({ post }) => {
+  const { user } = useAuth();
+  const router = useRouter();
+
   let [width, height] = post?.size?.split('x') || [500, 500];
-  width = (width * 800) / height;
-  height = 800;
-  console.log(width, height);
+  width = (width * 350) / height;
+  height = 350;
+
+  const isOwner = user?.id == post?.user_id;
+
+  const linkToEdit = () => {
+    router.push(`/post/${post?.id}/edit`);
+  };
+  const handleSavePost = () => {};
   return (
     <div className='card w-100 shadow-xss rounded-xxl border-0 p-4 mb-3'>
       <div className='card-body p-0 d-flex'>
@@ -33,16 +49,25 @@ const PostUser = ({ post }) => {
             : 'Name'}
           <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
             {' '}
-            {/* {value.time} */}5 hour
+            {/* {value.time} */}
+            {post?.updated_at
+              ? getFormatDate(new Date(post?.updated_at))
+              : 'updated'}
           </span>
         </h4>
-        <Link href='/defaultvideo'>
-          <a className='ms-auto'>
-            <i className='ti-more-alt text-grey-900 btn-round-md bg-greylight font-xss'>
-              <FiMoreHorizontal />
-            </i>
-          </a>
-        </Link>
+        <div className={`d-flex p-0 m-0 mb-3 ms-auto position-relative`}>
+          {isOwner && (
+            <a
+              className='ms-auto cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
+              onClick={isOwner ? linkToEdit : handleSavePost}
+            >
+              <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+                {isOwner ? <FiEdit3 /> : <BsBookmarkHeart />}
+              </span>
+            </a>
+          )}
+          <ReportButton item={post} />
+        </div>
       </div>
 
       <div className='card-body p-0 mb-3 rounded-3 overflow-hidden'>
@@ -54,7 +79,7 @@ const PostUser = ({ post }) => {
         />
       </div>
       <div className='card-body p-0 me-lg-5'>
-        <p className='fw-500 text-grey-500 lh-26 font-xssss w-100 mb-0'>
+        <p className='fw-700 text-grey-800 lh-26 font-xss w-100 mb-0'>
           {post?.caption ||
             `Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero
           delectus facere hic iusto consequuntur est sequi quis laborum impedit
@@ -67,33 +92,24 @@ const PostUser = ({ post }) => {
         </p>
       </div>
       <div className='card-body d-flex p-0 mt-3'>
-        <Link href={`/post/${post?.id}`}>
-          <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss me-3'>
-            <i className='text-white bg-green-gradient me-1 btn-round-xs font-xss'>
-              <IoPawOutline />
-            </i>{' '}
-            <i className='text-white bg-mini-gradient me-2 btn-round-xs font-xss'>
-              <FiHeart />
-            </i>
-            2.8K Like
-          </a>
-        </Link>
+        <VoteButton post={post} />
         <Link href={`/post/${post?.id}`}>
           <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
             <i className='text-dark text-grey-900 btn-round-sm font-lg'>
               <FiMessageCircle />
             </i>
-            22 Comment
           </a>
         </Link>
-        <Link href={`/post/${post?.id}`}>
-          <a className='ms-auto d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
-            <i className='text-grey-900 text-dark btn-round-sm font-lg'>
-              <FiShare2 />
-            </i>
-            <span className='d-none-xs'>Share</span>
-          </a>
-        </Link>
+        {false && (
+          <Link href={`/post/${post?.id}`}>
+            <a className='ms-auto d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
+              <i className='text-grey-900 text-dark btn-round-sm font-lg'>
+                <FiShare2 />
+              </i>
+              <span className='d-none-xs'>Share</span>
+            </a>
+          </Link>
+        )}
       </div>
     </div>
   );

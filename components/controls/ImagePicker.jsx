@@ -102,9 +102,7 @@ const ImagePicker = ({
               />
               <FaArrowUp />
             </div>
-            <caption className='text-black'>
-              Drag and drop or click to upload
-            </caption>
+            <span className='text-black'>Drag and drop or click to upload</span>
           </div>
         )}
         <label

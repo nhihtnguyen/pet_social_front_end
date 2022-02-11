@@ -65,9 +65,11 @@ const LoadExplore = ({ refreshSignal, grid = true }) => {
               />
             </div>
           ) : (
-            paginatedPosts.map((post, index) => (
-              <PostCardRow post={post} key={index} />
-            ))
+            <div className='middle-wrap'>
+              {paginatedPosts.map((post, index) => (
+                <PostCardRow post={post} key={index} />
+              ))}
+            </div>
           )}
         </InfiniteScroll>
       )}
