@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { useAuth } from 'app/authContext';
 import { FiPlusCircle } from 'react-icons/fi';
+import { Spinner } from 'react-bootstrap';
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
 const MyPet = () => {
@@ -24,7 +25,7 @@ const MyPet = () => {
   } = useSWR(id ? `/following/following` : null, id ? fetcher : null);
 
   if (error || errorGetFollowing) return <div>failed to load</div>;
-  if (!data || !following) return <div>loading...</div>;
+  const loading = !data || !following;
 
   const handleClick = (id) => () => {
     router.push(`/pet/${id}`);
@@ -61,6 +62,7 @@ const MyPet = () => {
           }
         />
         <div className='row'>
+          {!data && <Spinner animation='border' />}
           {data?.map((value, index) => (
             <div className='col-md-6 col-sm-6 pb-3' key={index}>
               <PetCard

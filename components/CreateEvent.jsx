@@ -9,7 +9,6 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
 
   const router = useRouter();
-
   const [loaded, setLoaded] = useState(-1);
 
   const handleUpload = (action) => async (data, setErrors, errors) => {

@@ -57,3 +57,12 @@ a {
 .infinite-scroll-parent > .infinite-scroll-component__outerdiv {
   padding: 0 !important;
 }
+
+.limit-text-in-row {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* number of lines to show */
+  line-clamp: 1;
+  -webkit-box-orient: vertical;
+}

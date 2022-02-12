@@ -39,6 +39,8 @@ client.interceptors.response.use(
     if (error.response) {
       return error.response;
     } else {
+      // Go to 500 page
+
       return Promise.reject(error);
     }
   }

@@ -12,6 +12,7 @@ import PostCardRow from 'components/PostCardRow';
 import Layout from 'components/Layout';
 import Head from 'next/head';
 import { useEffect } from 'react';
+import NoItem from 'components/NoItem';
 
 import EventCard from 'components/eventcard/EventCard';
 
@@ -51,6 +52,7 @@ const LoadEvents = ({ refreshSignal }) => {
           </div>
         </InfiniteScroll>
       )}
+      {paginatedEvents?.length == 0 && <NoItem />}
     </div>
   );
 };

@@ -7,7 +7,7 @@ import {
   Tab,
   Spinner,
 } from 'react-bootstrap';
-import { FiEdit3 } from 'react-icons/fi';
+import { FiEdit3, FiCopy } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import { useAuth } from 'app/authContext';
 import { calVote } from 'helpers';
@@ -18,6 +18,7 @@ import RegisterEventForm from 'components/forms/RegisterEventForm';
 import useInfinitePagination from 'hooks/useInfinitePagination';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axiosClient from 'axiosSetup';
+import { getFormatDate } from 'helpers';
 
 const STATUS = {
   allowed: 1,
@@ -142,10 +143,10 @@ const EventDetail = ({ item, loading, pid }) => {
 
   //const isOwner = String(user?.id) === String(item?.User.id);
 
-  const linkToEdit = () => {
-    router.push(`/event/${item?.id}/edit`);
+  const linkToEdit = (isClone) => () => {
+    router.push(`/event/${item?.id}/edit${isClone ? '?is_clone=true' : ''}`);
   };
-
+  const owner = user?.id == item?.creator;
   useEffect(() => {
     // const getExtra = async () => {
     //   try {
@@ -185,14 +186,22 @@ const EventDetail = ({ item, loading, pid }) => {
               <Placeholder xs={5} />
             </Placeholder>
           ) : (
-            <h4 className='text-dark'>{item?.name || 'Name'}</h4>
+            <h4 className='text-dark'>
+              {item?.name || 'Name'}
+              <br />
+              <span className='font-xsss'>
+                {getFormatDate(new Date(item?.start)) +
+                  '-' +
+                  getFormatDate(new Date(item?.end))}
+              </span>
+            </h4>
           )}
           <a
             className='ms-auto cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
-            onClick={linkToEdit}
+            onClick={linkToEdit(!owner)}
           >
             <span className='text-dark text-grey-900 btn-round-sm font-lg'>
-              <FiEdit3 />
+              {owner ? <FiEdit3 /> : <FiCopy />}
             </span>
           </a>
         </div>

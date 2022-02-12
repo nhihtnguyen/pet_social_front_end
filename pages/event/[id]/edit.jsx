@@ -9,6 +9,7 @@ const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 const AddEvent = () => {
   const router = useRouter();
   const { user } = useAuth();
+  const isClone = router.query.is_clone;
 
   const { id } = router.query;
   const { data: event, error } = useSWR(
@@ -19,7 +20,7 @@ const AddEvent = () => {
 
   return (
     <div className='middle-wrap pe-sm-3'>
-      <CreateEvent content={event} />
+      <CreateEvent content={event} isEdit={!isClone} />
     </div>
   );
 };

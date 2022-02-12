@@ -27,14 +27,18 @@ export const getPrimaryWallet = (action) => {
   }
 };
 
-export const getFormatDate = (date) => {
-  return (
-    (date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)) +
-    '/' +
-    (date.getDate() > 9 ? date.getDate() : '0' + date.getDate()) +
-    '/' +
-    date.getFullYear()
-  );
+export const getFormatDate = (date, format = 'mm/dd/yyyy') => {
+  let mm =
+    date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+  let dd = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+  let yyyy = date.getFullYear();
+  let newDate = format;
+  newDate = newDate
+    .replaceAll('mm', mm)
+    .replaceAll('dd', dd)
+    .replaceAll('yyyy', yyyy);
+
+  return newDate;
 };
 
 export const calVote = (vote) => {

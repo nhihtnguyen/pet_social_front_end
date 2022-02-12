@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 
-const publicRoutes = ['/login', '/explore', '/register'];
+const publicRoutes = ['/login', '/explore', '/register', '/500', '/404'];
 
 const ProtectRoute = ({ children }) => {
   const router = useRouter();

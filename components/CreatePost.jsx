@@ -12,6 +12,7 @@ import { checkImageStatus, checkCaptionStatus } from 'temp';
 import { getKeyByValue, getPrimaryWallet } from 'helpers';
 import { localWeb3 as web3, magicLocal } from 'app/magic';
 import InvolveModal from 'components/modal/InvolveModal';
+import { useNotification } from 'app/notificationContext';
 
 const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
 const petDetectionAPI = process.env.NEXT_PUBLIC_DETECTION_API;
@@ -25,6 +26,7 @@ const STATUS = {
 
 const CreatePost = ({ content, isEdit = false }) => {
   const { mutate } = useSWRConfig();
+  const { showMessage } = useNotification();
   const router = useRouter();
 
   const [loaded, setLoaded] = useState(-1);
@@ -165,6 +167,14 @@ const CreatePost = ({ content, isEdit = false }) => {
       console.log(error);
     }
     if (result && result.data) {
+      showMessage(
+        {
+          title: 'System',
+          content: 'Post created successfully. Going to detail page',
+        },
+        3000,
+        'success'
+      );
       mutate('/posts');
       router.push('/post/' + result.data.id);
     }
@@ -250,6 +260,14 @@ const CreatePost = ({ content, isEdit = false }) => {
       console.log('fee', gasFee);
     } catch (error) {
       console.log(error);
+      showMessage(
+        {
+          title: 'System',
+          content: 'Unexpected error occur',
+        },
+        3000,
+        'danger'
+      );
     } finally {
       setLoaded(-1);
     }
@@ -258,10 +276,35 @@ const CreatePost = ({ content, isEdit = false }) => {
     try {
       setLoaded(50);
       setShowInvolve(false);
+      showMessage(
+        {
+          title: 'System',
+          content: 'Working...',
+        },
+        0,
+        'info',
+        true
+      );
       let transaction = await contract.createToken(url);
+      showMessage(
+        {
+          title: 'System',
+          content: 'Token created successfully. Going to asset page',
+        },
+        3000,
+        'success',
+        false
+      );
       router.push('/assets');
     } catch (error) {
-      console.log(error);
+      showMessage(
+        {
+          title: 'System',
+          content: error.message,
+        },
+        3000,
+        'danger'
+      );
     } finally {
       setLoaded(-1);
     }
