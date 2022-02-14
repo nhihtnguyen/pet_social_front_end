@@ -1,9 +1,9 @@
-import CreatePost from 'components/createpost/CreatePost';
+import CreatePost from 'components/CreatePost';
 import Layout from 'components/Layout';
 
 const Create = () => {
   return (
-    <div className='row ms-0 pe-2 mb-3 justify-content-center w-100'>
+    <div className='row ms-0 pe-sm-3 mb-3 justify-content-center w-100'>
       <CreatePost />
     </div>
   );

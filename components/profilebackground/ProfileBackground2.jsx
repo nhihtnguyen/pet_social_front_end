@@ -5,12 +5,14 @@ import {
   FiAlertCircle,
   FiLock,
   FiEyeOff,
-  FiCamera,
+  FiEdit2,
 } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import axiosClient from 'axiosSetup';
 import { useRouter } from 'next/router';
 import { useAuth } from 'app/authContext';
+import { Placeholder } from 'react-bootstrap';
+import UploadImageButton from 'components/UploadImageButton';
 
 const MenuItem = ({ icon, tooltip, label, className, onClick, ...props }) => (
   <div
@@ -63,26 +65,38 @@ const ProfileBackground = ({ profile }) => {
 
   const [followed, setFollowed] = useState(false);
   const [toggleMore, setToggleMore] = useState(false);
+  const [extraInfo, setExtraInfo] = useState({});
+  const [extraInfoLoading, setExtraInfoLoading] = useState(true);
 
   useEffect(() => {
-    if (profile) {
-      axiosClient
-        .get(`/pets?user_id=${user.id}`)
-        .then((response) => {
-          if (response?.data) {
-            setIsOwner(!response.data.every((pet) => pet.id !== profile.id));
-          }
-        })
-        .catch((error) => {});
-      axiosClient
-        .get(`/following/${profile.id}`)
-        .then((response) => {
-          if (response.data.pet_id === profile.id) {
-            setFollowed(true);
-          }
-        })
-        .catch((error) => {});
-    }
+    const getExtra = async () => {
+      if (profile) {
+        axiosClient
+          .get(`/pets/${profile.id}/summary`)
+          .then((response) => {
+            setExtraInfo(response.data);
+            setExtraInfoLoading(false);
+          })
+          .catch((error) => {});
+        axiosClient
+          .get(`/pets?user_id=${user.id}`)
+          .then((response) => {
+            if (response?.data) {
+              setIsOwner(!response.data.every((pet) => pet.id !== profile.id));
+            }
+          })
+          .catch((error) => {});
+        axiosClient
+          .get(`/following/${profile.id}`)
+          .then((response) => {
+            if (response.data.pet_id === profile.id) {
+              setFollowed(true);
+            }
+          })
+          .catch((error) => {});
+      }
+    };
+    getExtra();
   }, [profile]);
 
   const follow = async () => {
@@ -101,48 +115,33 @@ const ProfileBackground = ({ profile }) => {
       console.log(error);
     }
   };
-
-  const handleUploadImage = (name) => async (e) => {
-    let file = e.target.files[0];
-
-    const data = new FormData();
-    data.append('image', file);
-    let result;
-    try {
-      result = await axiosClient.put(`/pets/${name}`, data, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      if (result) {
-      }
-    } catch (err) {
-      console.log(err);
-    }
+  const linkToEditPet = () => {
+    router.push(`/pet/${profile?.id}/edit`);
   };
+
+  const loading = !profile;
 
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
       <div className='card-body h240 p-0 rounded-xxxl overflow-hidden m-3 position-relative'>
         <Image
-          src={profile.background || 'https://via.placeholder.com/875x250'}
+          src={
+            loading || !profile?.background
+              ? 'https://via.placeholder.com/875x250'
+              : profile?.background
+          }
           alt='background'
           width={875}
           height={250}
         />
-        {isOwner && (
-          <label
-            htmlFor='file-background'
-            className='top-0 m-1 font-md cursor-pointer position-absolute border-0 d-lg-block bg-greylight btn-round-lg rounded-3 text-grey-700'
+        {isOwner && !loading && (
+          <UploadImageButton
             style={{ right: 0 }}
-          >
-            <FiCamera />
-
-            <input
-              id='file-background'
-              className='d-none'
-              type='file'
-              onChange={handleUploadImage('background')}
-            />
-          </label>
+            url={`/pets/${profile?.id}/background`}
+            id='profile-background'
+            className='m-1 top-0 position-absolute rounded-3'
+            mutateKey={`/pets/${profile?.id}`}
+          />
         )}
       </div>
       <div className='card-body d-block p-0 text-center position-relative'>
@@ -150,55 +149,71 @@ const ProfileBackground = ({ profile }) => {
           <Image
             width={200}
             height={200}
-            src={profile?.avatar || 'https://via.placeholder.com/200'}
+            src={
+              loading || !profile?.avatar
+                ? 'https://via.placeholder.com/200'
+                : profile?.avatar
+            }
             alt='avatar'
             className='p-1 bg-white rounded-xl w-100'
           />
-          {isOwner && (
-            <label
-              htmlFor='file-avatar'
+          {isOwner && !loading && (
+            <UploadImageButton
+              url={`/pets/${profile?.id}/avatar`}
+              id='profile-avatar-upload'
               style={{ right: 0 }}
-              className='bottom-0 cursor-pointer position-absolute border-0 d-lg-block bg-greylight btn-round-md  text-grey-700'
-            >
-              <FiCamera />
-              <input
-                id='file-avatar'
-                className='d-none'
-                type='file'
-                onChange={handleUploadImage('avatar')}
-              />
-            </label>
+              className='bottom-0 btn-round-md position-absolute'
+              mutateKey={`/pets/${profile?.id}`}
+            />
           )}
         </figure>
 
-        <h4 className='font-xs ls-1 fw-700 text-grey-900'>
-          {profile.name || 'Name'}
-          <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
-            @surfiyazakir22
-          </span>
-        </h4>
-        <div className='d-flex align-items-center pt-0 position-absolute left-15 top-0 mt-4 ms-2'>
-          <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
-            <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
-              456{' '}
-            </b>{' '}
-            Posts
+        {loading ? (
+          <Placeholder
+            as='h4'
+            animation='glow'
+            className='font-xs ls-1 fw-700 text-grey-900'
+          >
+            <Placeholder xs={2} />
+            <br />
+            <Placeholder xs={1} />
+          </Placeholder>
+        ) : (
+          <h4 className='font-xs ls-1 fw-700 text-grey-900'>
+            {profile.name || 'Name'}
+            <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
+              @surfiyazakir22
+            </span>
           </h4>
-          <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
-            <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
-              2.1k{' '}
-            </b>{' '}
-            Followers
-          </h4>
-          <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
-            <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
-              32k{' '}
-            </b>{' '}
-            Follow
-          </h4>
-        </div>
+        )}
+        {extraInfoLoading ? (
+          <Placeholder
+            as='h4'
+            className='position-absolute left-15 top-0 mt-4 ms-2'
+            animation='glow'
+            style={{ width: 300 }}
+          >
+            <Placeholder xs={3} /> <Placeholder xs={3} /> <Placeholder xs={3} />
+          </Placeholder>
+        ) : (
+          <div className='d-flex align-items-center pt-0 position-absolute left-15 top-0 mt-4 ms-2'>
+            <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
+              <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
+                {extraInfo?.total_posts || 0}{' '}
+              </b>{' '}
+              Posts
+            </h4>
+            <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
+              <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
+                {extraInfo?.total_followers || 0}{' '}
+              </b>{' '}
+              Followers
+            </h4>
+          </div>
+        )}
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
           {!isOwner &&
+            !loading &&
             (followed ? (
               <a
                 onClick={unfollow}
@@ -214,7 +229,15 @@ const ProfileBackground = ({ profile }) => {
                 Follow
               </a>
             ))}
-
+          {isOwner && (
+            <a
+              id='editPet'
+              className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+              onClick={linkToEditPet}
+            >
+              <FiEdit2 />
+            </a>
+          )}
           <a
             id='dropdownMenu4'
             className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'

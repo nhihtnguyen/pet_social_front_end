@@ -11,16 +11,18 @@ const FloatingButton = ({ label, icon, onClick, href, index }) => {
   return (
     <div
       onClick={onClick}
-      className={`shadow-xss ${styles.floatingButton}`}
+      className={`shadow-lg cursor-pointer position-absolute position-fixed rounded-circle ${styles.floatingButton}`}
       style={{
         marginBottom: `${marginBottom}px`,
       }}
     >
       {label && <label>{label}</label>}
       <Link href={href ? href : '#'}>
-        <a className={`shadow-xss ${styles.icon}`} style={{ fontSize: 30 }}>
+        <span
+          className={`shadow-lg bg-white d-flex rounded-circle justify-content-center align-items-center text-dark theme-dark-bg bg-opacity-25 ${styles.icon}`}
+        >
           {icon}
-        </a>
+        </span>
       </Link>
     </div>
   );

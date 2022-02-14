@@ -1,5 +1,5 @@
 import axios from 'axios';
-const serverHost = 'https://petsocial-backend.herokuapp.com/';
+const serverHost = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 const client = axios.create({
   baseURL: serverHost,
@@ -37,7 +37,7 @@ client.interceptors.response.use(
         });
     }
     if (error.response) {
-      return error.response.data;
+      return error.response;
     } else {
       return Promise.reject(error);
     }

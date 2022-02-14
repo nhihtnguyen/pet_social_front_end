@@ -1,4 +1,4 @@
-import DragAndDrop from 'components/draganddrop/DragAndDrop';
+import DragAndDrop from 'components/DragAndDrop';
 import { FiX } from 'react-icons/fi';
 import { FaArrowUp } from 'react-icons/fa';
 import Image from 'next/image';
@@ -27,8 +27,6 @@ const ImagePicker = ({
   const [file, setFile] = useState('');
 
   const handleDrop = async (file) => {
-    console.log('file', file);
-
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
@@ -71,7 +69,6 @@ const ImagePicker = ({
     : invalidTooltip
     ? invalidTooltip
     : '';
-  console.log('er', tooltip);
   return (
     <DragAndDrop handleDrop={handleDrop}>
       <div
@@ -105,7 +102,7 @@ const ImagePicker = ({
               />
               <FaArrowUp />
             </div>
-            <h6>Drag and drop or click to upload</h6>
+            <span className='text-black'>Drag and drop or click to upload</span>
           </div>
         )}
         <label

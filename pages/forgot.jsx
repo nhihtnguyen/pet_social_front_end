@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { FiMail, FiLock, FiGithub, FiUser } from 'react-icons/fi';
 
-const Login = () => {
+const Forgot = () => {
   return (
     <div className='main-wrap'>
       <div className='nav-header bg-transparent shadow-none border-0'>
@@ -94,4 +94,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Forgot;

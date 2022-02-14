@@ -123,7 +123,7 @@
 }
 
 .image-picker {
-    width: 340px;
+    width: 100%;
     min-height: 300px;
     background-color: #efefef;
     border: 3px dashed grey;
@@ -182,4 +182,9 @@
 .typing-box {
     width: 100%;
     position: relative;
+}
+
+.editor {
+    min-height: 300px;
+    height: max-content !important;
 }
