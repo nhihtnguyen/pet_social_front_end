@@ -16,7 +16,7 @@ import NoItem from 'components/NoItem';
 
 import EventCard from 'components/eventcard/EventCard';
 
-const LoadEvents = ({ refreshSignal }) => {
+const LoadEvents = ({ refreshSignal, filter }) => {
   const {
     paginatedData: paginatedEvents,
     size,
@@ -25,7 +25,7 @@ const LoadEvents = ({ refreshSignal }) => {
     error,
     isReachedEnd,
     loadingMore,
-  } = useInfinitePagination(`/events?`);
+  } = useInfinitePagination(`/events/${filter || ''}?`);
 
   return (
     <div className='infinite-scroll-parent p-0'>
@@ -46,7 +46,7 @@ const LoadEvents = ({ refreshSignal }) => {
                 key={index}
                 className='col-sm-4 col-xs-12 p-0 pe-3 m-0 mb-3 '
               >
-                <EventCard event={event} />
+                <EventCard event={event} type={filter} />
               </div>
             ))}
           </div>

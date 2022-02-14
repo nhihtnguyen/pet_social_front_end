@@ -10,10 +10,11 @@ import { useRouter } from 'next/router';
 import { magicLocal } from 'app/magic';
 import { getPrimaryWallet } from 'helpers';
 import axios from 'axios';
-import { Masonry } from 'masonic';
+import Masonry from 'components/Masonry';
 import InvolveModal from 'components/modal/InvolveModal';
 const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
 const nftMarketAddress = process.env.NEXT_PUBLIC_MARKET_ADDRESS;
+import { useNotification } from 'app/notificationContext';
 
 const MasonryCard =
   (method) =>
@@ -27,6 +28,7 @@ const MasonryCard =
 
     const [showInvolve, setShowInvolve] = useState(false);
     const router = useRouter();
+    const { showMessage } = useNotification();
 
     const estimateGas = (nft) => async () => {
       try {
@@ -85,6 +87,14 @@ const MasonryCard =
         });
       } catch (error) {
         console.log(error);
+        showMessage(
+          {
+            title: 'System',
+            content: error.message,
+          },
+          3000,
+          'danger'
+        );
       } finally {
         setBuying(false);
       }
@@ -93,8 +103,19 @@ const MasonryCard =
     const buyNft = (nft) => async () => {
       try {
         setShowInvolve(false);
+        setShow(false);
+        showMessage(
+          {
+            title: 'System',
+            content: 'Working...',
+          },
+          0,
+          'info',
+          true
+        );
         const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
 
+        console.log('tetx', nft.marketId);
         const transaction = await contract.createMarketSale(
           nftAddress,
           nft.marketId,
@@ -102,11 +123,30 @@ const MasonryCard =
             value: price,
           }
         );
+        console.log('tetx', transaction);
+
+        showMessage(
+          {
+            title: 'System',
+            content: 'Bought successfully. Going to assets',
+          },
+          3000,
+          'success',
+          false
+        );
         // Check result and show them for caller
         // Re-direct to assets page
         router.push('/assets');
       } catch (error) {
         console.log(error);
+        showMessage(
+          {
+            title: 'System',
+            content: error.message,
+          },
+          3000,
+          'danger'
+        );
       }
     };
 
@@ -198,6 +238,7 @@ const LoadMarket = ({ refreshSignal }) => {
           NFTMarket.abi,
           provider
         );
+
         const data = await marketContract.fetchMarketItems();
         if (mounted) {
           setChosen(chosen);

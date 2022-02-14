@@ -7,7 +7,7 @@ import { FiPlus, FiBriefcase } from 'react-icons/fi';
 const Market = () => {
   return (
     <div className='middle-wrap pe-sm-3'>
-      <FloatingButton icon={<FiPlus />} href={`/post/create`} />
+      <FloatingButton icon={<FiPlus />} href={`/post/create?is_mint=true`} />
       <FloatingButton icon={<FiBriefcase />} href={`/assets`} index={1} />
       <PageTitle title={'Market'} />
       <LoadMarket />

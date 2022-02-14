@@ -41,8 +41,9 @@ const CreatePost = ({ content, isEdit = false }) => {
     let mounted = true;
     const getChosenWallet = () => {
       try {
-        let chosen = getPrimaryWallet();
+        let { chosen } = getPrimaryWallet('asset');
         if (mounted) {
+          console.log('aa', chosen);
           setChosen(chosen);
         }
       } catch (error) {
@@ -220,22 +221,21 @@ const CreatePost = ({ content, isEdit = false }) => {
       setUrl(url);
 
       let signer;
+      let provider;
+      console.log('bb', chosen);
       switch (chosen) {
-        case 'metamask': {
+        case 'metamask':
           const web3Modal = new Web3Modal();
           const connection = await web3Modal.connect();
-          const provider = new ethers.providers.Web3Provider(connection);
+          provider = new ethers.providers.Web3Provider(connection);
           signer = await provider.getSigner();
           break;
-        }
-        default: {
-          const provider = new ethers.providers.Web3Provider(
-            magicLocal.rpcProvider
-          );
+        default:
+          provider = new ethers.providers.Web3Provider(magicLocal.rpcProvider);
           signer = await provider.getSigner();
           break;
-        }
       }
+      console.log('ss', signer);
 
       let contract = new ethers.Contract(nftAddress, NFT.abi, signer);
       setContract(contract);
@@ -297,6 +297,7 @@ const CreatePost = ({ content, isEdit = false }) => {
       );
       router.push('/assets');
     } catch (error) {
+      setLoaded(-1);
       showMessage(
         {
           title: 'System',
@@ -305,8 +306,6 @@ const CreatePost = ({ content, isEdit = false }) => {
         3000,
         'danger'
       );
-    } finally {
-      setLoaded(-1);
     }
   };
 

@@ -19,11 +19,35 @@ export const NotificationProvider = ({ children }) => {
   const [delay, setDelay] = useState(0);
   const [variant, setVariant] = useState('');
 
+  useEffect(() => {
+    try {
+      let items = localStorage.getItem('pet_notifications');
+      items = JSON.parse(items);
+      if (items && typeof items == 'object') {
+        setHistory(items);
+        console.log(items);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('pet_notifications', JSON.stringify(history));
+  }, [history]);
+  const clearAll = () => {
+    try {
+      localStorage.removeItem('pet_notifications');
+      setHistory([]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const showMessage = (incomingMessage, _delay, _variant, _loading = false) => {
     setMessage(incomingMessage);
     setHistory([
       ...history,
-      { incomingMessage, delay: _delay, variant: _variant },
+      { incomingMessage, delay: _delay, variant: _variant, time: Date.now() },
     ]);
     setVariant(_variant);
     setDelay(_delay);
@@ -44,6 +68,7 @@ export const NotificationProvider = ({ children }) => {
         position,
         variant,
         history,
+        clearAll,
       }}
     >
       {children}

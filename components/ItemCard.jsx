@@ -9,7 +9,11 @@ const ItemCard = ({ item, onClick, loading }) => {
         <div className='image-container' onClick={onClick}>
           <Image
             className='image w-100 mt-0 mb-0'
-            src={item?.image || 'https://via.placeholder.com/300'}
+            src={
+              !loading && item?.image
+                ? item?.image
+                : 'https://via.placeholder.com/300'
+            }
             layout='fill'
             alt={item?.name || 'bg'}
           />

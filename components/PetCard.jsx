@@ -72,7 +72,7 @@ const PetCard = ({
             : pet?.name || 'Name'}
         </h4>
         <p className='fw-500 font-xsssss text-grey-500 mt-0 mb-3 lh-3'>
-          @mickey
+          {/* @mickey */}
         </p>
         {!hideButton && !isUser && (
           <span className='position-absolute right-15 top-0 d-flex align-items-center'>

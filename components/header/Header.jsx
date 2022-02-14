@@ -21,6 +21,8 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Image from 'next/image';
 import { useAuth } from 'app/authContext';
 import { useNotification } from 'app/notificationContext';
+import { calTime } from 'helpers';
+import { useEffect } from 'react';
 
 const options = [
   {
@@ -37,10 +39,25 @@ const options = [
   },
 ];
 
-const NotificationItem = ({ message, className, variant }) => {
+const NotificationItem = ({ message, className, variant, time }) => {
+  const [messageTime, setMessageTime] = useState('...');
+  useEffect(() => {
+    if (time) {
+      const temp = calTime(Date.now() - new Date(time).getTime());
+      if (temp.days > 0) {
+        setMessageTime(temp.days + ' days ago');
+      } else if (temp.hours > 0) {
+        setMessageTime(temp.hours + ' hours ago');
+      } else if (temp.minutes > 0) {
+        setMessageTime(temp.minutes + ' minutes ago');
+      } else if (temp.seconds > 0) {
+        setMessageTime(temp.seconds + ' seconds ago');
+      }
+    }
+  }, [time]);
   return (
     <div
-      className={`cursor-pointer card bg-transparent-card border-0 p-2 ps-5 ${
+      className={`border-0 border-3 border-bottom border-${variant} cursor-pointer card bg-transparent-card p-2 ps-5 shadow-xs ${
         className || ''
       }`}
       style={{ maxWidth: 285 }}
@@ -58,7 +75,7 @@ const NotificationItem = ({ message, className, variant }) => {
         {message?.title || '...'}{' '}
         <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
           {' '}
-          {message?.time || '1 min'}
+          {messageTime}
         </span>
       </h5>
       <h6 className='text-grey-700 fw-500 font-xssss lh-4 m-0 limit-text-in-row'>
@@ -75,24 +92,30 @@ const NotificationSection = ({ notificationClass }) => {
     <div
       className={`dropdown-notification dropdown-menu mt-1 me-3 p-4 pt-4 right-0 rounded-xxl border-0 shadow-lg ${notificationClass}`}
       aria-labelledby='dropdownMenu3'
-      style={{ top: '100%' }}
+      style={{ top: '100%', minWidth: 270 }}
     >
       <h4 className='fw-700 font-xss mb-3'>Notification</h4>
-      {history?.map((value, index) => (
-        <NotificationItem
-          className='mt-2 bg-danger bg-opacity-40'
-          message={value?.incomingMessage}
-          key={index}
-        />
-      ))}
-      <NotificationItem
-        className='mt-2'
-        message={{
-          title: 'Victor Exrixon',
-          content: 'Mobile Apps UI Designer is require..',
-        }}
-      />
-      <a className='cursor-pointer font-xsss text-dark'>See all</a>
+      {history?.length == 0 && (
+        <span>
+          No item <br />
+        </span>
+      )}
+      {history
+        ?.slice(-3)
+        .reverse()
+        .map((value, index) => (
+          <NotificationItem
+            className={`mt-2`}
+            message={value?.incomingMessage}
+            key={index}
+            variant={value?.variant}
+            time={value?.time}
+          />
+        ))}
+
+      <Link href='/notifications'>
+        <a className='cursor-pointer font-xsss text-dark'>See all</a>
+      </Link>
     </div>
   );
 };

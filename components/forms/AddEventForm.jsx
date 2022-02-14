@@ -8,6 +8,7 @@ import validateAddEvent from './validateAddEvent';
 import { useState, useEffect } from 'react';
 import Editor from 'components/controls/Editor';
 import { getFormatDate } from 'helpers';
+import DateTimeRangePicker from 'components/controls/DateTimeRangePicker';
 
 const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
   const typeOptions = [
@@ -99,6 +100,7 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
             className='position-relative'
           />
         </Col>
+
         <Col lg={6} className='mb-3'>
           <Input
             type='date'

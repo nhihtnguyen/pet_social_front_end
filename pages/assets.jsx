@@ -8,7 +8,7 @@ const Assets = () => {
   return (
     <div className='row w-100 m-0 p-0 pe-sm-3'>
       <div className='col-xl-12 p-0 middle-wrap'>
-        <FloatingButton icon={<FiPlus />} href={`/post/create`} />
+        <FloatingButton icon={<FiPlus />} href={`/post/create?is_mint=true`} />
         <FloatingButton icon={<FiShoppingBag />} href={`/market`} index={1} />
         <PageTitle title={'My Assets'} />
         <LoadAssets />

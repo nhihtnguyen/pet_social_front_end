@@ -17,7 +17,7 @@ const Postcard = ({ value, className, ...props }) => {
   };
   const linkToAuthor = (event) => {
     event.stopPropagation();
-    router.push(`/user/${value.User.id}`);
+    router.push(`/user/${value?.User?.id || value?.user_id}`);
   };
 
   return (
@@ -51,7 +51,7 @@ const Postcard = ({ value, className, ...props }) => {
                 onClick={linkToAuthor}
                 width={40}
                 height={40}
-                src={value?.User.avatar || 'https://via.placeholder.com/40'}
+                src={value?.User?.avatar || 'https://via.placeholder.com/40'}
                 alt='avatar'
                 className='rounded-circle shadow-xss'
               />
@@ -59,9 +59,9 @@ const Postcard = ({ value, className, ...props }) => {
 
             <div className='clearfix'></div>
             <h4 className='fw-600 position-relative z-index-1 ls-3 font-xssss text-white mt-0 mb-1'>
-              {value?.User.first_name && value?.User.last_name
+              {value?.User?.first_name && value?.User?.last_name
                 ? `${value.User.first_name} ${value.User.last_name}`
-                : 'Full Name'}
+                : value?.user_name || 'Full Name'}
             </h4>
           </div>
         </div>

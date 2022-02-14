@@ -27,6 +27,7 @@ const EditProfileForm = ({ onSubmit, validated, loaded, values }) => {
     gender: values
       ? genderOptions.find((elm) => elm.value === values.gender)
       : genderOptions[0],
+    description: values?.description || '',
   });
 
   useEffect(() => {
@@ -38,6 +39,7 @@ const EditProfileForm = ({ onSubmit, validated, loaded, values }) => {
         gender: values
           ? genderOptions.find((elm) => elm.value === values.gender)
           : genderOptions[0],
+        description: values?.description || '',
       });
     }
   }, [values]);
@@ -85,7 +87,7 @@ const EditProfileForm = ({ onSubmit, validated, loaded, values }) => {
         </Col>
       </Row>
 
-      <Row>
+      {/* <Row>
         <Col lg={6} className='mb-3'>
           <Select
             name='gender'
@@ -113,7 +115,7 @@ const EditProfileForm = ({ onSubmit, validated, loaded, values }) => {
             className='position-relative'
           />
         </Col>
-      </Row>
+      </Row> */}
 
       <Row>
         <Col lg={12} className='mb-3'>

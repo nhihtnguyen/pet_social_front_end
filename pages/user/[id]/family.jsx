@@ -72,7 +72,7 @@ const MyPet = () => {
                 onClick={handleClick(value.id)}
                 mutate={mutate}
                 mutateFollowing={mutateFollowing}
-                followed={!following.every((pet) => pet.id !== value.id)}
+                followed={!following?.every((pet) => pet.id !== value.id)}
               />
             </div>
           ))}

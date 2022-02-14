@@ -444,3 +444,10 @@
         transition: 0.3s all;
     }
 }
+
+.mytab .nav-link {
+    &.active {
+        color: var(--theme-color) !important;
+    }
+    padding: 0rem 0.5rem;
+}

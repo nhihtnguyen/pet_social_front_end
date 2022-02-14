@@ -33,6 +33,9 @@ client.interceptors.response.use(
           }
         })
         .catch((error) => {
+          console.log('Refresh failed', error);
+          localStorage.removeItem('access_token');
+          delete client.defaults.headers.Authorization;
           return error;
         });
     }

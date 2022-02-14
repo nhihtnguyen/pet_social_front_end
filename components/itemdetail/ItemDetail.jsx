@@ -46,6 +46,7 @@ const ItemDetail = ({
           nftAddress,
           item.tokenId
         );
+        console.log(marketItems);
         const items = [];
         for (let item of marketItems) {
           items.push({
@@ -77,7 +78,7 @@ const ItemDetail = ({
         <Col sm='7' xs='12' className='bg-dark pe-0'>
           <div className='image-container '>
             <Image
-              src={item.image || 'https://via.placeholder.com/400'}
+              src={item?.image || 'https://via.placeholder.com/400'}
               className={'image'}
               layout='fill'
               alt='image'
@@ -87,7 +88,7 @@ const ItemDetail = ({
         <Col sm='5' xs='12'>
           <h4 className='text-danger font-xssss fw-700 ls-2 mt-3'></h4>
           <h3 className='fw-700 text-grey-900 display1-size lh-3 porduct-title display2-md-size'>
-            {item.name}
+            {item?.name}
           </h3>
           <Tabs defaultActiveKey='about' id='item-detail-tab' className='mb-3'>
             <Tab
@@ -100,21 +101,21 @@ const ItemDetail = ({
                 <li className='list-group-item bg-transparent'>
                   <p className='font-xsss fw-400 text-grey-700'>
                     <span className='fw-700'>{'Smart contract: '}</span>
-                    <span className='font-monospace'> {item.nftContract}</span>
+                    <span className='font-monospace'> {item?.nftContract}</span>
                   </p>
                 </li>
                 {item.seller && (
                   <li className='list-group-item bg-transparent'>
                     <p className='font-xsss fw-400 text-grey-700'>
                       <span className='fw-700'>{'Seller: '}</span>
-                      <span className='font-monospace'> {item.seller}</span>
+                      <span className='font-monospace'> {item?.seller}</span>
                     </p>
                   </li>
                 )}
                 <li className='list-group-item bg-transparent'>
                   <p className='font-xsss fw-400 text-grey-700'>
                     <span className='fw-700'>{'Description: '}</span>
-                    {item.description}
+                    {item?.description}
                   </p>
                 </li>
               </ul>
@@ -142,7 +143,10 @@ const ItemDetail = ({
                         <span className='font-monospace'>{value.seller}</span>
                         <br />
                         <span className='font-xssss fw-400'>
-                          Price: {value.price}
+                          Price:{' '}
+                          {typeof value?.price != 'object'
+                            ? value?.price
+                            : '...'}
                         </span>
                       </h6>
                     </li>
@@ -171,7 +175,7 @@ const ItemDetail = ({
                     <RiCopperCoinLine />
                   </span>
                 )}
-                {item.price}
+                {typeof item?.price != 'object' ? item?.price : '...'}
                 <span className='font-xl'>{unit}</span>
               </h6>
             )}

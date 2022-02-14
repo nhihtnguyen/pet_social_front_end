@@ -140,6 +140,7 @@ const EventDetail = ({ item, loading, pid }) => {
   const router = useRouter();
   const { user } = useAuth();
   const [markup, setMarkup] = useState('');
+  const [internalType, setInternalType] = useState('');
 
   //const isOwner = String(user?.id) === String(item?.User.id);
 
@@ -172,6 +173,14 @@ const EventDetail = ({ item, loading, pid }) => {
         console.log(markup);
         setMarkup(markup);
       }
+
+      if (new Date(item?.start) - Date.now() > 0) {
+        setInternalType('incoming');
+      } else if (new Date(item?.end) - Date.now() > 0) {
+        setInternalType('ongoing');
+      } else {
+        setInternalType('closed');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -187,7 +196,20 @@ const EventDetail = ({ item, loading, pid }) => {
             </Placeholder>
           ) : (
             <h4 className='text-dark'>
-              {item?.name || 'Name'}
+              {item?.name || 'Name'}{' '}
+              <span
+                className={`${
+                  internalType == 'incoming'
+                    ? 'text-info'
+                    : internalType == 'ongoing'
+                    ? 'text-success'
+                    : internalType == 'closed'
+                    ? 'text-danger'
+                    : ''
+                } font-xss`}
+              >
+                • {internalType || 'unset'}
+              </span>
               <br />
               <span className='font-xsss'>
                 {getFormatDate(new Date(item?.start)) +
@@ -226,14 +248,16 @@ const EventDetail = ({ item, loading, pid }) => {
           >
             <ParticipantsTab eventId={item?.id} />
           </Tab>
-          <Tab
-            tabClassName='text-info font-xssss fw-700 ls-2 mt-3'
-            eventKey='register'
-            title='REGISTER NOW'
-            className='pe-2'
-          >
-            <RegisterTab eventId={item?.id} />
-          </Tab>
+          {internalType != 'closed' && (
+            <Tab
+              tabClassName='text-info font-xssss fw-700 ls-2 mt-3'
+              eventKey='register'
+              title='REGISTER NOW'
+              className='pe-2'
+            >
+              <RegisterTab eventId={item?.id} />
+            </Tab>
+          )}
         </Tabs>
       </Card.Body>
     </Card>
