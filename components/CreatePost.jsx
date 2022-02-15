@@ -15,8 +15,10 @@ import InvolveModal from 'components/modal/InvolveModal';
 import { useNotification } from 'app/notificationContext';
 
 const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
-const petDetectionAPI = process.env.NEXT_PUBLIC_DETECTION_API;
-const petNLPAPI = process.env.NEXT_PUBLIC_NLP_API;
+const petDetectionAPI =
+  process.env.NEXT_PUBLIC_DETECTION_API || 'http://localhost:5000';
+const petNLPAPI =
+  process.env.NEXT_PUBLIC_NPL_API || 'http://localhost:2005/text';
 
 const STATUS = {
   allowed: 1,
@@ -75,7 +77,7 @@ const CreatePost = ({ content, isEdit = false }) => {
       newForm.append('result_type', 'json');
 
       try {
-        imageStatus = await axiosClient.post('http://localhost:5000', newForm, {
+        imageStatus = await axiosClient.post(petDetectionAPI, newForm, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         imageStatus = checkImageStatus(imageStatus.data);
@@ -102,13 +104,9 @@ const CreatePost = ({ content, isEdit = false }) => {
         let newForm = new FormData();
         newForm.append('text', data.caption);
         newForm.append('model_choice', 'model_1');
-        captionStatus = await axiosClient.post(
-          `http://localhost:2005/text`,
-          newForm,
-          {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          }
-        );
+        captionStatus = await axiosClient.post(petNLPAPI, newForm, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         captionStatus =
           Number(captionStatus.data['result']) === 1.0
             ? STATUS['allowed']
