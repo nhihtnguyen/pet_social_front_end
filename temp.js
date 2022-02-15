@@ -11,7 +11,6 @@ const allowingClass = ['cat', 'dog'];
 const warningClass = ['person'];
 
 export const checkImageStatus = (res) => {
-  console.log('in temp', res);
   let allowed = 0;
   let warning = 0;
   for (let box of res) {

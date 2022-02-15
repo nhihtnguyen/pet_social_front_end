@@ -21,7 +21,6 @@ export const getPrimaryWallet = (action) => {
         ? 'metamask'
         : 'integrated'
       : null;
-    console.log(actionAddress, selected);
     return { chosen, actionAddress };
   } catch (error) {
     console.log(error);

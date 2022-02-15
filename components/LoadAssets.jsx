@@ -56,18 +56,22 @@ const MasonryCard =
         // Approve
 
         const tokenContract = new ethers.Contract(nftAddress, NFT.abi, signer);
-        // const isApproved = await tokenContract.isApprovedForAll(
-        //   nft.owner,
-        //   nftMarketAddress
-        // );
+        const isApproved = await tokenContract.isApprovedForAll(
+          nft.owner,
+          nftMarketAddress
+        );
 
         const approveAddress = await tokenContract.getApproved(nft.tokenId);
-        if (approveAddress.toLowerCase() !== nftMarketAddress.toLowerCase()) {
+        if (
+          approveAddress.toLowerCase() !== nftMarketAddress.toLowerCase() &&
+          !isApproved
+        ) {
           // await tokenContract.setApprovalForAll(nftMarketAddress, true);
           const approval = await tokenContract.approve(
             nftMarketAddress,
             nft.tokenId
           );
+          await approval.wait();
         }
 
         const marketContract = new ethers.Contract(
@@ -75,8 +79,6 @@ const MasonryCard =
           NFTMarket.abi,
           signer
         );
-        const tempabc = await marketContract.fetchMyNFTs();
-        console.log('hahahha', tempabc);
         setContract(marketContract);
         const priceParsed = ethers.utils.parseUnits(price, 'ether');
         let listingPrice = await marketContract.getListingPrice();
@@ -148,10 +150,14 @@ const MasonryCard =
           priceParsed,
           { value: listingPrice }
         );
+        await transaction.wait();
+
         showMessage(
           {
             title: 'System',
-            content: 'Listed on marketplace successfully.',
+            content: `Listed on marketplace successfully. Check: ${
+              process.env.NEXT_PUBLIC_ETHERSCAN_URL + '/' + transaction?.hash
+            }`,
           },
           3000,
           'success',
@@ -180,7 +186,9 @@ const MasonryCard =
           if (mounted) {
             setLoading(true);
           }
-          const provider = new ethers.providers.JsonRpcProvider();
+          const provider = new ethers.providers.JsonRpcProvider(
+            process.env.NEXT_PUBLIC_RPC_URL
+          );
           const tokenContract = new ethers.Contract(
             nftAddress,
             NFT.abi,
@@ -263,15 +271,17 @@ const Assets = ({ refreshSignal }) => {
           actionAddress = actionAddress.publicAddress.toLowerCase();
         }
 
-        const provider = new ethers.providers.JsonRpcProvider();
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_RPC_URL
+        );
         const tokenContract = new ethers.Contract(
           nftAddress,
           NFT.abi,
           provider
         );
-
         let addressBalance = await tokenContract.balanceOf(actionAddress);
         addressBalance = await addressBalance.toString();
+
         let tokenID = 0;
         let supply = await tokenContract.totalSupply();
         const items = [];

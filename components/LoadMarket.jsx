@@ -115,7 +115,6 @@ const MasonryCard =
         );
         const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
 
-        console.log('tetx', nft.marketId);
         const transaction = await contract.createMarketSale(
           nftAddress,
           nft.marketId,
@@ -123,12 +122,16 @@ const MasonryCard =
             value: price,
           }
         );
-        console.log('tetx', transaction);
+        console.log('b', transaction);
+        await transaction.wait();
+        console.log('a', transaction);
 
         showMessage(
           {
             title: 'System',
-            content: 'Bought successfully. Going to assets',
+            content: `Bought successfully. Check: ${
+              process.env.NEXT_PUBLIC_ETHERSCAN_URL + '/' + transaction?.hash
+            }`,
           },
           3000,
           'success',
@@ -157,7 +160,9 @@ const MasonryCard =
       const loadToken = async () => {
         try {
           setLoading(true);
-          const provider = new ethers.providers.JsonRpcProvider();
+          const provider = new ethers.providers.JsonRpcProvider(
+            process.env.NEXT_PUBLIC_RPC_URL
+          );
           const tokenContract = new ethers.Contract(
             nftAddress,
             NFT.abi,
@@ -231,7 +236,9 @@ const LoadMarket = ({ refreshSignal }) => {
         //
         let { chosen } = getPrimaryWallet('asset');
 
-        const provider = new ethers.providers.JsonRpcProvider();
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_RPC_URL
+        );
 
         const marketContract = new ethers.Contract(
           nftMarketAddress,

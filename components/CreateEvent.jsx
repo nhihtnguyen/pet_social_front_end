@@ -16,6 +16,15 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
     let result;
 
     try {
+      showMessage(
+        {
+          title: 'System',
+          content: 'Working...',
+        },
+        0,
+        'info',
+        true
+      );
       // data['description'] = JSON.stringify(data['description']);
       data['start'] = fixLocaleTime(new Date(data['start']));
       data['end'] = fixLocaleTime(new Date(data['end']));
@@ -31,17 +40,31 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
           },
         }
       );
+      showMessage(
+        {
+          title: 'System',
+          content: 'Event added successfully. Going to detail',
+        },
+        3000,
+        'success'
+      );
     } catch (error) {
       // logging
       console.log(error);
+      showMessage(
+        {
+          title: 'System',
+          content: error.message,
+        },
+        3000,
+        'danger'
+      );
     } finally {
       setLoaded(-1);
     }
-    console.log(result);
 
     if (result?.data) {
       //mutate();
-      console.log(result);
       router.push('/event/' + result?.data?.id);
     }
   };

@@ -46,7 +46,6 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
       });
     }
   }, [values]);
-  console.log(initValues);
 
   const {
     handleChange: onChange,

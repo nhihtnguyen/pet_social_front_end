@@ -27,7 +27,6 @@ const UploadImageButton = ({
       });
       if (result) {
         const ret = await mutate(mutateKey);
-        console.log(mutate, ret);
       }
     } catch (err) {
       console.log(err);

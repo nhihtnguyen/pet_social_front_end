@@ -13,9 +13,18 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
   const [loaded, setLoaded] = useState(-1);
 
   const handleUpload = (action) => async (data, setErrors, errors) => {
-    let result;
-    data.gender = data?.gender.value;
     try {
+      showMessage(
+        {
+          title: 'System',
+          content: 'Working...',
+        },
+        0,
+        'info',
+        true
+      );
+      let result;
+      data.gender = data?.gender.value;
       result = await axiosClient[action](
         `/pets/${action === 'put' ? content?.id : ''}`,
         data,
@@ -33,20 +42,26 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
           title: 'System',
           content: 'Pet added successfully. Going to pet profile',
         },
-        1000
+        3000,
+        'success'
       );
     } catch (error) {
       // logging
       console.log(error);
-      showMessage({ title: 'System', content: 'Unexpected error occur' });
+      showMessage(
+        {
+          title: 'System',
+          content: error.message,
+        },
+        3000,
+        'danger'
+      );
     } finally {
       setLoaded(-1);
     }
-    console.log(result);
 
     if (result?.data) {
       //mutate();
-      console.log(result);
       router.push('/pet/' + result?.data?.id);
     }
   };

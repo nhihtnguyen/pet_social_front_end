@@ -31,10 +31,8 @@ const EditProfile = ({ className, ...props }) => {
           setLoaded(percentCompleted);
         },
       });
-      console.log(result);
 
       if (result?.data) {
-        console.log(result);
       }
     } catch (error) {
       // logging

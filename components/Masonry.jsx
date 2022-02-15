@@ -51,7 +51,6 @@ const MyMasonry = ({
     [items.length]
   );
   const resizeObserver = useResizeObserver(positioner);
-  console.log('haha', width, windowWidth, isScrolling, offset);
   return (
     <div className='masonic'>
       {useMasonry({

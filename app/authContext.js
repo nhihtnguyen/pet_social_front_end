@@ -70,7 +70,6 @@ export const AuthProvider = ({ children }) => {
       // Trigger Magic link to be sent to user
       let didToken = await magic.auth.loginWithMagicLink({ email });
       // Set token
-      console.log('hallo', didToken);
       axiosClient.defaults.headers.Authorization = `Bearer ${didToken}`;
 
       // Validate didToken with server
@@ -81,7 +80,6 @@ export const AuthProvider = ({ children }) => {
         const { data: user } = await axiosClient.get('users/me');
         localStorage.setItem('access_token', accessToken);
         axiosClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
-        console.log({ ...user, metadata });
         setUser({ ...user, metadata });
         setLoading(false);
         router.push('/user/me');
@@ -100,7 +98,6 @@ export const AuthProvider = ({ children }) => {
       // Trigger Magic link to be sent to user
       let didToken = await magic.auth.loginWithMagicLink({ email });
       // Set token
-      console.log('hallo', didToken);
       axiosClient.defaults.headers.Authorization = `Bearer ${didToken}`;
 
       // Validate didToken with server

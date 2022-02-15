@@ -9,7 +9,7 @@ import Market from 'contracts/NFTMarket.json';
 
 function* handleFetchItems() {
   try {
-    // const provider = new ethers.providers.JsonRpcProvider();
+    // const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_RPC_URL);
     // const tokenContract = new ethers.Contract(nftaddress, NFT.abi, provider);
     // const marketContract = new ethers.Contract(
     //   nftmarketaddress,

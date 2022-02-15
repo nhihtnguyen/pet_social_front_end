@@ -18,7 +18,6 @@ const useForm = (
   useEffect(() => {
     console.log(errors);
     if (isSubmitted && Object.values(errors).every((x) => x === '')) {
-      console.log('submit');
       callback(values, setErrors, errors);
     }
     setIsSubmitted(false);
@@ -27,20 +26,16 @@ const useForm = (
 
   const handleChange = (name) => (event) => {
     const newValue = event.target.value;
-    console.log('change', name, event.target.value);
     setValues({ ...values, [name]: newValue });
     if (validateOnchange) {
       const temp = validate({ [name]: newValue });
-      console.log('err', temp);
       setErrors({ ...errors, ...temp });
     }
   };
 
   const handleSubmit = (event) => {
-    console.log('submit1');
     event.preventDefault();
     let filtered = values;
-    console.log(validateFields);
     if (
       validateFields &&
       validateFields !== undefined &&

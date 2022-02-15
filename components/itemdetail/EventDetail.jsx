@@ -39,7 +39,6 @@ const ParticipantsTab = ({ eventId }) => {
     eventId ? `/events/${eventId}/participants?` : null,
     eventId ? 10 : 0
   );
-  console.log(paginatedParticipants);
 
   return (
     <InfiniteScroll
@@ -92,7 +91,6 @@ const RegisterTab = ({ eventId }) => {
       );
       if (result.status == 200) {
         // Notify here and redirect
-        console.log(result.data);
       }
 
       if (result.status == 400) {
@@ -167,10 +165,8 @@ const EventDetail = ({ item, loading, pid }) => {
     try {
       if (item) {
         const rawContentState = JSON.parse(item?.description);
-        console.log(rawContentState);
 
         let markup = draftToHtml(rawContentState);
-        console.log(markup);
         setMarkup(markup);
       }
 
