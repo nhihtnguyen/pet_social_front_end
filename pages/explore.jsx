@@ -1,17 +1,13 @@
 import Postcard from 'components/postcard/Postcard';
 import FloatingButton from 'components/floatingbutton/FloatingButton';
 import { FiPlus, FiGrid, FiList } from 'react-icons/fi';
-import { Spinner } from 'react-bootstrap';
 import axiosClient from 'axiosSetup';
 import { SWRConfig } from 'swr';
-import useInfinitePagination from 'hooks/useInfinitePagination';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { Masonry } from 'masonic';
-
 import Layout from 'components/Layout';
 import Head from 'next/head';
 import { useState } from 'react';
 import LoadExplore from 'components/LoadExplore';
+import LoadRisingPets from 'components/LoadRisingPets';
 
 const Explore = ({ fallback }) => {
   const [grid, setGrid] = useState(true);
@@ -23,19 +19,17 @@ const Explore = ({ fallback }) => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <div className='row w-100 m-0 pe-sm-3'>
-        <div className='col-xl-12'>
+        <div className='col-xl-12 m-0 p-0'>
           <FloatingButton icon={<FiPlus />} href={`/post/create`} />
           <FloatingButton
             icon={grid ? <FiGrid /> : <FiList />}
             index={1}
             onClick={() => setGrid(!grid)}
           />
-
-          <div className='row'>
-            <SWRConfig value={{ fallback }}>
-              <LoadExplore grid={grid} />
-            </SWRConfig>
-          </div>
+          <LoadRisingPets />
+          <SWRConfig value={{ fallback }}>
+            <LoadExplore grid={grid} />
+          </SWRConfig>
         </div>
       </div>
     </>

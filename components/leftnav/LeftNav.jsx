@@ -61,7 +61,7 @@ const LeftNav = ({ className }) => {
                 {expand ? 'Market' : ''}
               </NavItem>
               <NavItem
-                href='/pet-adoption'
+                href='/adoption'
                 icon={<FiShield />}
                 className='bg-green-gradient'
               >

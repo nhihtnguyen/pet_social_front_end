@@ -26,7 +26,7 @@ const PageTitle = ({ title, searchCallback, shortcutButtons = false }) => {
               : 'ms-auto'
           } pt-0 pb-0`}
         >
-          <div className={`search-form-2 ms-2`}>
+          <div className={`search-form-2 ms-2 d-none d-sm-block`}>
             <input
               type='text'
               className='form-control text-grey-500 mb-0 bg-greylight theme-dark-bg border-0 rounded-xxxl'

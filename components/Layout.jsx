@@ -7,13 +7,13 @@ import ProfileBackground2 from './profilebackground/ProfileBackground2';
 import ProfileBackground from './profilebackground/ProfileBackground';
 import Link from 'next/link';
 import { FiGithub } from 'react-icons/fi';
+import CentralNotification from 'components/CentralNotification';
 
 export const Layout = ({ children }) => {
   return (
     <div>
       <Header />
       <LeftNav />
-
       <div className='main-content'>
         <div className='middle-sidebar-bottom pt-3 pb-1'>
           <div className='middle-sidebar-left pe-0'>{children}</div>

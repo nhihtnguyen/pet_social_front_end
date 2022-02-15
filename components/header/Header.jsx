@@ -20,6 +20,9 @@ import {
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import Image from 'next/image';
 import { useAuth } from 'app/authContext';
+import { useNotification } from 'app/notificationContext';
+import { calTime } from 'helpers';
+import { useEffect } from 'react';
 
 const options = [
   {
@@ -36,101 +39,86 @@ const options = [
   },
 ];
 
-const NotificationSection = ({ notificationClass }) => (
-  <div
-    className={`dropdown-notification dropdown-menu mt-1 me-3 p-4 right-0 rounded-xxl border-0 shadow-lg ${notificationClass}`}
-    aria-labelledby='dropdownMenu3'
-    style={{ top: '100%' }}
-  >
-    <h4 className='fw-700 font-xss mb-4'>Notification</h4>
-    <div className='card bg-transparent-card w-100 border-0 ps-5 mb-3'>
-      <span className='position-absolute left-0 overflow rounded-circle'>
+const NotificationItem = ({ message, className, variant, time }) => {
+  const [messageTime, setMessageTime] = useState('...');
+  useEffect(() => {
+    if (time) {
+      const temp = calTime(Date.now() - new Date(time).getTime());
+      if (temp.days > 0) {
+        setMessageTime(temp.days + ' days ago');
+      } else if (temp.hours > 0) {
+        setMessageTime(temp.hours + ' hours ago');
+      } else if (temp.minutes > 0) {
+        setMessageTime(temp.minutes + ' minutes ago');
+      } else if (temp.seconds > 0) {
+        setMessageTime(temp.seconds + ' seconds ago');
+      }
+    }
+  }, [time]);
+  return (
+    <div
+      className={`border-0 border-3 border-bottom border-${variant} cursor-pointer card bg-transparent-card p-2 ps-5 shadow-xs ${
+        className || ''
+      }`}
+      style={{ maxWidth: 285 }}
+    >
+      <span className='position-absolute left-0 overflow rounded-circle ps-1'>
         <Image
-          src='https://via.placeholder.com/40'
+          src={message?.image || 'https://via.placeholder.com/40'}
           width={40}
           height={40}
           alt='user'
           className='rounded-circle'
         />
       </span>
+      <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
+        {message?.title || '...'}{' '}
+        <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
+          {' '}
+          {messageTime}
+        </span>
+      </h5>
+      <h6 className='text-grey-700 fw-500 font-xssss lh-4 m-0 limit-text-in-row'>
+        {message?.content || '...'}
+      </h6>
+    </div>
+  );
+};
 
-      <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
-        Hendrix Stamp{' '}
-        <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
-          {' '}
-          3 min
-        </span>
-      </h5>
-      <h6 className='text-grey-500 fw-500 font-xssss lh-4'>
-        There are many variations of pass..
-      </h6>
-    </div>
-    <div className='card bg-transparent-card w-100 border-0 ps-5 mb-3'>
-      <span className='position-absolute left-0 overflow rounded-circle'>
-        <Image
-          src='https://via.placeholder.com/40'
-          width={40}
-          height={40}
-          alt='user'
-          className='rounded-circle'
-        />
-      </span>
-      <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
-        Goria Coast{' '}
-        <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
-          {' '}
-          2 min
-        </span>
-      </h5>
-      <h6 className='text-grey-500 fw-500 font-xssss lh-4'>
-        Mobile Apps UI Designer is require..
-      </h6>
-    </div>
+const NotificationSection = ({ notificationClass }) => {
+  const { history } = useNotification();
 
-    <div className='card bg-transparent-card w-100 border-0 ps-5 mb-3'>
-      <span className='position-absolute left-0 overflow rounded-circle'>
-        <Image
-          src='https://via.placeholder.com/40'
-          width={40}
-          height={40}
-          alt='user'
-          className='rounded-circle'
-        />
-      </span>
-      <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
-        Surfiya Zakir{' '}
-        <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
-          {' '}
-          1 min
+  return (
+    <div
+      className={`dropdown-notification dropdown-menu mt-1 me-3 p-4 pt-4 right-0 rounded-xxl border-0 shadow-lg ${notificationClass}`}
+      aria-labelledby='dropdownMenu3'
+      style={{ top: '100%', minWidth: 270 }}
+    >
+      <h4 className='fw-700 font-xss mb-3'>Notification</h4>
+      {history?.length == 0 && (
+        <span>
+          No item <br />
         </span>
-      </h5>
-      <h6 className='text-grey-500 fw-500 font-xssss lh-4'>
-        Mobile Apps UI Designer is require..
-      </h6>
+      )}
+      {[...history]
+        ?.slice(-3)
+        .reverse()
+        .map((value, index) => (
+          <NotificationItem
+            className={`mt-2`}
+            message={value?.incomingMessage}
+            key={index}
+            variant={value?.variant}
+            time={value?.time}
+          />
+        ))}
+
+      <Link href='/notifications'>
+        <a className='cursor-pointer font-xsss text-dark'>See all</a>
+      </Link>
     </div>
-    <div className='card bg-transparent-card w-100 border-0 ps-5'>
-      <span className='position-absolute left-0 overflow rounded-circle'>
-        <Image
-          src='https://via.placeholder.com/40'
-          width={40}
-          height={40}
-          alt='user'
-          className='rounded-circle'
-        />
-      </span>
-      <h5 className='font-xsss text-grey-900 mb-1 mt-0 fw-700 d-block'>
-        Victor Exrixon{' '}
-        <span className='text-grey-400 font-xsssss fw-600 float-right mt-1'>
-          {' '}
-          30 sec
-        </span>
-      </h5>
-      <h6 className='text-grey-500 fw-500 font-xssss lh-4'>
-        Mobile Apps UI Designer is require..
-      </h6>
-    </div>
-  </div>
-);
+  );
+};
 
 const Header = () => {
   const { user, loading, isAuthenticated } = useAuth();
@@ -167,7 +155,7 @@ const Header = () => {
         <Link href='/'>
           <a>
             <span className='cursor-pointer d-inline-block fredoka-font ls-3 fw-500 text-current font-xxl logo-text mb-0'>
-              <span className='display2-size me-2 ms-0'>
+              <span className='display2-size logo-size-small me-2 ms-0'>
                 <FiGithub />
               </span>
               Pet's Friend
@@ -177,15 +165,20 @@ const Header = () => {
 
         <span
           onClick={toggleSearch}
-          className='ms-auto me-2 menu-search-icon mob-menu'
+          className='ms-auto me-0 menu-search-icon mob-menu '
         >
           <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
             <FiSearch />
           </span>
         </span>
+        <DarkModeToggle
+          className='mob-menu ms-1 p-0 '
+          innerClassName='text-grey-900 font-sm btn-round-md bg-greylight'
+        />
+
         <button
           onClick={toggleLeftNav}
-          className={`nav-menu me-0 ms-2 ${buttonClass}`}
+          className={`nav-menu me-0 ms-3 ${buttonClass}`}
         ></button>
       </div>
 
@@ -270,7 +263,7 @@ const Header = () => {
               </span>
             </a>
           </Link>
-          <DarkModeToggle />
+          <DarkModeToggle className='ms-3 p-2' />
           <Link href='/settings'>
             <a className='p-0 ms-3 menu-icon'>
               <Image
@@ -300,17 +293,19 @@ const Header = () => {
 
       <LeftNav className={`scroll-bar ${navClass}`} />
 
-      <div className={`app-header-search bg-transparent  ${searchClass}`}>
-        <form className='search-form bg-transparent'>
-          <div className='form-group searchbox mb-0 border-0 p-1 bg-transparent'>
+      <div
+        className={`app-header-search bg-transparent shadow-lg border-0 ${searchClass}`}
+      >
+        <form className='search-form' onSubmit={handleSubmit}>
+          <div className='form-group searchbox mb-0 border-0'>
             <input
               type='text'
               className='form-control border-0'
               placeholder='Search...'
             />
 
-            <span className='ms-1 mt-1 d-inline-block close searchbox-close'>
-              <span className='font-xs' onClick={toggleSearch}>
+            <span className='d-inline-flex align-items-center close searchbox-close'>
+              <span className='font-md text-dark' onClick={toggleSearch}>
                 <FiX />
               </span>
             </span>

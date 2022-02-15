@@ -3,10 +3,11 @@ import { useState } from 'react';
 import AddPetForm from 'components/forms/AddPetForm';
 import { useSWRConfig } from 'swr';
 import axiosClient from 'axiosSetup';
+import { useNotification } from 'app/notificationContext';
 
 const CreatePet = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
-
+  const { showMessage } = useNotification();
   const router = useRouter();
 
   const [loaded, setLoaded] = useState(-1);
@@ -27,9 +28,17 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
           },
         }
       );
+      showMessage(
+        {
+          title: 'System',
+          content: 'Pet added successfully. Going to pet profile',
+        },
+        1000
+      );
     } catch (error) {
       // logging
       console.log(error);
+      showMessage({ title: 'System', content: 'Unexpected error occur' });
     } finally {
       setLoaded(-1);
     }

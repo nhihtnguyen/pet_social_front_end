@@ -12,10 +12,13 @@ import { checkImageStatus, checkCaptionStatus } from 'temp';
 import { getKeyByValue, getPrimaryWallet } from 'helpers';
 import { localWeb3 as web3, magicLocal } from 'app/magic';
 import InvolveModal from 'components/modal/InvolveModal';
+import { useNotification } from 'app/notificationContext';
 
 const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
-const petDetectionAPI = process.env.NEXT_PUBLIC_DETECTION_API;
-const petNLPAPI = process.env.NEXT_PUBLIC_NLP_API;
+const petDetectionAPI =
+  process.env.NEXT_PUBLIC_DETECTION_API || 'http://localhost:5000';
+const petNLPAPI =
+  process.env.NEXT_PUBLIC_NPL_API || 'http://localhost:2005/text';
 
 const STATUS = {
   allowed: 1,
@@ -25,6 +28,7 @@ const STATUS = {
 
 const CreatePost = ({ content, isEdit = false }) => {
   const { mutate } = useSWRConfig();
+  const { showMessage } = useNotification();
   const router = useRouter();
 
   const [loaded, setLoaded] = useState(-1);
@@ -39,8 +43,9 @@ const CreatePost = ({ content, isEdit = false }) => {
     let mounted = true;
     const getChosenWallet = () => {
       try {
-        let chosen = getPrimaryWallet();
+        let { chosen } = getPrimaryWallet('asset');
         if (mounted) {
+          console.log('aa', chosen);
           setChosen(chosen);
         }
       } catch (error) {
@@ -72,7 +77,7 @@ const CreatePost = ({ content, isEdit = false }) => {
       newForm.append('result_type', 'json');
 
       try {
-        imageStatus = await axiosClient.post('http://localhost:5000', newForm, {
+        imageStatus = await axiosClient.post(petDetectionAPI, newForm, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         imageStatus = checkImageStatus(imageStatus.data);
@@ -99,13 +104,9 @@ const CreatePost = ({ content, isEdit = false }) => {
         let newForm = new FormData();
         newForm.append('text', data.caption);
         newForm.append('model_choice', 'model_1');
-        captionStatus = await axiosClient.post(
-          `http://localhost:2005/text`,
-          newForm,
-          {
-            headers: { 'Content-Type': 'multipart/form-data' },
-          }
-        );
+        captionStatus = await axiosClient.post(petNLPAPI, newForm, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
         captionStatus =
           Number(captionStatus.data['result']) === 1.0
             ? STATUS['allowed']
@@ -165,6 +166,14 @@ const CreatePost = ({ content, isEdit = false }) => {
       console.log(error);
     }
     if (result && result.data) {
+      showMessage(
+        {
+          title: 'System',
+          content: 'Post created successfully. Going to detail page',
+        },
+        3000,
+        'success'
+      );
       mutate('/posts');
       router.push('/post/' + result.data.id);
     }
@@ -210,22 +219,21 @@ const CreatePost = ({ content, isEdit = false }) => {
       setUrl(url);
 
       let signer;
+      let provider;
+      console.log('bb', chosen);
       switch (chosen) {
-        case 'metamask': {
+        case 'metamask':
           const web3Modal = new Web3Modal();
           const connection = await web3Modal.connect();
-          const provider = new ethers.providers.Web3Provider(connection);
+          provider = new ethers.providers.Web3Provider(connection);
           signer = await provider.getSigner();
           break;
-        }
-        default: {
-          const provider = new ethers.providers.Web3Provider(
-            magicLocal.rpcProvider
-          );
+        default:
+          provider = new ethers.providers.Web3Provider(magicLocal.rpcProvider);
           signer = await provider.getSigner();
           break;
-        }
       }
+      console.log('ss', signer);
 
       let contract = new ethers.Contract(nftAddress, NFT.abi, signer);
       setContract(contract);
@@ -250,6 +258,14 @@ const CreatePost = ({ content, isEdit = false }) => {
       console.log('fee', gasFee);
     } catch (error) {
       console.log(error);
+      showMessage(
+        {
+          title: 'System',
+          content: 'Unexpected error occur',
+        },
+        3000,
+        'danger'
+      );
     } finally {
       setLoaded(-1);
     }
@@ -258,12 +274,36 @@ const CreatePost = ({ content, isEdit = false }) => {
     try {
       setLoaded(50);
       setShowInvolve(false);
+      showMessage(
+        {
+          title: 'System',
+          content: 'Working...',
+        },
+        0,
+        'info',
+        true
+      );
       let transaction = await contract.createToken(url);
+      showMessage(
+        {
+          title: 'System',
+          content: 'Token created successfully. Going to asset page',
+        },
+        3000,
+        'success',
+        false
+      );
       router.push('/assets');
     } catch (error) {
-      console.log(error);
-    } finally {
       setLoaded(-1);
+      showMessage(
+        {
+          title: 'System',
+          content: error.message,
+        },
+        3000,
+        'danger'
+      );
     }
   };
 

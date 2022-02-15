@@ -9,15 +9,17 @@ import NFTMarket from 'contracts/NFTMarket.json';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { magicLocal } from 'app/magic';
-import { Masonry } from 'masonic';
+import Masonry from 'components/Masonry';
 import InvolveModal from 'components/modal/InvolveModal';
 import { getPrimaryWallet } from 'helpers';
 const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
 const nftMarketAddress = process.env.NEXT_PUBLIC_MARKET_ADDRESS;
+import { useNotification } from 'app/notificationContext';
 
 const MasonryCard =
   (method) =>
   ({ data }) => {
+    const { showMessage } = useNotification();
     const [info, setInfo] = useState({});
     const [show, setShow] = useState(false);
     const [price, setPrice] = useState('');
@@ -54,12 +56,18 @@ const MasonryCard =
         // Approve
 
         const tokenContract = new ethers.Contract(nftAddress, NFT.abi, signer);
-        const isApproved = tokenContract.isApprovedForAll(
-          nft.owner,
-          nftMarketAddress
-        );
-        if (!isApproved) {
-          await tokenContract.setApprovalForAll(nftMarketAddress, true);
+        // const isApproved = await tokenContract.isApprovedForAll(
+        //   nft.owner,
+        //   nftMarketAddress
+        // );
+
+        const approveAddress = await tokenContract.getApproved(nft.tokenId);
+        if (approveAddress.toLowerCase() !== nftMarketAddress.toLowerCase()) {
+          // await tokenContract.setApprovalForAll(nftMarketAddress, true);
+          const approval = await tokenContract.approve(
+            nftMarketAddress,
+            nft.tokenId
+          );
         }
 
         const marketContract = new ethers.Contract(
@@ -67,6 +75,8 @@ const MasonryCard =
           NFTMarket.abi,
           signer
         );
+        const tempabc = await marketContract.fetchMyNFTs();
+        console.log('hahahha', tempabc);
         setContract(marketContract);
         const priceParsed = ethers.utils.parseUnits(price, 'ether');
         let listingPrice = await marketContract.getListingPrice();
@@ -103,6 +113,16 @@ const MasonryCard =
         });
       } catch (error) {
         console.log(error);
+        setShowInvolve(false);
+
+        showMessage(
+          {
+            title: 'System',
+            content: error.message,
+          },
+          3000,
+          'danger'
+        );
       } finally {
         setListing(false);
       }
@@ -110,18 +130,44 @@ const MasonryCard =
 
     const sellNFTs = (nft) => async () => {
       try {
+        setShowInvolve(false);
+        setShow(false);
         const priceParsed = ethers.utils.parseUnits(price, 'ether');
-
+        showMessage(
+          {
+            title: 'System',
+            content: 'Working...',
+          },
+          0,
+          'info',
+          true
+        );
         const transaction = await contract.createMarketItem(
           nft.nftContract,
           nft.tokenId,
           priceParsed,
           { value: listingPrice }
         );
-
+        showMessage(
+          {
+            title: 'System',
+            content: 'Listed on marketplace successfully.',
+          },
+          3000,
+          'success',
+          false
+        );
         router.push('/market');
       } catch (error) {
         console.log(error);
+        showMessage(
+          {
+            title: 'System',
+            content: error.message,
+          },
+          3000,
+          'danger'
+        );
       }
     };
 
@@ -213,8 +259,8 @@ const Assets = ({ refreshSignal }) => {
 
         if (!actionAddress) {
           // show modal
-          actionAddress = await magic.user.getMetadata();
-          actionAddress = address.publicAddress.toLowerCase();
+          actionAddress = await magicLocal.user.getMetadata();
+          actionAddress = actionAddress.publicAddress.toLowerCase();
         }
 
         const provider = new ethers.providers.JsonRpcProvider();

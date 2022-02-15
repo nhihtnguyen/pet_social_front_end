@@ -4,18 +4,21 @@ import AddEventForm from 'components/forms/AddEventForm';
 import { useSWRConfig } from 'swr';
 import axiosClient from 'axiosSetup';
 import { useEffect } from 'react';
+import { fixLocaleTime } from 'helpers';
 
 const CreatePet = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
 
   const router = useRouter();
-
   const [loaded, setLoaded] = useState(-1);
 
   const handleUpload = (action) => async (data, setErrors, errors) => {
     let result;
+
     try {
       // data['description'] = JSON.stringify(data['description']);
+      data['start'] = fixLocaleTime(new Date(data['start']));
+      data['end'] = fixLocaleTime(new Date(data['end']));
       result = await axiosClient[action](
         `/events/${action === 'put' ? content?.id : ''}`,
         data,

@@ -33,12 +33,17 @@ client.interceptors.response.use(
           }
         })
         .catch((error) => {
+          console.log('Refresh failed', error);
+          localStorage.removeItem('access_token');
+          delete client.defaults.headers.Authorization;
           return error;
         });
     }
     if (error.response) {
       return error.response;
     } else {
+      // Go to 500 page
+
       return Promise.reject(error);
     }
   }

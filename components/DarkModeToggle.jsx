@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiMoon } from 'react-icons/fi';
-const DarkMode = () => {
+const DarkMode = ({ className, innerClassName }) => {
   let clickedClass = 'clicked';
   const body = document.body;
   const lightTheme = 'theme-light';
@@ -33,12 +33,12 @@ const DarkMode = () => {
 
   return (
     <span
-      className={`cursor-pointer p-2 text-center ms-3 menu-icon chat-active-btn ${
+      className={`cursor-pointer text-center menu-icon chat-active-btn ${
         theme === 'dark' ? clickedClass : ''
-      }`}
+      } ${className || ''}`}
       onClick={(e) => switchTheme(e)}
     >
-      <span className='font-xl text-current'>
+      <span className={`font-xl text-current ${innerClassName}`}>
         <FiMoon />
       </span>
     </span>

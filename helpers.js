@@ -21,20 +21,26 @@ export const getPrimaryWallet = (action) => {
         ? 'metamask'
         : 'integrated'
       : null;
+    console.log(actionAddress, selected);
     return { chosen, actionAddress };
   } catch (error) {
     console.log(error);
+    return { chosen: 'integrated' };
   }
 };
 
-export const getFormatDate = (date) => {
-  return (
-    (date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1)) +
-    '/' +
-    (date.getDate() > 9 ? date.getDate() : '0' + date.getDate()) +
-    '/' +
-    date.getFullYear()
-  );
+export const getFormatDate = (date, format = 'mm/dd/yyyy') => {
+  let mm =
+    date.getMonth() > 8 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+  let dd = date.getDate() > 9 ? date.getDate() : '0' + date.getDate();
+  let yyyy = date.getFullYear();
+  let newDate = format;
+  newDate = newDate
+    .replaceAll('mm', mm)
+    .replaceAll('dd', dd)
+    .replaceAll('yyyy', yyyy);
+
+  return newDate;
 };
 
 export const calVote = (vote) => {
@@ -45,4 +51,21 @@ export const calVote = (vote) => {
   } else {
     return `${vote}`;
   }
+};
+
+export const calTime = (ms) => {
+  const days = Math.floor(ms / (24 * 60 * 60 * 1000));
+  const daysms = ms % (24 * 60 * 60 * 1000);
+  const hours = Math.floor(daysms / (60 * 60 * 1000));
+  const hoursms = ms % (60 * 60 * 1000);
+  const minutes = Math.floor(hoursms / (60 * 1000));
+  const minutesms = ms % (60 * 1000);
+  const seconds = Math.floor(minutesms / 1000);
+  return { days, hours, minutes, seconds };
+};
+
+export const fixLocaleTime = (date) => {
+  return new Date(
+    date.getTime() + date.getTimezoneOffset() * 60000
+  ).toISOString();
 };

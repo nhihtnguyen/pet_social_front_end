@@ -12,6 +12,7 @@
     "@babel/core": "^7.16.12",
     "@magic-ext/oauth": "^2.0.1",
     "@reduxjs/toolkit": "^1.6.2",
+    "@wojtekmaj/react-datetimerange-picker": "^3.5.0",
     "axios": "^0.23.0",
     "bootstrap": "^5.1.1",
     "draftjs-to-html": "^0.9.1",

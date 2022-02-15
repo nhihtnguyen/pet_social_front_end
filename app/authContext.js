@@ -14,22 +14,30 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function loadUserFromToken() {
-      const token = localStorage.getItem('access_token');
-      if (token) {
-        axiosClient.defaults.headers.Authorization = `Bearer ${token}`;
-        const { data: user } = await axiosClient.get('/users/me');
-        const magicIsLoggedIn = await magic.user.isLoggedIn();
-        if (magicIsLoggedIn) {
-          //const metadata = await magic.user.getMetadata();
-          setUser({ ...user });
+      try {
+        const token = localStorage.getItem('access_token');
+        if (token) {
+          axiosClient.defaults.headers.Authorization = `Bearer ${token}`;
+          const { data: user } = await axiosClient.get('/users/me');
+          const magicIsLoggedIn = await magic.user.isLoggedIn();
+          if (magicIsLoggedIn) {
+            //const metadata = await magic.user.getMetadata();
+            setUser({ ...user });
+          } else {
+            // If no user is logged in, redirect to `/login`
+            // router.push('/login');
+            router.push('/login');
+            console.log('retrieve to login');
+          }
         } else {
-          // If no user is logged in, redirect to `/login`
-          // router.push('/login');
           router.push('/login');
-          console.log('retrieve to login');
         }
+      } catch (error) {
+        console.log(error);
+        router.push('/500');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     loadUserFromToken();
   }, []);

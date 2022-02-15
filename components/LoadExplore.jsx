@@ -1,21 +1,18 @@
 import Postcard from 'components/postcard/Postcard';
-import FloatingButton from 'components/floatingbutton/FloatingButton';
-import { FiPlus } from 'react-icons/fi';
 import { Spinner } from 'react-bootstrap';
-import axiosClient from 'axiosSetup';
-import { SWRConfig } from 'swr';
 import useInfinitePagination from 'hooks/useInfinitePagination';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Masonry } from 'masonic';
+import Masonry from 'components/Masonry';
 import PostCardRow from 'components/PostCardRow';
-
-import Layout from 'components/Layout';
-import Head from 'next/head';
-import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { isMobile } from 'web3modal';
+import { useState } from 'react';
 
 const MasonryCard = ({ data }) => <Postcard value={data} className={`m-0`} />;
 
 const LoadExplore = ({ refreshSignal, grid = true }) => {
+  const router = useRouter();
+  const search = router.query.search;
   const pageSize = Math.floor(
     document?.documentElement?.clientHeight &&
       document?.documentElement?.clientWidth
@@ -32,8 +29,13 @@ const LoadExplore = ({ refreshSignal, grid = true }) => {
     error,
     isReachedEnd,
     loadingMore,
-  } = useInfinitePagination(pageSize ? `/posts/explore?` : null, pageSize);
-
+  } = useInfinitePagination(
+    pageSize ? `/posts/explore?${search ? `search=${search}&` : ''}` : null,
+    pageSize
+  );
+  const [isMobile, setIsMobile] = useState(
+    navigator?.userAgent?.toLowerCase()?.match(/mobile/i)
+  );
   return (
     <div className='infinite-scroll-parent p-0'>
       {!paginatedPosts && !error ? (
@@ -50,20 +52,19 @@ const LoadExplore = ({ refreshSignal, grid = true }) => {
           pullToRefresh
         >
           {grid ? (
-            <div className='masonic'>
-              <Masonry
-                // Provides the data for our grid items
-                items={paginatedPosts || []}
-                // Adds 8px of space between the grid cells
-                columnGutter={12}
-                // Sets the minimum column width to 172px
-                columnWidth={172}
-                // Pre-renders 5 windows worth of content
-                overscanBy={5}
-                // This is the grid item component
-                render={MasonryCard}
-              />
-            </div>
+            <Masonry
+              // Provides the data for our grid items
+              items={paginatedPosts || []}
+              // Adds 8px of space between the grid cells
+              columnGutter={12}
+              // Sets the minimum column width to 172px
+              columnWidth={172}
+              // Pre-renders 5 windows worth of content
+              overscanBy={5}
+              // This is the grid item component
+              render={MasonryCard}
+              columnCount={isMobile ? 2 : undefined}
+            />
           ) : (
             <div className='middle-wrap'>
               {paginatedPosts.map((post, index) => (

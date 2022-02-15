@@ -7,6 +7,8 @@ import useForm from 'hooks/useForm';
 import validateAddEvent from './validateAddEvent';
 import { useState, useEffect } from 'react';
 import Editor from 'components/controls/Editor';
+import { getFormatDate } from 'helpers';
+import DateTimeRangePicker from 'components/controls/DateTimeRangePicker';
 
 const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
   const typeOptions = [
@@ -24,6 +26,10 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
   const [initValues, setInitValues] = useState({
     name: values?.name || '',
     description: values?.description || '',
+    start: values?.start
+      ? getFormatDate(new Date(values?.start), 'yyyy-mm-dd')
+      : '',
+    end: values?.end ? getFormatDate(new Date(values?.end), 'yyyy-mm-dd') : '',
   });
 
   useEffect(() => {
@@ -31,9 +37,16 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
       setInitValues({
         name: values?.name || '',
         description: values?.description || '',
+        start: values?.start
+          ? getFormatDate(new Date(values?.start), 'yyyy-mm-dd')
+          : '',
+        end: values?.end
+          ? getFormatDate(new Date(values?.end), 'yyyy-mm-dd')
+          : '',
       });
     }
   }, [values]);
+  console.log(initValues);
 
   const {
     handleChange: onChange,
@@ -71,6 +84,33 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
             singleStyle={{ fontWeight: 600, fontSize: 14 }}
             aria-label='type'
             options={typeOptions}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col lg={6} className='mb-3'>
+          <Input
+            type='date'
+            name='start'
+            value={info.start}
+            onChange={onChange('start')}
+            label={<label className='mont-font fw-600 font-xsss'>Start</label>}
+            invalidTooltip={errors['start']}
+            inputClassName={`${styles['textarea']} rounded-xxxl`}
+            className='position-relative'
+          />
+        </Col>
+
+        <Col lg={6} className='mb-3'>
+          <Input
+            type='date'
+            name='end'
+            value={info.end}
+            onChange={onChange('end')}
+            label={<label className='mont-font fw-600 font-xsss'>End</label>}
+            invalidTooltip={errors['end']}
+            inputClassName={`${styles['textarea']} rounded-xxxl`}
+            className='position-relative'
           />
         </Col>
       </Row>

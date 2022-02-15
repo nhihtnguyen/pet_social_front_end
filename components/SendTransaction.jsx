@@ -5,6 +5,7 @@ import { FiArrowUpRight } from 'react-icons/fi';
 import { Form, Spinner } from 'react-bootstrap';
 import { ethers } from 'ethers';
 import { useState } from 'react';
+import { useNotification } from 'app/notificationContext';
 
 const SendTransaction = ({ provider }) => {
   const [showInput, setShowInput] = useState(false);
@@ -15,6 +16,7 @@ const SendTransaction = ({ provider }) => {
   const [showInvolve, setShowInvolve] = useState(false);
   const [involve, setInvolve] = useState({});
   const [estimatedGas, setEstimatedGas] = useState('auto');
+  const { showMessage } = useNotification();
 
   const estimateGas = async () => {
     try {
@@ -35,12 +37,22 @@ const SendTransaction = ({ provider }) => {
       setInvolve({
         'Estimated gas fee': gasFee,
         'Gas limit': gas.toString(),
-        'Max fee per gas': gasData.maxFeePerGas.toString(),
+        'Max fee per gas':
+          ethers.utils.formatUnits(gasData.maxFeePerGas.toString(), 'gwei') +
+          ' gwei',
         total: Number(Number(amount) + Number(gasFee)),
       });
     } catch (error) {
       console.log(error);
       setShowInvolve(false);
+      showMessage(
+        {
+          title: 'System',
+          content: error.message,
+        },
+        3000,
+        'danger'
+      );
     } finally {
       setSending(false);
     }
@@ -51,14 +63,40 @@ const SendTransaction = ({ provider }) => {
       setShowInvolve(false);
 
       setSending(true);
+      showMessage(
+        {
+          title: 'System',
+          content: 'Working...',
+        },
+        0,
+        'info',
+        true
+      );
       const signer = await provider.getSigner();
 
       const transaction = await signer.sendTransaction({
         to,
         value: ethers.utils.parseEther(amount),
       });
+      showMessage(
+        {
+          title: 'System',
+          content: 'Sent successfully.',
+        },
+        3000,
+        'success',
+        false
+      );
     } catch (error) {
       console.log(error);
+      showMessage(
+        {
+          title: 'System',
+          content: error.message,
+        },
+        3000,
+        'danger'
+      );
     } finally {
       setSending(false);
     }

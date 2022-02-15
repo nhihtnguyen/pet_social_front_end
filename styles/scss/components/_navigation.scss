@@ -331,7 +331,7 @@
                 line-height: 28px;
                 padding-left: 0;
                 width: auto;
-                i.feather-zap {
+                .logo-size-small {
                     font-size: 28px !important;
                     margin-right: 5px !important;
                 }
@@ -443,4 +443,11 @@
         top: env(safe-area-inset-top);
         transition: 0.3s all;
     }
+}
+
+.mytab .nav-link {
+    &.active {
+        color: var(--theme-color) !important;
+    }
+    padding: 0rem 0.5rem;
 }

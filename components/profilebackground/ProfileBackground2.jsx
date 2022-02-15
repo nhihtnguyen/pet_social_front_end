@@ -6,6 +6,8 @@ import {
   FiLock,
   FiEyeOff,
   FiEdit2,
+  FiCheckCircle,
+  FiCircle,
 } from 'react-icons/fi';
 import { useEffect, useState } from 'react';
 import axiosClient from 'axiosSetup';
@@ -79,7 +81,7 @@ const ProfileBackground = ({ profile }) => {
           })
           .catch((error) => {});
         axiosClient
-          .get(`/pets?user_id=${user.id}`)
+          .get(`/pets?user_id=${user?.id}`)
           .then((response) => {
             if (response?.data) {
               setIsOwner(!response.data.every((pet) => pet.id !== profile.id));
@@ -123,7 +125,7 @@ const ProfileBackground = ({ profile }) => {
 
   return (
     <div className='card w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
-      <div className='card-body h240 p-0 rounded-xxxl overflow-hidden m-3 position-relative'>
+      <div className='card-body h240 p-0 rounded-xxxl d-grid justify-content-center overflow-hidden m-3 position-relative'>
         <Image
           src={
             loading || !profile?.background
@@ -133,6 +135,7 @@ const ProfileBackground = ({ profile }) => {
           alt='background'
           width={875}
           height={250}
+          layout='fixed'
         />
         {isOwner && !loading && (
           <UploadImageButton
@@ -196,14 +199,14 @@ const ProfileBackground = ({ profile }) => {
             <Placeholder xs={3} /> <Placeholder xs={3} /> <Placeholder xs={3} />
           </Placeholder>
         ) : (
-          <div className='d-flex align-items-center pt-0 position-absolute left-15 top-0 mt-4 ms-2'>
-            <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
+          <div className='d-flex flex-column flex-lg-row align-items-start align-items-lg-center pt-0 position-absolute left-15 top-0 mt-lg-4 ms-2'>
+            <h4 className='font-xsssss text-lg-center d-lg-block text-grey-500 fw-600 ms-lg-2 me-lg-2'>
               <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
                 {extraInfo?.total_posts || 0}{' '}
               </b>{' '}
               Posts
             </h4>
-            <h4 className='font-xsssss text-center d-none d-lg-block text-grey-500 fw-600 ms-2 me-2'>
+            <h4 className='font-xsssss text-lg-center d-lg-block text-grey-500 fw-600 ms-lg-2 me-lg-2'>
               <b className='text-grey-900 mb-1 font-sm fw-700 d-inline-block ls-3 text-dark'>
                 {extraInfo?.total_followers || 0}{' '}
               </b>{' '}
@@ -212,35 +215,46 @@ const ProfileBackground = ({ profile }) => {
           </div>
         )}
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
-          {!isOwner &&
-            !loading &&
-            (followed ? (
+          {!isOwner && !loading && (
+            <>
               <a
-                onClick={unfollow}
-                className='d-none cursor-pointer d-lg-block bg-danger p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
+                onClick={followed ? unfollow : follow}
+                className={`${
+                  followed ? 'bg-danger' : 'bg-success'
+                } d-none cursor-pointer d-lg-block  p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3`}
               >
-                Unfollow
+                {followed ? 'Unfollow' : 'Follow'}
               </a>
-            ) : (
               <a
-                onClick={follow}
-                className='d-none cursor-pointer d-lg-block bg-success p-3 z-index-1 rounded-3 text-white font-xsssss text-uppercase fw-700 ls-3'
+                id='editPet'
+                className='d-lg-none font-md cursor-pointer d-block bg-greylight btn-round-sm ms-2 rounded-3 text-grey-700'
+                onClick={followed ? unfollow : follow}
               >
-                Follow
+                {followed ? <FiCheckCircle /> : <FiCircle />}
               </a>
-            ))}
+            </>
+          )}
           {isOwner && (
-            <a
-              id='editPet'
-              className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
-              onClick={linkToEditPet}
-            >
-              <FiEdit2 />
-            </a>
+            <>
+              <a
+                id='editPet'
+                className='d-none font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+                onClick={linkToEditPet}
+              >
+                <FiEdit2 />
+              </a>
+              <a
+                id='editPet'
+                className='d-lg-none font-md cursor-pointer d-block bg-greylight btn-round-sm ms-2 rounded-3 text-grey-700'
+                onClick={linkToEditPet}
+              >
+                <FiEdit2 />
+              </a>
+            </>
           )}
           <a
             id='dropdownMenu4'
-            className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+            className='d-none font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
             data-toggle='dropdown'
             aria-haspopup='true'
             aria-expanded='false'
@@ -290,7 +304,7 @@ const ProfileBackground = ({ profile }) => {
               </a>
             </Link>
           </li>
-          <li
+          {/* <li
             className={`${
               router.pathname == `/pet/[id]/events` ? 'active ' : ''
             }list-inline-item me-5`}
@@ -303,7 +317,7 @@ const ProfileBackground = ({ profile }) => {
             >
               Events
             </a>
-          </li>
+          </li> */}
           <li
             className={`${
               router.pathname == `/pet/[id]/following` ? 'active ' : ''

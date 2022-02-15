@@ -11,6 +11,8 @@ import validateCreatePost from './validateCreatePost';
 import useSWR from 'swr';
 import axiosClient from 'axiosSetup';
 import { useState, useEffect } from 'react';
+import { FiPlusCircle } from 'react-icons/fi';
+import { useRouter } from 'next/router';
 
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
@@ -26,6 +28,21 @@ const CreatePostForm = ({
     `/pets/owner`,
     fetcher
   );
+
+  const options = mentionOptions?.map((pet) => {
+    return {
+      value: pet?.id,
+      label: pet?.name,
+      image: pet?.avatar || 'https://via.placeholder.com/30',
+      hasIcon: true,
+    };
+  });
+
+  const router = useRouter();
+
+  const linkToAddPet = () => {
+    router.push('/pet/create');
+  };
 
   const [initValues, setInitValues] = useState({
     name: values?.name || '',
@@ -66,9 +83,7 @@ const CreatePostForm = ({
     true,
     validateCreatePost,
     onSubmit,
-    isMint
-      ? ['name', 'price', 'image', 'caption']
-      : ['image', 'caption', 'mentions']
+    isMint ? ['name', 'image', 'caption'] : ['image', 'caption', 'mentions']
   );
 
   return (
@@ -121,17 +136,17 @@ const CreatePostForm = ({
               name='mentions'
               className={`mb-2 rounded-xxl ${styles['typing-box']}`}
               isLoading={!mentionOptions && !loadMentionOptionsError}
-              label={<h3>Choose pets</h3>}
+              label={
+                <h3>
+                  Choose pets{' '}
+                  <span onClick={linkToAddPet} className='cursor-pointer'>
+                    <FiPlusCircle />
+                  </span>
+                </h3>
+              }
               multiple={true}
               required
-              options={mentionOptions?.map((pet) => {
-                return {
-                  value: pet?.id,
-                  label: pet?.name,
-                  image: pet?.avatar || 'https://via.placeholder.com/30',
-                  hasIcon: true,
-                };
-              })}
+              options={options}
             />
 
             <div className={`rounded-xxl ${styles['typing-box']} mb-2`}>

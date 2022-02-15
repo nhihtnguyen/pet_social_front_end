@@ -12,10 +12,11 @@ import PostCardRow from 'components/PostCardRow';
 import Layout from 'components/Layout';
 import Head from 'next/head';
 import { useEffect } from 'react';
+import NoItem from 'components/NoItem';
 
 import EventCard from 'components/eventcard/EventCard';
 
-const LoadEvents = ({ refreshSignal }) => {
+const LoadEvents = ({ refreshSignal, filter }) => {
   const {
     paginatedData: paginatedEvents,
     size,
@@ -24,7 +25,7 @@ const LoadEvents = ({ refreshSignal }) => {
     error,
     isReachedEnd,
     loadingMore,
-  } = useInfinitePagination(`/events?`);
+  } = useInfinitePagination(`/events/${filter || ''}?`);
 
   return (
     <div className='infinite-scroll-parent p-0'>
@@ -39,18 +40,19 @@ const LoadEvents = ({ refreshSignal }) => {
           className='w-100 p-0'
           pullToRefresh
         >
-          <div className='row middle-wrap'>
+          <div className='row middle-wrap p-0 m-0'>
             {paginatedEvents.map((event, index) => (
               <div
                 key={index}
-                className='col-sm-4 col-xs-12 p-0 pe-3 m-0 mb-3 '
+                className='col-sm-4 col-xs-12 p-0 pe-sm-3 m-0 mb-3 '
               >
-                <EventCard event={event} />
+                <EventCard event={event} type={filter} />
               </div>
             ))}
           </div>
         </InfiniteScroll>
       )}
+      {paginatedEvents?.length == 0 && <NoItem />}
     </div>
   );
 };
