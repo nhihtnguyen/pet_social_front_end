@@ -41,7 +41,6 @@ const Login = () => {
   const handleLogin = async (data, errors, setErrors) => {
     const email = data.email;
     if (email) {
-      console.log(email);
       login(email);
     }
   };

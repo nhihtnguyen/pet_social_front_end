@@ -45,7 +45,6 @@ const CreatePost = ({ content, isEdit = false }) => {
       try {
         let { chosen } = getPrimaryWallet('asset');
         if (mounted) {
-          console.log('aa', chosen);
           setChosen(chosen);
         }
       } catch (error) {
@@ -57,6 +56,15 @@ const CreatePost = ({ content, isEdit = false }) => {
   }, []);
 
   const handleUpload = (action) => async (data, setErrors, errors) => {
+    showMessage(
+      {
+        title: 'System',
+        content: 'Working...',
+      },
+      0,
+      'info',
+      true
+    );
     let bodyFormData = new FormData();
 
     bodyFormData.append('image', data.image.file);
@@ -161,21 +169,29 @@ const CreatePost = ({ content, isEdit = false }) => {
           },
         }
       );
+      if (result && result.status == 200) {
+        showMessage(
+          {
+            title: 'System',
+            content: 'Post created successfully. Going to detail page',
+          },
+          3000,
+          'success'
+        );
+        mutate('/posts');
+        router.push('/post/' + result.data.id);
+      }
     } catch (error) {
       // logging
       console.log(error);
-    }
-    if (result && result.data) {
       showMessage(
         {
           title: 'System',
-          content: 'Post created successfully. Going to detail page',
+          content: error.message,
         },
         3000,
-        'success'
+        'danger'
       );
-      mutate('/posts');
-      router.push('/post/' + result.data.id);
     }
   };
 
@@ -220,7 +236,6 @@ const CreatePost = ({ content, isEdit = false }) => {
 
       let signer;
       let provider;
-      console.log('bb', chosen);
       switch (chosen) {
         case 'metamask':
           const web3Modal = new Web3Modal();
@@ -233,7 +248,6 @@ const CreatePost = ({ content, isEdit = false }) => {
           signer = await provider.getSigner();
           break;
       }
-      console.log('ss', signer);
 
       let contract = new ethers.Contract(nftAddress, NFT.abi, signer);
       setContract(contract);
@@ -255,7 +269,6 @@ const CreatePost = ({ content, isEdit = false }) => {
           ' gwei',
         total: gasFee,
       });
-      console.log('fee', gasFee);
     } catch (error) {
       console.log(error);
       showMessage(
@@ -284,10 +297,11 @@ const CreatePost = ({ content, isEdit = false }) => {
         true
       );
       let transaction = await contract.createToken(url);
+      await transaction.wait();
       showMessage(
         {
           title: 'System',
-          content: 'Token created successfully. Going to asset page',
+          content: `Token created successfully.`,
         },
         3000,
         'success',

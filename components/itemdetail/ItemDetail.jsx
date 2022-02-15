@@ -35,7 +35,9 @@ const ItemDetail = ({
         if (mounted) {
           setLoadingHolders(true);
         }
-        const provider = new ethers.providers.JsonRpcProvider();
+        const provider = new ethers.providers.JsonRpcProvider(
+          process.env.NEXT_PUBLIC_RPC_URL
+        );
         const marketContract = new ethers.Contract(
           nftMarketAddress,
           NFTMarket.abi,
@@ -46,7 +48,6 @@ const ItemDetail = ({
           nftAddress,
           item.tokenId
         );
-        console.log(marketItems);
         const items = [];
         for (let item of marketItems) {
           items.push({
@@ -55,7 +56,6 @@ const ItemDetail = ({
           });
         }
         if (mounted) {
-          console.log(items);
           setHolders(items);
         }
       } catch (error) {

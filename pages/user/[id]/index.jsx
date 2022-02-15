@@ -13,7 +13,6 @@ const Profile = () => {
     id ? `/users/${id}` : null,
     id ? fetcher : null
   );
-  console.log(profile);
   return (
     <div className='row w-100 justify-content-center p-0 m-0 pe-sm-3'>
       <div className='col-12 mb-3 p-0' style={{ maxWidth: 1000 }}>

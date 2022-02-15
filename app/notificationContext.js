@@ -25,7 +25,6 @@ export const NotificationProvider = ({ children }) => {
       items = JSON.parse(items);
       if (items && typeof items == 'object') {
         setHistory(items);
-        console.log(items);
       }
     } catch (error) {
       console.log(error);

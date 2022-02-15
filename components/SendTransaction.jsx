@@ -78,10 +78,15 @@ const SendTransaction = ({ provider }) => {
         to,
         value: ethers.utils.parseEther(amount),
       });
+      await transaction.wait();
+
+      console.log(transaction);
       showMessage(
         {
           title: 'System',
-          content: 'Sent successfully.',
+          content: `Sent successfully. Check: ${
+            process.env.NEXT_PUBLIC_ETHERSCAN_URL + '/' + transaction?.hash
+          }`,
         },
         3000,
         'success',

@@ -57,7 +57,6 @@ const VoteButton = ({ post, comment = null }) => {
     };
     if (post) {
       setCountVote(comment?.id ? comment?.upvote : post?.upvote);
-      console.log(comment?.id ? comment?.upvote : post?.upvote, post, comment);
       getUserVote();
     }
   }, [post, comment]);

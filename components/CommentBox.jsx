@@ -67,7 +67,6 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
         `/comments/${comment.id}`,
         newComment
       );
-      console.log(result);
       if (result) {
         setIsEdit(false);
         mutate();

@@ -82,7 +82,6 @@ const LoadRisingPets = () => {
     setStatus({ ...status, scroller, itemWidth });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
-  console.log('aa', pets);
   return (
     <div className='bg-white rounded-xxl p-1 ps-3 pe-3 mb-3 theme-dark-bg bg-opacity-75 shadow-lg position-relative'>
       <h6 className='border-bottom lh-26 fw-500'>Pets to follow</h6>

@@ -75,7 +75,6 @@ const MentionItem = ({ petID }) => {
     const getMentionExtra = async (petID) => {
       try {
         const result = await axiosClient.get(`/pets/${petID}`);
-        console.log(result);
         if (mounted) {
           setPet(result.data);
         }
