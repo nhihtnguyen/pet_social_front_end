@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Placeholder } from 'react-bootstrap';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useRef, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
@@ -13,6 +14,10 @@ const PetItem = ({ petId }) => {
     petId ? fetcher : null
   );
   const loading = !pet && !error;
+  const router = useRouter();
+  const linkToPet = () => {
+    router.push(`/pet/${petId}`);
+  };
 
   return (
     <div
@@ -20,6 +25,7 @@ const PetItem = ({ petId }) => {
       style={{
         scrollSnapAlign: 'start',
       }}
+      onClick={linkToPet}
     >
       <Image
         src={pet?.avatar || 'https://via.placeholder.com/60'}

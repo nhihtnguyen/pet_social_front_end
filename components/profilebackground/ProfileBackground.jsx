@@ -33,14 +33,18 @@ const MenuItem = ({ icon, tooltip, label, className, onClick, ...props }) => (
   </div>
 );
 
-const MoreActionMenu = () => {
+const MoreActionMenu = ({ className, ...prop }) => {
   const [toggleMore, setToggleMore] = useState(false);
 
   return (
     <>
       <a
         id='dropdownMenu4'
-        className='font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+        className={
+          className ||
+          '' +
+            'd-none font-md cursor-pointer d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'
+        }
         data-toggle='dropdown'
         aria-haspopup='true'
         aria-expanded='false'
@@ -119,7 +123,7 @@ const ProfileNavbar = ({ userID }) => {
             </a>
           </Link>
         </li>
-        <li
+        {/* <li
           className={`${
             router.pathname == `/user/[id]/events` ? 'active ' : ''
           }list-inline-item me-5`}
@@ -132,7 +136,7 @@ const ProfileNavbar = ({ userID }) => {
           >
             Events
           </a>
-        </li>
+        </li> */}
         <li
           className={`${
             router.pathname == `/user/[id]/following` ? 'active ' : ''
@@ -189,7 +193,7 @@ const ProfileBackground = ({ className }) => {
   if (error) return <div>failed to load</div>;
   return (
     <Card className='w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
-      <Card.Body className='h250 p-0 rounded-xxxl overflow-hidden m-3 position-relative'>
+      <Card.Body className='h250 p-0 rounded-xxxl overflow-hidden d-grid justify-content-center m-3 position-relative'>
         <Image
           width={875}
           height={250}
@@ -199,7 +203,7 @@ const ProfileBackground = ({ className }) => {
               : profile?.background
           }
           alt='background'
-          layout='responsive'
+          layout='fixed'
         />
         {isOwner && !loading && (
           <UploadImageButton
@@ -260,19 +264,20 @@ const ProfileBackground = ({ className }) => {
           </h4>
         )}
         <div className='d-flex align-items-center justify-content-center position-absolute right-15 top-0 me-2'>
-          {isOwner ? (
-            <Link href='/personal'>
-              <a className='font-md d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
-                <FiEdit2 />
-              </a>
-            </Link>
-          ) : (
-            <Link href='/defaultemailbox'>
-              <a className='font-md d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
-                <FiMail />
-              </a>
-            </Link>
-          )}
+          {
+            <>
+              <Link href={isOwner ? '/personal' : '/message'}>
+                <a className='d-none font-md d-lg-block bg-greylight btn-round-lg ms-2 rounded-3 text-grey-700'>
+                  {isOwner ? <FiEdit2 /> : <FiMail />}
+                </a>
+              </Link>
+              <Link href={isOwner ? '/personal' : '/message'}>
+                <a className='d-lg-none font-md d-block bg-greylight btn-round-sm mt-4 mt-lg-0 ms-2 rounded-3 text-grey-700'>
+                  {isOwner ? <FiEdit2 /> : <FiMail />}
+                </a>
+              </Link>
+            </>
+          }
 
           <MoreActionMenu />
         </div>

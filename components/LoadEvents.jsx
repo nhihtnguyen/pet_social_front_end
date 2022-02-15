@@ -40,11 +40,11 @@ const LoadEvents = ({ refreshSignal, filter }) => {
           className='w-100 p-0'
           pullToRefresh
         >
-          <div className='row middle-wrap'>
+          <div className='row middle-wrap p-0 m-0'>
             {paginatedEvents.map((event, index) => (
               <div
                 key={index}
-                className='col-sm-4 col-xs-12 p-0 pe-3 m-0 mb-3 '
+                className='col-sm-4 col-xs-12 p-0 pe-sm-3 m-0 mb-3 '
               >
                 <EventCard event={event} type={filter} />
               </div>

@@ -25,13 +25,12 @@ const Event = () => {
       <Tabs
         defaultActiveKey='all'
         id='item-detail-tab'
-        className='mb-3 bg-white p-2 rounded-xxl shadow-xss mytab'
+        className='mb-3 bg-white p-2 rounded-xxl shadow-xss mytab border-0'
       >
         <Tab
           eventKey='all'
           title='All'
           tabClassName='bg-transparent font-xssss fw-700 border-0 text-dark'
-          className='pe-2'
         >
           <LoadEvents />
         </Tab>
@@ -39,7 +38,6 @@ const Event = () => {
           eventKey='ongoing'
           title='Ongoing'
           tabClassName='bg-transparent font-xssss fw-700 border-0 text-dark'
-          className='pe-2'
         >
           <LoadEvents filter='ongoing' />
         </Tab>
@@ -47,7 +45,6 @@ const Event = () => {
           eventKey='incoming'
           title='Incoming'
           tabClassName='bg-transparent font-xssss fw-700 border-0 text-dark'
-          className='pe-2'
         >
           <LoadEvents filter='incoming' />
         </Tab>
@@ -55,7 +52,6 @@ const Event = () => {
           eventKey='closed'
           title='Closed'
           tabClassName='bg-transparent font-xssss fw-700 border-0 text-dark'
-          className='pe-2'
         >
           <LoadEvents filter='closed' />
         </Tab>

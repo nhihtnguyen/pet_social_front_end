@@ -29,7 +29,7 @@ const Notification = () => {
 
         <ul className='notification-box'>
           {history?.length == 0 && 'No item'}
-          {history
+          {[...history]
             ?.reverse()
             ?.slice(page * pageLimit, page * pageLimit + pageLimit)
             ?.map((value, index) => (
@@ -51,7 +51,7 @@ const Notification = () => {
               {'<Newer'}
             </a>
           )}
-          {page * pageLimit < history.length && (
+          {page * pageLimit + pageLimit < history.length && (
             <a
               onClick={() => setPage(page + 1)}
               className='cursor-pointer ms-auto text-dark'

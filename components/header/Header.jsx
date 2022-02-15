@@ -100,7 +100,7 @@ const NotificationSection = ({ notificationClass }) => {
           No item <br />
         </span>
       )}
-      {history
+      {[...history]
         ?.slice(-3)
         .reverse()
         .map((value, index) => (
@@ -155,7 +155,7 @@ const Header = () => {
         <Link href='/'>
           <a>
             <span className='cursor-pointer d-inline-block fredoka-font ls-3 fw-500 text-current font-xxl logo-text mb-0'>
-              <span className='display2-size me-2 ms-0'>
+              <span className='display2-size logo-size-small me-2 ms-0'>
                 <FiGithub />
               </span>
               Pet's Friend
@@ -165,15 +165,20 @@ const Header = () => {
 
         <span
           onClick={toggleSearch}
-          className='ms-auto me-2 menu-search-icon mob-menu'
+          className='ms-auto me-0 menu-search-icon mob-menu '
         >
           <span className='text-grey-900 font-sm btn-round-md bg-greylight'>
             <FiSearch />
           </span>
         </span>
+        <DarkModeToggle
+          className='mob-menu ms-1 p-0 '
+          innerClassName='text-grey-900 font-sm btn-round-md bg-greylight'
+        />
+
         <button
           onClick={toggleLeftNav}
-          className={`nav-menu me-0 ms-2 ${buttonClass}`}
+          className={`nav-menu me-0 ms-3 ${buttonClass}`}
         ></button>
       </div>
 
@@ -258,7 +263,7 @@ const Header = () => {
               </span>
             </a>
           </Link>
-          <DarkModeToggle />
+          <DarkModeToggle className='ms-3 p-2' />
           <Link href='/settings'>
             <a className='p-0 ms-3 menu-icon'>
               <Image
@@ -288,17 +293,19 @@ const Header = () => {
 
       <LeftNav className={`scroll-bar ${navClass}`} />
 
-      <div className={`app-header-search bg-transparent  ${searchClass}`}>
-        <form className='search-form bg-transparent'>
-          <div className='form-group searchbox mb-0 border-0 p-1 bg-transparent'>
+      <div
+        className={`app-header-search bg-transparent shadow-lg border-0 ${searchClass}`}
+      >
+        <form className='search-form' onSubmit={handleSubmit}>
+          <div className='form-group searchbox mb-0 border-0'>
             <input
               type='text'
               className='form-control border-0'
               placeholder='Search...'
             />
 
-            <span className='ms-1 mt-1 d-inline-block close searchbox-close'>
-              <span className='font-xs' onClick={toggleSearch}>
+            <span className='d-inline-flex align-items-center close searchbox-close'>
+              <span className='font-md text-dark' onClick={toggleSearch}>
                 <FiX />
               </span>
             </span>

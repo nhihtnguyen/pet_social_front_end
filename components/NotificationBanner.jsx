@@ -51,14 +51,14 @@ const NotificationBanner = ({
       ></i>
       <h6 className='font-xssss text-grey-900 text-grey-900 mb-0 mt-0 fw-500 lh-20'>
         <strong>{content?.title}</strong> : {content?.content}
-        <span className='d-block text-grey-700 font-xssss fw-600 mb-0 mt-0 0l-auto'>
+        <span className='d-block text-grey-700 font-xssss fw-600 mb-0 mt-0 0l-auto text-dark'>
           {' '}
           {messageTime}
         </span>{' '}
       </h6>
-      <i className='text-grey-500 font-xs ms-auto'>
+      {/* <i className='text-grey-700 font-xs ms-auto text-dark'>
         <FiMoreVertical />
-      </i>
+      </i> */}
     </div>
   );
 };
