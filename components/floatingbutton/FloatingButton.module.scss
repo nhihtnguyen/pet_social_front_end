@@ -1,0 +1,14 @@
+.floatingButton {
+    right: 45px;
+    bottom: 45px;
+    z-index: 100;
+    & .icon {
+        font-size: 1.7rem;
+        height: 45px;
+        width: 45px;
+
+        &:hover {
+            color: var(--theme-color) !important;
+        }
+    }
+}

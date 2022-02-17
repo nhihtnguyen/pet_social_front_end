@@ -1,0 +1,10 @@
+.masonry-container {
+    display: grid;
+    display: -ms-grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: masonry;
+}
+.masonic {
+    width: 100%;
+    box-sizing: border-box;
+}

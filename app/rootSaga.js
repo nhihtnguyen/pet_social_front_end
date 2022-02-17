@@ -1,10 +1,9 @@
-import { all } from 'redux-saga/effects'
-import todoSaga from '../features/todo/todoSaga';
+import { all } from 'redux-saga/effects';
+import postSaga from 'features/post/postSaga';
+import marketSaga from 'features/market/marketSaga';
 
 function* rootSaga() {
-    yield all([
-        todoSaga(),
-    ])
+  yield all([marketSaga()]);
 }
 
 export default rootSaga;
