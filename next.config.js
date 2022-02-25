@@ -45,4 +45,7 @@ module.exports = {
       'ipfs.infura.io',
     ],
   },
+  experimental: {
+    outputStandalone: true,
+  },
 };
