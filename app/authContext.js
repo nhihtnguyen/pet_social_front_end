@@ -77,7 +77,9 @@ export const AuthProvider = ({ children }) => {
 
       if (result.status === 200) {
         const { metadata, accessToken } = result.data;
-        const { data: user } = await axiosClient.get('users/me');
+        const { data: user } = await axiosClient.get('users/me', {
+          credentials: 'include',
+        });
         localStorage.setItem('access_token', accessToken);
         axiosClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
         setUser({ ...user, metadata });
