@@ -1,11 +1,12 @@
 import { calVote } from 'helpers';
 import axiosClient from 'axiosSetup';
-import { IoPawOutline, IoPaw } from 'react-icons/io5';
+import { IoPawOutline, IoPaw, IoHeartOutline, IoHeart } from 'react-icons/io5';
+import { FaRegHeart, FaHeart } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import styles from './VoteButton.module.scss';
 import { useAuth } from 'app/authContext';
 
-const VoteButton = ({ post, comment = null }) => {
+const VoteButton = ({ post, comment = null, className }) => {
   const { user } = useAuth();
   const [voted, setVoted] = useState(false);
   const [countVote, setCountVote] = useState('...');
@@ -66,10 +67,13 @@ const VoteButton = ({ post, comment = null }) => {
       onClick={voted ? unvote : vote}
     >
       <span
-        className={`text-dark text-grey-900 btn-round-sm font-lg ${styles['vote-button']}`}
+        className={`text-dark text-grey-900 ${styles['vote-button']} ${
+          className || ''
+        }`}
       >
-        {voted ? <IoPaw className='text-current' /> : <IoPawOutline />}
+        {voted ? <FaHeart className='text-current' /> : <FaRegHeart />}
       </span>
+      &nbsp;
       {calVote(countVote || 0)}
     </a>
   );

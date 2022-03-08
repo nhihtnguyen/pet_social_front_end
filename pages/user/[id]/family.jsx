@@ -40,43 +40,36 @@ const MyPet = () => {
   const isOwner = user?.id === Number(id);
 
   return (
-    <div
-      className='row w-100 m-0 p-0 pe-sm-3'
-      style={{
-        transition: 'top 2s ease 0s',
-      }}
-    >
-      <div className='col-xl-12 p-0'>
-        <PageTitle
-          title='Family'
-          shortcutButtons={
-            isOwner
-              ? [
-                  {
-                    icon: <FiPlusCircle />,
-                    label: 'Add pet',
-                    onClick: linkToAddPet,
-                  },
-                ]
-              : []
-          }
-        />
-        <div className='row'>
-          {!data && <Spinner animation='border' />}
-          {data?.map((value, index) => (
-            <div className='col-md-6 col-sm-6 pb-3' key={index}>
-              <PetCard
-                pet={value}
-                buttonCallback={isOwner ? linkToEditPet : null}
-                buttonLabel={isOwner ? 'Edit' : null}
-                onClick={handleClick(value.id)}
-                mutate={mutate}
-                mutateFollowing={mutateFollowing}
-                followed={!following?.every((pet) => pet.id !== value.id)}
-              />
-            </div>
-          ))}
-        </div>
+    <div className='middle-wrap pe-sm-3'>
+      <PageTitle
+        title='Family'
+        shortcutButtons={
+          isOwner
+            ? [
+                {
+                  icon: <FiPlusCircle />,
+                  label: 'Add pet',
+                  onClick: linkToAddPet,
+                },
+              ]
+            : []
+        }
+      />
+      <div className='row'>
+        {!data && <Spinner animation='border' />}
+        {data?.map((value, index) => (
+          <div className='col-md-6 col-sm-6 pb-3' key={index}>
+            <PetCard
+              pet={value}
+              buttonCallback={isOwner ? linkToEditPet : null}
+              buttonLabel={isOwner ? 'Edit' : null}
+              onClick={handleClick(value.id)}
+              mutate={mutate}
+              mutateFollowing={mutateFollowing}
+              followed={!following?.every((pet) => pet.id !== value.id)}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );

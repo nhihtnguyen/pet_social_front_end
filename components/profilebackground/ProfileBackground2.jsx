@@ -129,11 +129,11 @@ const ProfileBackground = ({ profile }) => {
         <Image
           src={
             loading || !profile?.background
-              ? 'https://via.placeholder.com/875x250'
+              ? 'https://via.placeholder.com/975x250'
               : profile?.background
           }
           alt='background'
-          width={875}
+          width={975}
           height={250}
           layout='fixed'
         />

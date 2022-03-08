@@ -250,19 +250,13 @@ const Header = () => {
             aria-expanded='false'
             onClick={toggleNotification}
           >
-            <span className='dot-count bg-warning' style={{ top: 10 }} />
+            <span className='dot-count bg-warning' style={{ top: 16 }} />
             <span className='font-xl text-current'>
               <FiBell />
             </span>
           </span>
           <NotificationSection notificationClass={notificationClass} />
-          <Link href='/message'>
-            <a className='p-2 text-center ms-3 menu-icon chat-active-btn'>
-              <span className='font-xl text-current'>
-                <FiMessageSquare />
-              </span>
-            </a>
-          </Link>
+
           <DarkModeToggle className='ms-3 p-2' />
           <Link href='/settings'>
             <a className='p-0 ms-3 menu-icon'>

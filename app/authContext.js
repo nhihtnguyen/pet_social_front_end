@@ -77,11 +77,11 @@ export const AuthProvider = ({ children }) => {
 
       if (result.status === 200) {
         const { metadata, accessToken } = result.data;
+        localStorage.setItem('access_token', accessToken);
+        axiosClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
         const { data: user } = await axiosClient.get('users/me', {
           credentials: 'include',
         });
-        localStorage.setItem('access_token', accessToken);
-        axiosClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
         setUser({ ...user, metadata });
         setLoading(false);
         router.push('/user/me');
@@ -111,10 +111,9 @@ export const AuthProvider = ({ children }) => {
 
       if (result.status === 200) {
         const { metadata, accessToken } = result.data;
-        const { data: user } = await axiosClient.get('users/me');
         localStorage.setItem('access_token', accessToken);
         axiosClient.defaults.headers.Authorization = `Bearer ${accessToken}`;
-        console.log({ ...user, metadata });
+        const { data: user } = await axiosClient.get('users/me');
         setUser({ ...user, metadata });
         setLoading(false);
         router.push('/user/me');
@@ -125,11 +124,11 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
+  const isAuthenticated = !!user;
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated: !!user,
+        isAuthenticated,
         user,
         login: handleLoginWithEmail,
         register: handleRegisterWithEmail,

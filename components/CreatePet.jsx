@@ -4,6 +4,8 @@ import AddPetForm from 'components/forms/AddPetForm';
 import { useSWRConfig } from 'swr';
 import axiosClient from 'axiosSetup';
 import { useNotification } from 'app/notificationContext';
+import ActionHeader from 'components/ActionHeader';
+import { Card } from 'react-bootstrap';
 
 const CreatePet = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
@@ -67,17 +69,21 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
   };
 
   return (
-    <div
-      className={`card w-100 border-0 bg-white shadow-xs p-0 mb-4 rounded-xxl`}
-    >
-      <div className='card-body p-lg-5 p-4 w-100 border-0 '>
+    <Card className={`w-100 border-0 bg-white shadow-xs p-0 mb-4 rounded-xxl`}>
+      <ActionHeader
+        title={isEdit ? 'Edit pet' : 'Create pet'}
+        link={isEdit ? `/pet/${content?.id}` : '/user/me'}
+        style={{ margin: '32px 32px 0' }}
+      />
+
+      <Card.Body className='w-100 border-0' style={{ padding: 35 }}>
         <AddPetForm
           onSubmit={handleUpload(isEdit ? 'put' : 'post')}
           loaded={loaded}
           values={content}
         />
-      </div>
-    </div>
+      </Card.Body>
+    </Card>
   );
 };
 

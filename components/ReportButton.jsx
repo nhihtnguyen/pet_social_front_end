@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FiImage, FiFileText, FiAlertCircle } from 'react-icons/fi';
 import { IoAlertCircleSharp, IoAlertCircleOutline } from 'react-icons/io5';
 import { Spinner } from 'react-bootstrap';
+import { useEffect } from 'react';
 
 const MenuItem = ({ icon, tooltip, label, className, onClick, ...props }) => (
   <div
@@ -33,6 +34,9 @@ const ReportButton = ({ item, ...props }) => {
       console.log(error);
     }
   };
+  useEffect(() => {
+    return () => setToggleMore(false);
+  }, []);
   return (
     <>
       <a
@@ -67,7 +71,7 @@ const ReportButton = ({ item, ...props }) => {
         />
         <MenuItem
           icon={<FiFileText />}
-          label='Report image'
+          label='Report caption'
           tooltip='Report caption'
           className='mt-2'
           onClick={report('report_text')}

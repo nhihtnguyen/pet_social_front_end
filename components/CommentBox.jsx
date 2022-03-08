@@ -9,6 +9,7 @@ import { getFormatDate } from 'helpers';
 import Input from 'components/controls/Input';
 import VoteButton from 'components/votebutton/VoteButton';
 import { useAuth } from 'app/authContext';
+import { beautifyTime } from 'helpers';
 
 const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -118,16 +119,19 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
               ? comment.User?.first_name + ' ' + comment.User?.last_name
               : 'UserName'}
             &nbsp;
-            <span className={`text-grey-500 font-xssss`}>
-              Last edited:&nbsp;
-              {comment ? getFormatDate(new Date(comment.updated_at)) : ''}
+            <span className={`text-grey-500 font-xssss fw-500`}>
+              {comment ? beautifyTime(comment?.updated_at) : ''}
             </span>
           </h6>
           <p className={`font-xssss text-grey-900 fw-500`}>
             {comment?.content}
           </p>
           <div className={`d-flex p-0 mt-3 position-relative`}>
-            <VoteButton post={{ id: pid }} comment={comment} />
+            <VoteButton
+              post={{ id: pid }}
+              comment={comment}
+              className='btn-round-sm font-xs'
+            />
             <Link href='/'>
               <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
                 <i className='text-dark text-grey-900 btn-round-sm font-xs'>
@@ -145,10 +149,13 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
             name='message'
             as='textarea'
             className='w-100'
-            inputClassName={`h100 rounded-xxl p-2 ${
-              isEdit ? '' : 'ps-5 '
-            }font-xssss border-light-md theme-dark-bg`}
-            inputStyle={{ resize: 'none', overflow: 'hidden' }}
+            inputClassName={`h100 rounded-xxl font-xssss fw-500 border-light-md theme-dark-bg`}
+            inputStyle={{
+              resize: 'none',
+              overflow: 'hidden',
+              paddingLeft: isEdit ? '' : '',
+              padding: '0.5rem 0.5rem 0.5rem 70px',
+            }}
             cols='30'
             rows='10'
             placeholder="What's on your mind?"

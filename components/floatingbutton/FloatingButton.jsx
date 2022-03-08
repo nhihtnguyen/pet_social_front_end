@@ -19,7 +19,7 @@ const FloatingButton = ({ label, icon, onClick, href, index }) => {
       {label && <label>{label}</label>}
       <Link href={href ? href : '#'}>
         <span
-          className={`shadow-lg bg-white d-flex rounded-circle justify-content-center align-items-center text-dark theme-dark-bg bg-opacity-25 ${styles.icon}`}
+          className={`shadow-lg bg-white d-flex rounded-circle justify-content-center align-items-center text-dark theme-dark-bg ${styles.icon}`}
         >
           {icon}
         </span>

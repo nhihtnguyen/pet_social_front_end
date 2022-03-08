@@ -26,24 +26,22 @@ const Following = () => {
   const isOwner = String(user?.id) === String(id);
 
   return (
-    <div className='row w-100 p-0 m-0 pe-sm-3'>
-      <div className='col-xl-12 p-0'>
-        <PageTitle title='Following' />
-        <div className='row'>
-          {data.map((value, index) => {
-            return (
-              <div key={index} className='col-md-6 col-sm-6 pb-3'>
-                <PetCard
-                  pet={value}
-                  followed={true}
-                  mutate={mutate}
-                  hideButton={!isOwner}
-                  onClick={handleClick(value.id)}
-                />
-              </div>
-            );
-          })}
-        </div>
+    <div className='middle-wrap pe-sm-3'>
+      <PageTitle title='Following' />
+      <div className='row'>
+        {data.map((value, index) => {
+          return (
+            <div key={index} className='col-md-6 col-sm-6 pb-3'>
+              <PetCard
+                pet={value}
+                followed={true}
+                mutate={mutate}
+                hideButton={!isOwner}
+                onClick={handleClick(value.id)}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

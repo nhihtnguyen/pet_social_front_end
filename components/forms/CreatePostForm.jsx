@@ -129,25 +129,27 @@ const CreatePostForm = ({
               />
             )}
 
-            <Select
-              value={info.mentions}
-              onChange={onChange('mentions')}
-              invalidTooltip={errors['mentions']}
-              name='mentions'
-              className={`mb-2 rounded-xxl ${styles['typing-box']}`}
-              isLoading={!mentionOptions && !loadMentionOptionsError}
-              label={
-                <h3>
-                  Choose pets{' '}
-                  <span onClick={linkToAddPet} className='cursor-pointer'>
-                    <FiPlusCircle />
-                  </span>
-                </h3>
-              }
-              multiple={true}
-              required
-              options={options}
-            />
+            {!isMint && (
+              <Select
+                value={info.mentions}
+                onChange={onChange('mentions')}
+                invalidTooltip={errors['mentions']}
+                name='mentions'
+                className={`mb-2 rounded-xxl ${styles['typing-box']}`}
+                isLoading={!mentionOptions && !loadMentionOptionsError}
+                label={
+                  <h3>
+                    Choose pets{' '}
+                    <span onClick={linkToAddPet} className='cursor-pointer'>
+                      <FiPlusCircle />
+                    </span>
+                  </h3>
+                }
+                multiple={true}
+                required
+                options={options}
+              />
+            )}
 
             <div className={`rounded-xxl ${styles['typing-box']} mb-2`}>
               <Input
@@ -174,7 +176,7 @@ const CreatePostForm = ({
             <Check
               checked={isMint}
               onChange={() => setIsMint(!isMint)}
-              label='Create as NFT token'
+              label='Create as a token'
             />
             {loaded > 0 ? (
               <ProgressBar
