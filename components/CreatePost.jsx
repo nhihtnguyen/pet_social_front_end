@@ -13,6 +13,7 @@ import { getKeyByValue, getPrimaryWallet } from 'helpers';
 import { localWeb3 as web3, magicLocal } from 'app/magic';
 import InvolveModal from 'components/modal/InvolveModal';
 import { useNotification } from 'app/notificationContext';
+import ActionHeader from 'components/ActionHeader';
 
 const nftAddress = process.env.NEXT_PUBLIC_NFT_ADDRESS;
 const petDetectionAPI =
@@ -323,6 +324,12 @@ const CreatePost = ({ content, isEdit = false }) => {
 
   return (
     <Card className={`border-0 shadow-xss rounded-xxl`}>
+      <ActionHeader
+        title={isEdit ? 'Edit post' : isMint ? 'Create token' : 'Create post'}
+        link={isEdit ? `/post/${content?.id}` : isMint ? '/assets' : '/explore'}
+        style={{ margin: '32px 32px 0' }}
+      />
+
       <Card.Body className='d-flex' style={{ margin: 20 }}>
         <CreatePostForm
           onSubmit={

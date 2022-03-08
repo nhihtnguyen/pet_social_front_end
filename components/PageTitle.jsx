@@ -3,7 +3,7 @@ import { FiPlusCircle } from 'react-icons/fi';
 const PageTitle = ({ title, searchCallback, shortcutButtons = false }) => {
   return (
     <div className='card shadow-xss w-100 d-block d-flex border-0 p-4 mb-3  rounded-xxl'>
-      <h2 className='fw-700 mb-0 mt-0 font-md text-grey-900 d-flex align-items-center'>
+      <h2 className='fw-600 mb-0 mt-0 font-md text-grey-900 d-flex align-items-center'>
         {title}
         {typeof shortcutButtons == 'object' &&
           shortcutButtons?.map((value, index) => (

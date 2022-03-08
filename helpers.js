@@ -68,3 +68,24 @@ export const fixLocaleTime = (date) => {
     date.getTime() + date.getTimezoneOffset() * 60000
   ).toISOString();
 };
+
+export const beautifyTime = (time) => {
+  if (time) {
+    const temp = calTime(Date.now() - new Date(time).getTime());
+    if (temp.days > 30) {
+      return Math.floor(temp.days / 30) + ' months ago';
+    } else if (temp.days > 7) {
+      return Math.floor(temp.days / 7) + ' weeks ago';
+    } else if (temp.days > 0) {
+      return temp.days + ' days ago';
+    } else if (temp.hours > 0) {
+      return temp.hours + ' hours ago';
+    } else if (temp.minutes > 0) {
+      return temp.minutes + ' minutes ago';
+    } else if (temp.seconds > 0) {
+      return temp.seconds + ' seconds ago';
+    } else {
+      return getFormatDate(new Date(time));
+    }
+  }
+};

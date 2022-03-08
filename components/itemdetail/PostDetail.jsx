@@ -6,6 +6,8 @@ import {
   FiMoreHorizontal,
   FiEdit3,
   FiAlertCircle,
+  FiMoreVertical,
+  FiEye,
 } from 'react-icons/fi';
 import { BsBookmarkHeart } from 'react-icons/bs';
 import { IoPawOutline } from 'react-icons/io5';
@@ -23,6 +25,48 @@ import ReportButton from 'components/ReportButton';
 
 const NestedComment = ({ comment, onShowReplies }) => {
   return <CommentBox />;
+};
+
+const MoreButton = ({ item, className, isOwner, ...props }) => {
+  const [toggleMore, setToggleMore] = useState(false);
+  const router = useRouter();
+  const linkToEdit = () => {
+    router.push(`/post/${item?.id}/edit`);
+  };
+  const linkToUser = () => {};
+  const handleReport = () => {};
+  const handleSavePost = () => {};
+  return (
+    <div
+      className={`more-button${
+        toggleMore ? ' active' : ''
+      } ms-auto d-inline-flex`}
+    >
+      <div className='item'>
+        {isOwner && (
+          <a
+            className='ms-auto cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
+            onClick={isOwner ? linkToEdit : handleSavePost}
+          >
+            <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+              {isOwner ? <FiEdit3 /> : <BsBookmarkHeart />}
+            </span>
+          </a>
+        )}
+        <ReportButton item={item} />
+      </div>
+      <a
+        className={`toggle ${
+          toggleMore ? 'active' : ''
+        } cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss`}
+        onClick={() => setToggleMore(!toggleMore)}
+      >
+        <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+          <FiMoreVertical />
+        </span>
+      </a>
+    </div>
+  );
 };
 
 const CommentSection = ({ pid, setNumberOfComments }) => {
@@ -104,6 +148,7 @@ const MentionItem = ({ petID }) => {
         {pet?.name || 'Name'}
         <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
           {/*5 Posts*/}
+          {'Pet'}
         </span>
       </h4>
     </li>
@@ -113,7 +158,9 @@ const MentionItem = ({ petID }) => {
 const MentionSection = ({ item }) => {
   return (
     <ul className='d-flex'>
-      <li className={`d-flex m-1 me-3 align-items-center cursor-pointer`}>
+      <li
+        className={`d-flex m-1 me-3 align-items-center cursor-pointer border-end pe-3`}
+      >
         <Link href={`/user/${item?.User?.id}` || '/user'}>
           <figure as='a' className='avatar m-auto me-3'>
             <Image
@@ -132,6 +179,7 @@ const MentionSection = ({ item }) => {
             : 'Full Name'}
           <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
             {/*5 Posts*/}
+            {'Author'}
           </span>
         </h4>
       </li>
@@ -146,18 +194,11 @@ const PostDetail = ({ item, loading, pid }) => {
   const router = useRouter();
   const { user } = useAuth();
   const [numberOfComments, setNumberOfComments] = useState(0);
+  const [showImage, setShowImage] = useState(true);
 
   const width = Number(item?.size?.split('x')[0]) || 300;
   const height = Number(item?.size?.split('x')[1]) || 500;
   const isOwner = String(user?.id) === String(item?.User.id);
-
-  const linkToEdit = () => {
-    router.push(`/post/${item?.id}/edit`);
-  };
-
-  const linkToUser = () => {};
-  const handleReport = () => {};
-  const handleSavePost = () => {};
 
   useEffect(() => {
     const getExtra = async () => {
@@ -173,6 +214,7 @@ const PostDetail = ({ item, loading, pid }) => {
       }
     };
     if (item) {
+      setShowImage(item.image_status == 'allowed');
       getExtra();
     }
   }, [item]);
@@ -184,39 +226,37 @@ const PostDetail = ({ item, loading, pid }) => {
           <Col xs={12} md={true} className='align-content-center'>
             {loading ? (
               <Placeholder as='div' className={`w-100 h-100 rounded-xxxxl}`} />
-            ) : (
+            ) : showImage ? (
               <Image
                 src={item?.media_url || 'https://via.placeholder.com/300/500'}
                 className={`rounded-xxxxl`}
                 width={width}
                 height={height}
                 alt='image'
+                layout='responsive'
               />
+            ) : (
+              <div
+                style={{ width: '100%', height: '100%', filter: 'blur 50%' }}
+                className='card justify-content-center align-items-center d-flex shadow-xss'
+              >
+                <h6 className='font-xss text-align-center fw-500'>
+                  <span>
+                    <FiEye
+                      className='cursor-pointer'
+                      onClick={() => setShowImage(true)}
+                    />{' '}
+                  </span>
+                  Content is maybe not related to pet
+                </h6>
+              </div>
             )}
           </Col>
 
           <Col xs={12} md={true}>
-            <div className={`d-flex p-0 m-0 mb-3 position-relative`}>
-              <VoteButton post={item} />
-              <a className='d-flex cursor-pointer align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
-                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
-                  <FiMessageCircle />
-                </span>
-                {numberOfComments}
-              </a>
-              {isOwner && (
-                <a
-                  className='ms-auto cursor-pointer fw-600 text-grey-900 text-dark lh-26 font-xssss'
-                  onClick={isOwner ? linkToEdit : handleSavePost}
-                >
-                  <span className='text-dark text-grey-900 btn-round-sm font-lg'>
-                    {isOwner ? <FiEdit3 /> : <BsBookmarkHeart />}
-                  </span>
-                </a>
-              )}
-              <ReportButton item={item} className={isOwner ? '' : 'ms-auto'} />
-            </div>
-            <h4 className='font-xss text-grey-900 fw-700 ls-2 '>About</h4>
+            <MentionSection item={item} />
+            <div className='w-100 border-top mt-2 mb-2'></div>
+            {/* <h4 className='font-xss text-grey-900 fw-700 ls-2 '>About</h4> */}
             {loading ? (
               <Placeholder as='p' animation='glow'>
                 <Placeholder xs={7} /> <Placeholder xs={4} />{' '}
@@ -228,9 +268,16 @@ const PostDetail = ({ item, loading, pid }) => {
                 {item?.caption || ''}
               </p>
             )}
-            <hr />
-
-            <MentionSection item={item} />
+            <div className={`d-flex p-0 m-0 mb-3 position-relative`}>
+              <VoteButton post={item} className='font-lg' />
+              <a className='d-flex cursor-pointer align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
+                <span className='text-dark text-grey-900 btn-round-sm font-lg'>
+                  <FiMessageCircle />
+                </span>
+                {numberOfComments}
+              </a>
+              <MoreButton className='ms-auto' isOwner={isOwner} item={item} />
+            </div>
 
             <CommentSection
               pid={pid}
