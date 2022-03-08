@@ -1,15 +1,102 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiMessageCircle, FiSend, FiEdit2 } from 'react-icons/fi';
+import {
+  FiMessageCircle,
+  FiSend,
+  FiEdit2,
+  FiXCircle,
+  FiMoreVertical,
+  FiX,
+} from 'react-icons/fi';
 import { AiOutlineSend, AiOutlineCloseCircle } from 'react-icons/ai';
+import { FaCommentSlash } from 'react-icons/fa';
 import axiosClient from 'axiosSetup';
-import { Spinner, Button } from 'react-bootstrap';
+import { Spinner, Button, Modal } from 'react-bootstrap';
 import { getFormatDate } from 'helpers';
 import Input from 'components/controls/Input';
 import VoteButton from 'components/votebutton/VoteButton';
 import { useAuth } from 'app/authContext';
 import { beautifyTime } from 'helpers';
+
+const MoreButton = ({
+  item,
+  className,
+  isOwner,
+  setIsEdit,
+  mutate,
+  ...props
+}) => {
+  const [toggleMore, setToggleMore] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  //const router = useRouter();
+  const linkToEdit = () => {
+    //router.push(`/post/${item?.id}/edit`);
+  };
+  const linkToUser = () => {};
+  const handleReport = () => {};
+  const handleSavePost = () => {};
+  const handleDelete = async () => {
+    try {
+      await axiosClient.delete(`/comments/${item.id}`);
+      console.log('success');
+      setShowConfirm(false);
+      mutate();
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const handleCloseConfirm = () => {
+    setShowConfirm(false);
+  };
+  return (
+    <div
+      className={`more-button${
+        toggleMore ? ' active' : ''
+      } top-0 right-0 position-absolute d-inline-flex`}
+    >
+      <div className='item'>
+        <a className='me-1' onClick={() => setIsEdit(true)}>
+          <span className='cursor-pointer text-grey-900 text-dark font-xs'>
+            <FiEdit2 />
+          </span>
+        </a>
+        <a className='me-1' onClick={() => setShowConfirm(true)}>
+          <span className='cursor-pointer font-xs text-danger'>
+            <FaCommentSlash />
+          </span>
+        </a>
+      </div>
+
+      <span
+        className={`toggle ${
+          toggleMore ? 'active' : ''
+        } cursor-pointer text-grey-900 text-dark font-xs me-3`}
+        onClick={() => setToggleMore(!toggleMore)}
+      >
+        <FiMoreVertical />
+      </span>
+      <Modal
+        contentClassName='card rounded-xxl'
+        show={showConfirm}
+        onHide={handleCloseConfirm}
+      >
+        <Modal.Header className='text-dark'>
+          <Modal.Title>Delete comment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className='text-dark'>Confirm delete.</Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' onClick={handleCloseConfirm}>
+            Close
+          </Button>
+          <Button variant='danger' onClick={handleDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
+  );
+};
 
 const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -108,11 +195,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
                      border-light-md theme-dark-bg position-relative`}
         >
           {isOwner && (
-            <a className='ms-auto' onClick={() => setIsEdit(true)}>
-              <span className='cursor-pointer text-grey-900 text-dark font-xs position-absolute top-0 right-0 me-3'>
-                <FiEdit2 />
-              </span>
-            </a>
+            <MoreButton setIsEdit={setIsEdit} item={comment} mutate={mutate} />
           )}
           <h6 className={`font-xsss fw-600 mb-0 d-flex`}>
             {comment
@@ -168,7 +251,7 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
                 onClick={handleCancelEdit}
                 className='cursor-pointer font-sm fw-600 ls-1 text-danger pe-4'
               >
-                <AiOutlineCloseCircle />
+                <FiXCircle />
               </a>
             )}
 

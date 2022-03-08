@@ -27,22 +27,6 @@ const NestedComment = ({ comment, onShowReplies }) => {
   return <CommentBox />;
 };
 
-const MenuItem = ({ icon, tooltip, label, className, onClick, ...props }) => (
-  <div
-    className={`${className} card-body p-0 d-flex cursor-pointer`}
-    onClick={onClick}
-    {...props}
-  >
-    <span className='d-flex text-grey-600 me-3 font-lg'>{icon}</span>
-    <h4 className='fw-600 text-grey-900 font-xssss mt-0 me-0 mb-0'>
-      {label}
-      <span className='d-block font-xsssss fw-500 mt-1 text-grey-500'>
-        {tooltip}
-      </span>
-    </h4>
-  </div>
-);
-
 const MoreButton = ({ item, className, isOwner, ...props }) => {
   const [toggleMore, setToggleMore] = useState(false);
   const router = useRouter();
