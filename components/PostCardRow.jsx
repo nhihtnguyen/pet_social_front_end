@@ -88,7 +88,7 @@ const PostUser = ({ post }) => {
           alt='content'
           width={width}
           height={height}
-          src={post?.media_url || 'https://via.placeholder.com/500/500'}
+          src={post?.media_url || 'https://via.placeholder.com/500x500'}
         />
       </div>
 

@@ -44,7 +44,7 @@ const PetCard = ({
     >
       <div className='card-body p-0 position-relative h100'>
         <Image
-          src={pet?.background || 'https://via.placeholder.com/430x100'}
+          src={pet?.background || 'http://placehold.jp/430x100.png'}
           alt='back'
           width={430}
           height={100}
@@ -60,7 +60,7 @@ const PetCard = ({
           <Image
             width={100}
             height={100}
-            src={pet?.avatar || 'https://via.placeholder.com/100'}
+            src={pet?.avatar || 'http://placehold.jp/100x100.png'}
             alt='avatar'
             className='p-1 bg-white rounded-circle'
           />

@@ -41,7 +41,10 @@ const CentralNotification = ({ children }) => {
           <Toast.Body className='d-flex align-items-center'>
             <div className='left-0'>
               <Image
-                src={message.image || 'https://via.placeholder.com/40'}
+                src={
+                  message.image ||
+                  `https://ui-avatars.com/api/name=${message.title}&background=random`
+                }
                 width={40}
                 height={40}
                 layout='fixed'

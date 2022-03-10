@@ -129,7 +129,7 @@ const ProfileBackground = ({ profile }) => {
         <Image
           src={
             loading || !profile?.background
-              ? 'https://via.placeholder.com/975x250'
+              ? 'http://placehold.jp/975x250.png'
               : profile?.background
           }
           alt='background'
@@ -154,7 +154,7 @@ const ProfileBackground = ({ profile }) => {
             height={200}
             src={
               loading || !profile?.avatar
-                ? 'https://via.placeholder.com/200'
+                ? 'http://placehold.jp/200x200.png'
                 : profile?.avatar
             }
             alt='avatar'

@@ -15,7 +15,7 @@ const UserCard = ({ profile, as }) => {
               <Image
                 width={65}
                 height={65}
-                src={profile?.avatar || 'https://via.placeholder.com/65'}
+                src={profile?.avatar || 'http://placehold.jp/65x65.png'}
                 alt='avatar'
                 className='rounded-circle'
               />

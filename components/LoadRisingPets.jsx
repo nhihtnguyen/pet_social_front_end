@@ -29,7 +29,7 @@ const PetItem = ({ petId, ...props }) => {
       {...props}
     >
       <Image
-        src={pet?.avatar || 'https://via.placeholder.com/60'}
+        src={pet?.avatar || 'http://placehold.jp/60x60.png'}
         width={60}
         height={60}
         layout='fixed'

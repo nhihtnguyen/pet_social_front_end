@@ -200,7 +200,7 @@ const ProfileBackground = ({ className }) => {
           layout='responsive'
           src={
             loading || !profile?.background
-              ? 'https://via.placeholder.com/975x250'
+              ? 'http://placehold.jp/975x250.png'
               : profile?.background
           }
           alt='background'
@@ -227,7 +227,7 @@ const ProfileBackground = ({ className }) => {
           <Image
             src={
               loading || !profile?.avatar
-                ? 'https://via.placeholder.com/100'
+                ? 'http://placehold.jp/100x100.png'
                 : profile?.avatar
             }
             alt='avatar'
