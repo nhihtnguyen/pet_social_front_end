@@ -12,7 +12,7 @@ const ItemCard = ({ item, onClick, loading }) => {
             src={
               !loading && item?.image
                 ? item?.image
-                : 'https://via.placeholder.com/300'
+                : 'http://placehold.jp/300x300'
             }
             layout='fill'
             alt={item?.name || 'bg'}

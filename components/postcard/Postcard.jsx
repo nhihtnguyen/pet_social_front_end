@@ -35,7 +35,7 @@ const Postcard = ({ value, className, ...props }) => {
         width={width}
         height={height}
         layout='responsive'
-        src={value.media_url || `https://via.placeholder.com/400`}
+        src={value.media_url || `http://placehold.jp/400x400.png`}
         alt={value.media_url || 'image'}
       />
 
@@ -51,7 +51,7 @@ const Postcard = ({ value, className, ...props }) => {
                 onClick={linkToAuthor}
                 width={40}
                 height={40}
-                src={value?.User?.avatar || 'https://via.placeholder.com/40'}
+                src={value?.User?.avatar || 'http://placehold.jp/40x40.png'}
                 alt='avatar'
                 className='rounded-circle shadow-xss'
               />

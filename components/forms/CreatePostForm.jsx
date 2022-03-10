@@ -33,7 +33,7 @@ const CreatePostForm = ({
     return {
       value: pet?.id,
       label: pet?.name,
-      image: pet?.avatar || 'https://via.placeholder.com/30',
+      image: pet?.avatar || 'http://placehold.jp/30x30.png',
       hasIcon: true,
     };
   });

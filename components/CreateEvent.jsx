@@ -77,7 +77,7 @@ const CreateEvent = ({ content, onSubmit, isEdit }) => {
       className={`card w-100 border-0 bg-white shadow-xs p-0 mb-4 rounded-xxl`}
     >
       <ActionHeader
-        title={isEdit ? 'Edit pet' : 'Create pet'}
+        title={isEdit ? 'Edit event' : 'Create event'}
         link={isEdit ? `/event/${content?.id}` : '/event'}
         style={{ margin: '32px 32px 0' }}
       />

@@ -87,7 +87,7 @@ const ParticipantCard = ({ item, mutate }) => {
         } bg-image-cover bg-image-center w-100 h-100 position-absolute bg-white`}
         style={{
           backgroundImage: `url(${
-            item?.media_url || 'https://via.placeholder.com/300x430'
+            item?.media_url || 'http://placehold.jp/300x430.png'
           })`,
           zIndex: 11,
         }}
@@ -106,7 +106,7 @@ const ParticipantCard = ({ item, mutate }) => {
             <Image
               width={100}
               height={100}
-              src={pet?.avatar || 'https://via.placeholder.com/100'}
+              src={pet?.avatar || 'http://placehold.jp/100x100.png'}
               alt='avatar'
               className='p-1 bg-white rounded-xl w-100'
             />

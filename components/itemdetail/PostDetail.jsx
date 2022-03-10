@@ -137,7 +137,7 @@ const MentionItem = ({ petID }) => {
           <Image
             width={45}
             height={45}
-            src={pet?.avatar || 'https://via.placeholder.com/45'}
+            src={pet?.avatar || 'http://placehold.jp/45x45.png'}
             alt='avatar'
             className='shadow-sm rounded-circle w45'
           />
@@ -166,7 +166,7 @@ const MentionSection = ({ item }) => {
             <Image
               width={45}
               height={45}
-              src={item?.User?.avatar || 'https://via.placeholder.com/45'}
+              src={item?.User?.avatar || 'http://placehold.jp/45x45.png'}
               alt='avatar'
               className='image  shadow-sm rounded-circle w45 '
             />
@@ -228,7 +228,7 @@ const PostDetail = ({ item, loading, pid }) => {
               <Placeholder as='div' className={`w-100 h-100 rounded-xxxxl}`} />
             ) : showImage ? (
               <Image
-                src={item?.media_url || 'https://via.placeholder.com/300/500'}
+                src={item?.media_url || 'http://placehold.jp/300x500.png'}
                 className={`rounded-xxxxl`}
                 width={width}
                 height={height}

@@ -38,6 +38,8 @@ module.exports = {
   },
   images: {
     domains: [
+      'placehold.jp',
+      'ui-avatars.com',
       'via.placeholder.com',
       'placeholder.com',
       'picsum.photos',

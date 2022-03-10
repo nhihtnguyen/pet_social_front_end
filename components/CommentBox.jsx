@@ -183,7 +183,13 @@ const CommentBox = ({ className, comment, created, pid, replyFor, mutate }) => {
         <Image
           width={`${created ? 45 : 30}`}
           height={`${created ? 45 : 30}`}
-          src='https://via.placeholder.com/45'
+          src={
+            comment || !user?.avatar
+              ? `https://ui-avatars.com/api/name=${
+                  comment?.User?.first_name || 'Me'
+                }&background=random`
+              : user?.avatar
+          }
           alt='avatar'
           className={`rounded-circle shadow-sm`}
         />

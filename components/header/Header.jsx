@@ -64,7 +64,7 @@ const NotificationItem = ({ message, className, variant, time }) => {
     >
       <span className='position-absolute left-0 overflow rounded-circle ps-1'>
         <Image
-          src={message?.image || 'https://via.placeholder.com/40'}
+          src={message?.image || 'http://placehold.jp/40x40.png'}
           width={40}
           height={40}
           alt='user'
@@ -261,7 +261,7 @@ const Header = () => {
           <Link href='/settings'>
             <a className='p-0 ms-3 menu-icon'>
               <Image
-                src={user?.avatar || 'https://via.placeholder.com/40'}
+                src={user?.avatar || 'http://placehold.jp/40x40.png'}
                 alt='user'
                 className='rounded-circle'
                 width={40}

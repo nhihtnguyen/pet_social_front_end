@@ -47,6 +47,10 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
         3000,
         'success'
       );
+      if (result?.data) {
+        //mutate();
+        router.push('/pet/' + result?.data?.id);
+      }
     } catch (error) {
       // logging
       console.log(error);
@@ -60,11 +64,6 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
       );
     } finally {
       setLoaded(-1);
-    }
-
-    if (result?.data) {
-      //mutate();
-      router.push('/pet/' + result?.data?.id);
     }
   };
 
