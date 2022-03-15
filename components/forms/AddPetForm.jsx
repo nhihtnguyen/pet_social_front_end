@@ -101,7 +101,11 @@ const AddPetForm = ({ onSubmit, validated, loaded, values }) => {
             value={info.age}
             onChange={onChange('age')}
             invalidTooltip={errors['age']}
-            label={<label className='mont-font fw-600 font-xsss'>Age</label>}
+            label={
+              <label className='mont-font fw-600 font-xsss'>
+                Year of birth
+              </label>
+            }
             type='number'
             inputClassName={`${styles['textarea']} rounded-xxxl`}
             className='position-relative'

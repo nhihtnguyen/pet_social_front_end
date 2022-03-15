@@ -18,7 +18,7 @@ const Profile = () => {
   if (!pet) return <div>loading...</div>;
 
   const properties = [
-    { key: 'Age', value: pet.age },
+    { key: 'Age', value: new Date().getFullYear() - pet.age },
     { key: 'Gender', value: pet.gender ? 'Male' : 'Female' },
     { key: 'Breed', value: pet.type },
   ];
