@@ -10,7 +10,7 @@ const IconOption = ({ data, ...props }) => (
     {data?.hasIcon && (
       <Image
         className='rounded-circle'
-        src={data?.image || `https://via.placeholder.com/30`}
+        src={data?.image || `http://placehold.jp/30x30.png`}
         height='30px'
         width='30px'
         alt='label'
@@ -24,7 +24,7 @@ const IconMultiValue = ({ data, ...props }) => (
   <MultiValue {...props} className='rounded-xxl d-flex align-items-center'>
     <Image
       alt='label'
-      src={data?.image || 'https://via.placeholder.com/30'}
+      src={data?.image || 'http://placehold.jp/30x30.png'}
       height='30px'
       width='30px'
       className='rounded-circle'

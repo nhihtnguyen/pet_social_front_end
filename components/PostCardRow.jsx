@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import { getFormatDate } from 'helpers';
 import VoteButton from 'components/votebutton/VoteButton';
 import ReportButton from 'components/ReportButton';
-
+import { beautifyTime } from 'helpers';
 const PostUser = ({ post }) => {
   const { user } = useAuth();
   const router = useRouter();
@@ -50,9 +50,7 @@ const PostUser = ({ post }) => {
           <span className='d-block font-xssss fw-500 mt-1 lh-3 text-grey-500'>
             {' '}
             {/* {value.time} */}
-            {post?.updated_at
-              ? getFormatDate(new Date(post?.updated_at))
-              : 'updated'}
+            {post?.updated_at ? beautifyTime(post?.updated_at) : 'updated'}
           </span>
         </h4>
         <div className={`d-flex p-0 m-0 mb-3 ms-auto position-relative`}>
@@ -69,17 +67,8 @@ const PostUser = ({ post }) => {
           <ReportButton item={post} />
         </div>
       </div>
-
-      <div className='card-body p-0 mb-3 rounded-3 overflow-hidden'>
-        <Image
-          alt='content'
-          width={width}
-          height={height}
-          src={post?.media_url || 'https://via.placeholder.com/500/500'}
-        />
-      </div>
       <div className='card-body p-0 me-lg-5'>
-        <p className='fw-700 text-grey-800 lh-26 font-xss w-100 mb-0'>
+        <p className='fw-700 text-grey-800 lh-26 font-xss w-100 mb-2'>
           {post?.caption ||
             `Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero
           delectus facere hic iusto consequuntur est sequi quis laborum impedit
@@ -91,8 +80,20 @@ const PostUser = ({ post }) => {
           )}
         </p>
       </div>
+      <div
+        className='card-body p-0 mb-3 rounded-3 overflow-hidden d-flex justify-content-center'
+        style={{ background: 'rgba(71,71,71,0.5)' }}
+      >
+        <Image
+          alt='content'
+          width={width}
+          height={height}
+          src={post?.media_url || 'https://via.placeholder.com/500x500'}
+        />
+      </div>
+
       <div className='card-body d-flex p-0 mt-3'>
-        <VoteButton post={post} />
+        <VoteButton post={post} className='font-lg' />
         <Link href={`/post/${post?.id}`}>
           <a className='d-flex align-items-center fw-600 text-grey-900 text-dark lh-26 font-xssss'>
             <i className='text-dark text-grey-900 btn-round-sm font-lg'>

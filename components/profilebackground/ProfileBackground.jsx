@@ -195,11 +195,12 @@ const ProfileBackground = ({ className }) => {
     <Card className='w-100 border-0 p-0 bg-white shadow-xss rounded-xxl'>
       <Card.Body className='h250 p-0 rounded-xxxl overflow-hidden d-grid justify-content-center m-3 position-relative'>
         <Image
-          width={875}
+          width={975}
           height={250}
+          layout='responsive'
           src={
             loading || !profile?.background
-              ? 'https://via.placeholder.com/875x250'
+              ? 'http://placehold.jp/975x250.png'
               : profile?.background
           }
           alt='background'
@@ -226,7 +227,7 @@ const ProfileBackground = ({ className }) => {
           <Image
             src={
               loading || !profile?.avatar
-                ? 'https://via.placeholder.com/100'
+                ? 'http://placehold.jp/100x100.png'
                 : profile?.avatar
             }
             alt='avatar'

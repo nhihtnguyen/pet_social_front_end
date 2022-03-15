@@ -64,7 +64,7 @@ const NotificationItem = ({ message, className, variant, time }) => {
     >
       <span className='position-absolute left-0 overflow rounded-circle ps-1'>
         <Image
-          src={message?.image || 'https://via.placeholder.com/40'}
+          src={message?.image || 'http://placehold.jp/40x40.png'}
           width={40}
           height={40}
           alt='user'
@@ -250,24 +250,18 @@ const Header = () => {
             aria-expanded='false'
             onClick={toggleNotification}
           >
-            <span className='dot-count bg-warning' style={{ top: 10 }} />
+            <span className='dot-count bg-warning' style={{ top: 16 }} />
             <span className='font-xl text-current'>
               <FiBell />
             </span>
           </span>
           <NotificationSection notificationClass={notificationClass} />
-          <Link href='/message'>
-            <a className='p-2 text-center ms-3 menu-icon chat-active-btn'>
-              <span className='font-xl text-current'>
-                <FiMessageSquare />
-              </span>
-            </a>
-          </Link>
+
           <DarkModeToggle className='ms-3 p-2' />
           <Link href='/settings'>
             <a className='p-0 ms-3 menu-icon'>
               <Image
-                src={user?.avatar || 'https://via.placeholder.com/40'}
+                src={user?.avatar || 'http://placehold.jp/40x40.png'}
                 alt='user'
                 className='rounded-circle'
                 width={40}

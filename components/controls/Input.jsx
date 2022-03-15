@@ -28,7 +28,9 @@ const Input = ({
       )}
       <Form.Control
         type={type}
-        className={`${inputClassName} ${styles['typing-box']} font-xsss fw-600`}
+        className={`${inputClassName || 'font-xsss fw-600'} ${
+          styles['typing-box']
+        }`}
         style={inputStyle}
         {...props}
       />

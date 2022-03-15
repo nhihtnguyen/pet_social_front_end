@@ -17,18 +17,16 @@ const Follower = () => {
   if (error) return <div>failed to load</div>;
   if (!data || !id) return <div>loading...</div>;
   return (
-    <div className='row w-100 m-0 p-0 pe-sm-3'>
-      <div className='col-xl-12 p-0'>
-        <PageTitle title='Follower' />
-        <div className='row'>
-          {data.map((value) => {
-            return (
-              <div key={value} className='col-md-3 col-sm-4 pe-2'>
-                <UserCard profile={value} />
-              </div>
-            );
-          })}
-        </div>
+    <div className='middle-wrap pe-sm-3'>
+      <PageTitle title='Follower' />
+      <div className='row'>
+        {data.map((value) => {
+          return (
+            <div key={value} className='col-md-3 col-sm-4 pe-2'>
+              <UserCard profile={value} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

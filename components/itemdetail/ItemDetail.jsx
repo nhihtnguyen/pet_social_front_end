@@ -78,7 +78,7 @@ const ItemDetail = ({
         <Col sm='7' xs='12' className='bg-dark pe-0'>
           <div className='image-container '>
             <Image
-              src={item?.image || 'https://via.placeholder.com/400'}
+              src={item?.image || 'http://placehold.jp/400x400.png'}
               className={'image'}
               layout='fill'
               alt='image'

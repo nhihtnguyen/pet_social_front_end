@@ -7,6 +7,7 @@ import {
   FiSettings,
   FiUser,
   FiLogIn,
+  FiBriefcase,
 } from 'react-icons/fi';
 import { useAuth } from 'app/authContext';
 import { useState } from 'react';
@@ -61,11 +62,11 @@ const LeftNav = ({ className }) => {
                 {expand ? 'Market' : ''}
               </NavItem>
               <NavItem
-                href='/adoption'
-                icon={<FiShield />}
+                href='/assets'
+                icon={<FiBriefcase />}
                 className='bg-green-gradient'
               >
-                {expand ? 'Pet Adoption' : ''}
+                {expand ? 'Assets' : ''}
               </NavItem>
             </ul>
           </div>

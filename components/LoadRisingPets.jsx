@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 
 const fetcher = (url) => axiosClient.get(url).then((res) => res.data);
 
-const PetItem = ({ petId }) => {
+const PetItem = ({ petId, ...props }) => {
   const { data: pet, error } = useSWR(
     petId ? `/pets/${petId}` : null,
     petId ? fetcher : null
@@ -26,14 +26,15 @@ const PetItem = ({ petId }) => {
         scrollSnapAlign: 'start',
       }}
       onClick={linkToPet}
+      {...props}
     >
       <Image
-        src={pet?.avatar || 'https://via.placeholder.com/60'}
+        src={pet?.avatar || 'http://placehold.jp/60x60.png'}
         width={60}
         height={60}
         layout='fixed'
         alt='avt'
-        className='rounded-circle w60 bg-white bg-opacity-75 p-1'
+        className='rounded-circle w60 bg-white bg-opacity-75 p-1 cursor-pointer'
       />
       <h6 className='fw-500 font-xssss text-center m-0 p-0 mb-1 lh-1'>
         {pet?.name || 'name'}
@@ -110,7 +111,7 @@ const LoadRisingPets = () => {
       >
         {!loading &&
           pets?.map((value, index) => (
-            <PetItem key={index} petId={value?.pet_id} />
+            <PetItem key={index} petId={value?.pet_id} className='me-1' />
           ))}
 
         {loading && (

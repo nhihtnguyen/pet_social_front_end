@@ -5,9 +5,12 @@ import { useSWRConfig } from 'swr';
 import axiosClient from 'axiosSetup';
 import { useEffect } from 'react';
 import { fixLocaleTime } from 'helpers';
+import { useNotification } from 'app/notificationContext';
+import ActionHeader from './ActionHeader';
 
-const CreatePet = ({ content, onSubmit, isEdit }) => {
+const CreateEvent = ({ content, onSubmit, isEdit }) => {
   const { mutate } = useSWRConfig();
+  const { showMessage } = useNotification();
 
   const router = useRouter();
   const [loaded, setLoaded] = useState(-1);
@@ -73,7 +76,12 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
     <div
       className={`card w-100 border-0 bg-white shadow-xs p-0 mb-4 rounded-xxl`}
     >
-      <div className='card-body p-lg-5 p-4 w-100 border-0 '>
+      <ActionHeader
+        title={isEdit ? 'Edit event' : 'Create event'}
+        link={isEdit ? `/event/${content?.id}` : '/event'}
+        style={{ margin: '32px 32px 0' }}
+      />
+      <div className='card-body w-100 border-0' style={{ padding: 35 }}>
         <AddEventForm
           onSubmit={handleUpload(isEdit ? 'put' : 'post')}
           loaded={loaded}
@@ -84,4 +92,4 @@ const CreatePet = ({ content, onSubmit, isEdit }) => {
   );
 };
 
-export default CreatePet;
+export default CreateEvent;
